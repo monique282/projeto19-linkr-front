@@ -1,24 +1,25 @@
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import SignupPage from "./pages/SignupPage";
+import SigninPage from "./pages/SigninPage";
+import TimelinePage from "./pages/TimelinePage";
+import HashtagPage from "./pages/HashtagPage";
+import UserPage from "./pages/UserPage";
+import { UserContext } from "./contexts/UserContext";
+
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <UserContext.Provider>
+      <BrowserRouter>
+        <Routes >
+          <Route path='/sing-up' element={<SignupPage />} />
+          <Route path='/' element={<SigninPage />} />
+          <Route path='/timeline' element={<TimelinePage />} />
+          <Route path='/hashtag/:hashtag' element={<HashtagPage />} />
+          <Route path='/user/:id' element={<UserPage />} />
+        </Routes>
+      </BrowserRouter>
+    </UserContext.Provider>
   );
 }
 
