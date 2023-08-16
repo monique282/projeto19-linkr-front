@@ -17,17 +17,21 @@ export const FontPageTitle = styled.h2`
   font-weight: 700;
   line-height: normal;`
 
-const Lato400 = styled.h3`
+export const Lato400 = styled.h3`
   font-family: Lato;
   font-style: normal;
   font-weight: 400;
   line-height: normal;
   `
-
-export const TextPost = styled(Lato400)`
-  color: #B7B7B7;
-  font-size: 15px;
+export const Lato300 = styled.h3`
+  font-family: Lato;
+  font-style: normal;
+  font-weight: 300;
+  line-height: normal;
+  `
+export const Lato700 = styled.h3`
+  font-family: Lato;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
 `
-export const TitlePost = styled(Lato400)`
-  color: #FFF;
-  font-size: 17px;`

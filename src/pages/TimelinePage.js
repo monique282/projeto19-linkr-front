@@ -1,14 +1,19 @@
 import styled from "styled-components"
+import { Background } from "../components/PageComponents/PageComponents"
+import SharePost from "../components/PageComponents/SharePost"
 
 export default function TimelinePage(){
     return (
         <Background>
+            <Feed>
+                <SharePost />
+            </Feed>
+            <Trending>
 
+            </Trending>
         </Background>
     )
 }
-const Background = styled.div`
-    margin-top: 72px;
-    background: #333;
-    height: 100vh;
-`
+const Feed = styled.div``
+
+const Trending = styled.div``
