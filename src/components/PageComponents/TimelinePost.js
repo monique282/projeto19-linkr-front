@@ -1,9 +1,11 @@
-import { Background } from "./PageComponents";
+import styled from "styled-components"
 
 export default function TimelinePost(){
   return(
-    <Background>
-      
-    </Background>
+    <Container>
+
+    </Container>
   )
 }
+const Container = styled.div`
+`
