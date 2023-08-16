@@ -1,14 +1,33 @@
 import styled from 'styled-components';
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { configToken } from '../../services/api';
+import { useEffect, useState } from 'react';
 
 export default function HashtagBox () {
 
-    const mockHashtagList = [ "javascript", "react", "react-native", "material", "web-dev", "mobile", "css", "html", "node", "sql"]
+    // const mockHashtagList = [ "javascript", "react", "react-native", "material", "web-dev", "mobile", "css", "html", "node", "sql"];
+
+    const navigate = useNavigate();
+    const [hashtagsList, setHashtagsList] = useState([]);
+
+    const URL = `${process.env.REACT_APP_API_URL}/hashtags`;
+    const headers = configToken();
+
+    useEffect(() => {
+
+        axios.get(URL, headers)
+            .then(res => setHashtagsList(res.data))
+            .catch(err => alert(err.response.data));
+
+    },
+    []) // COLOCAR DENTRO A VARIAVEL DE ESTADO QUE ATUALIZA O GET DOS POSTS!!!!!!!!!!!!!!!!!!
 
     return (
         <SCHashtagBox>
             <SCTrending> trending </SCTrending>
             <SCHashtagContent>
-                { mockHashtagList.map(word => <SCHashtagWord> # {word} </SCHashtagWord>) }
+                { hashtagsList.map(hashtag => <SCHashtagWord onClick={() => navigate(`/hashtag/${hashtag}`)} > # {hashtag} </SCHashtagWord>) }
             </SCHashtagContent>
         </SCHashtagBox>
     )
@@ -24,11 +43,6 @@ const SCHashtagBox = styled.div`
     flex-direction: column;
     justify-content:center;
     align-items:center;
-
-    //COLOCANDO APENAS PARA EDITAR, APAGAR QUANDO FOR USAR EM PRÁTICA
-    position:fixed;
-    top:150px;
-    right:750px;
 `
 
 const SCTrending = styled.div`
@@ -44,7 +58,7 @@ const SCTrending = styled.div`
     display:flex;
     align-items:center;
     justify-content:start;
-    border: 1px solid #484848;
+    border-bottom: 1px solid #484848;
 
     box-sizing:border-box;
 `
