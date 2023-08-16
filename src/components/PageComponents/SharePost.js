@@ -8,7 +8,7 @@ export default function SharePost({userPhoto, config}) {
 
   function handlePublish(e) {
     e.preventDefault()
-    axios.post(`${REACT_APP_API_URL}new-post`, post, config)
+    axios.post(`${process.env.REACT_APP_API_URL}/new-post`, post, config)
   }
 
   return (
