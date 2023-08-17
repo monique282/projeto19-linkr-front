@@ -131,6 +131,10 @@ const SingInContainer = styled.section`
                 font-weight: 700;
                 line-height: 40px;
                 margin-bottom: 30px;
+                font-family: 'Oswald';
+                font-size: 27px;
+                font-weight: 700;
+                line-height: 40px;
 } }
 `
 const Input = styled.input`
