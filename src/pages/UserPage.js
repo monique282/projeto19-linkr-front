@@ -9,12 +9,13 @@ export default function UserPage() {
       name: "Vitor",
       picture:
         "https://i.pinimg.com/originals/52/37/04/5237042f152ca9cf6c54daf824f1dc5d.jpg",
-      content: "post 1",
+      content: "post 1 #anime #2023",
       url: "https://www.aficionados.com.br/animes-2023/",
-      tags: ["#anime", "#2023"],
+      tags: [],
       likes: 13,
     },
   ]);
+  
   const [image, setImage] = useState(
     "https://i.pinimg.com/originals/52/37/04/5237042f152ca9cf6c54daf824f1dc5d.jpg"
   );
@@ -69,6 +70,8 @@ const Content = styled.main`
       height: 100%;
       display: flex;
       align-items: center;
+      flex-direction: column;
+      gap: 15px;
     }
   }
 

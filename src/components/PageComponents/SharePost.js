@@ -1,14 +1,31 @@
 import styled from "styled-components"
 import { Lato300, Lato700 } from "../StyleComponents/StylesComponents"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import axios from "axios"
+import reactStringReplace from "react-string-replace"
 
 export default function SharePost({userPhoto, config}) { 
   const [post, setPost] = useState({url:"", content:""})
+  const [hashtags, setHashtags] = useState([]);
+
+  useEffect(() => {
+    const extractedHashtags = [];
+
+    reactStringReplace(post.content, /#(\w+)/g, (match, i) => {
+      extractedHashtags.push(match);
+    });
+
+    setHashtags(extractedHashtags);
+  }, [post.content]);
 
   function handlePublish(e) {
-    e.preventDefault()
-    axios.post(`${process.env.REACT_APP_API_URL}/new-post`, post, config)
+    e.preventDefault();
+
+    const obj = {url: post.url, content:post.content, hashtags}
+
+    console.log(obj)
+
+    axios.post(`${process.env.REACT_APP_API_URL}/new-post`, {url: post.url, content:post.content, hashtags}, config)
   }
 
   return (
@@ -41,7 +58,7 @@ export default function SharePost({userPhoto, config}) {
             setPost(prevState => {
             return {
             ...prevState,
-              text: newValue
+              content: newValue
             }
           })}}/>
           <BtnContainer>
