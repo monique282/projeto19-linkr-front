@@ -54,6 +54,7 @@ export default function SigninPage() {
                         <Input placeholder="e-mail" type="email" required value={email} onChange={(e) => setEmail(e.target.value)} disabled={disabled} />
                         <Input placeholder="password" type="password" autoComplete="new-password" required value={password} onChange={(e) => setPassword(e.target.value)} disabled={disabled} />
                         <button type='submit' disabled={disabled} data-test="sign-in-submit">
+                           
                             <p>Log In</p>
                         </button>
                         <Register to = {"/sing-up"}>First time? Create an account!</Register>

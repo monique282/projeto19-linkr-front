@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
+import { ThreeDots } from "react-loader-spinner";
 
 
 export default function SignupPage() {
@@ -18,7 +19,7 @@ export default function SignupPage() {
     function register(e) {
         e.preventDefault();
 
-       
+
         //para quando tiver o deploy 
         const url = `${process.env.REACT_APP_API_URL}/signup`
 
@@ -55,10 +56,13 @@ export default function SignupPage() {
                         <Input placeholder="username" type="text" required value={name} onChange={(e) => setName(e.target.value)} disabled={disabled} />
                         <Input placeholder="picture url" type="text" required value={photo} onChange={(e) => setPhoto(e.target.value)} disabled={disabled} />
                         <button type='submit' disabled={disabled} data-test="sign-in-submit">
-                           
-                            <p>Sign Up</p>
+                            {disabled ? (
+                                <ThreeDots width={32} height={21} border-radius={4.5} background-color="#d540e9" color="#FFFFFF" font-size={9} diplay />
+                            ) : (
+                                <p>Sign Up</p>
+                            )}
                         </button>
-                        <Register to = {"/"}>Switch back to log in</Register>
+                        <Register to={"/"}>Switch back to log in</Register>
                     </form>
                 </SingInContainer>
             </Backgroun>
