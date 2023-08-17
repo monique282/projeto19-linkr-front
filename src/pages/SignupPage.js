@@ -55,6 +55,7 @@ export default function SignupPage() {
                         <Input placeholder="username" type="text" required value={name} onChange={(e) => setName(e.target.value)} disabled={disabled} />
                         <Input placeholder="picture url" type="text" required value={photo} onChange={(e) => setPhoto(e.target.value)} disabled={disabled} />
                         <button type='submit' disabled={disabled} data-test="sign-in-submit">
+                           
                             <p>Sign Up</p>
                         </button>
                         <Register to = {"/"}>Switch back to log in</Register>

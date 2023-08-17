@@ -131,6 +131,9 @@ const SingInContainer = styled.section`
                 font-weight: 700;
                 line-height: 40px;
                 margin-bottom: 30px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
 } }
 `
 const Input = styled.input`
