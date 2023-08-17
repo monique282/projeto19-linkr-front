@@ -141,7 +141,9 @@ const SingInContainer = styled.section`
                 font-size: 27px;
                 font-weight: 700;
                 line-height: 40px;
-        
+                display: flex;
+                justify-content: center;
+                align-items: center;
 } }
 `
 const Input = styled.input`
