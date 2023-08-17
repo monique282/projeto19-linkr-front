@@ -1,9 +1,11 @@
 import { AiOutlineHeart } from "react-icons/ai";
 import styled from "styled-components";
 import { Lato400 } from "../StyleComponents/StylesComponents.js";
+import reactStringReplace from 'react-string-replace';
 
 export default function Post(props) {
   const { name, picture, content, url, tags, likes } = props.post;
+
   return (
     <Container>
       <Info>
@@ -18,10 +20,9 @@ export default function Post(props) {
       <Content>
         <Lato400 style={{ color: "#fff", fontSize: "19px" }}>{name}</Lato400>
         <Lato400 style={{ color: "#B7B7B7", fontSize: "17px" }}>
-          {content}{" "}
-          <span style={{ color: "#fff", fontSize: "17px" }}>
-            {tags.join(" ")}
-          </span>
+        {reactStringReplace(content, /#(\w+)/g, (match, i) => (
+            <span key={i}> #{match} </span>
+          ))}
         </Lato400>
       </Content>
     </Container>
