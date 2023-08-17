@@ -1,9 +1,14 @@
 import { AiOutlineHeart } from "react-icons/ai";
 import styled from "styled-components";
 import { Lato400 } from "../StyleComponents/StylesComponents.js";
+import reactStringReplace from 'react-string-replace';
+import { useNavigate } from "react-router-dom";
 
 export default function Post(props) {
-  const { name, picture, content, url, tags, likes } = props.post;
+  const { name, picture, content, url, likes } = props.post;
+
+  const navigate = useNavigate();
+
   return (
     <Container>
       <Info>
@@ -18,10 +23,9 @@ export default function Post(props) {
       <Content>
         <Lato400 style={{ color: "#fff", fontSize: "19px" }}>{name}</Lato400>
         <Lato400 style={{ color: "#B7B7B7", fontSize: "17px" }}>
-          {content}{" "}
-          <span style={{ color: "#fff", fontSize: "17px" }}>
-            {tags.join(" ")}
-          </span>
+        {reactStringReplace(content, /#(\w+)/g, (match, i) => (
+            <span key={i} onClick={() => navigate(`/hashtag/${match}`)} > #{match} </span>
+          ))}
         </Lato400>
       </Content>
     </Container>
@@ -47,6 +51,7 @@ const Content = styled.div`
     font-style: normal;
     font-weight: 700;
     line-height: normal;
+    cursor: pointer;
   }
 `;
 

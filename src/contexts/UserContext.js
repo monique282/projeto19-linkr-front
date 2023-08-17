@@ -14,12 +14,12 @@ export default function AuthProvider({ children }) {
 
     
     useEffect(() => {
-        if (lsToken === null && localiza.pathname !== "/signup") {
-            navigate("/");
-        } else if (lsToken && localiza.pathname !== "/singup") {
-            navigate("/");
-        }
-    }, []);
+         if (lsToken === null && localiza.pathname !== "/signup") {
+             navigate("/");
+         } else if (lsToken && localiza.pathname !== "/singup") {
+             navigate("/");
+         }
+     }, []);
 
     return (
         <AuthContext.Provider value={{
