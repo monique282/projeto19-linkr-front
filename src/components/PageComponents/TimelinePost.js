@@ -15,7 +15,7 @@ export default function TimelinePost(){
       <ContainerImg>
         <img src={userPhoto} alt={"profile-img"}/>
         <Likes data-tooltip-id="my-tooltip" data-tooltip-content={`Mensagem`}>
-        <ion-icon $isLiked name={isLiked ? "heart" : "heart-ouline"}></ion-icon>{likes}</Likes>
+        <ion-icon isLiked={isLiked} name={isLiked ? "heart" : "heart-ouline"}></ion-icon>{likes}</Likes>
         <Tooltip id="my-tooltip" />
       </ContainerImg>
       <ContainerContent>
@@ -67,6 +67,7 @@ const Post = styled(Lato400)`
 const Hashtags = styled(Lato700)`
   font-size: 17px;
   color: #fff;`
+
 const Likes = styled(Lato400)`
   font-size:11px;
   color:#FFF;
@@ -76,5 +77,5 @@ const Likes = styled(Lato400)`
   ion-icon{
     height: 20px;
     width: 20px;
-    color: ${props => props.isLiked ? #AC0000 : #FFF}
+    color: ${props => (props.isLiked ? #AC0000 : #FFF)};
   }`
