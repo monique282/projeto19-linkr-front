@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useContext, useState } from "react";
 import axios from "axios";
 import { AuthContext } from "../contexts/UserContext";
+import { ThreeDots } from "react-loader-spinner";
 
 
 
@@ -54,9 +55,13 @@ export default function SigninPage() {
                         <Input placeholder="e-mail" type="email" required value={email} onChange={(e) => setEmail(e.target.value)} disabled={disabled} />
                         <Input placeholder="password" type="password" autoComplete="new-password" required value={password} onChange={(e) => setPassword(e.target.value)} disabled={disabled} />
                         <button type='submit' disabled={disabled} data-test="sign-in-submit">
-                            <p>Log In</p>
+                            {disabled ? (
+                                <ThreeDots width={32} height={21} border-radius={4.5} background-color="#d540e9" color="#FFFFFF" font-size={9} diplay />
+                            ) : (
+                                <p>Log In</p>
+                            )}
                         </button>
-                        <Register to = {"/sing-up"}>First time? Create an account!</Register>
+                        <Register to={"/sing-up"}>First time? Create an account!</Register>
                     </form>
                 </SingInContainer>
             </Backgroun>
@@ -132,9 +137,9 @@ const SingInContainer = styled.section`
                 line-height: 40px;
                 margin-bottom: 30px;
                 font-family: 'Oswald';
-                font-size: 27px;
-                font-weight: 700;
-                line-height: 40px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
 } }
 `
 const Input = styled.input`
