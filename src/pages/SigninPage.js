@@ -74,7 +74,7 @@ const Total = styled.div`
     width: 100%;
     height: 100vh; 
     display: flex;
-`;
+`
 const RegisteLogin = styled.div`
     width: 905px;
     height: 100%;
@@ -83,7 +83,6 @@ const RegisteLogin = styled.div`
     justify-content: center;
     align-items: center;
     background-color: #151515;
-
 `
 const Title = styled.p`
     font-family: 'Passion One';
@@ -103,17 +102,15 @@ const Slogam = styled.p`
     line-height: 64px;
     text-align: left;
     color: rgba(255, 255, 255, 1);
-
-
 `
 
 const SingInContainer = styled.section`
- height: 100%;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-top: 317px;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 317px;
     form{
         display: flex;
         flex-direction: column;
@@ -122,8 +119,8 @@ const SingInContainer = styled.section`
 
             button{
                 color: #ffff;
-                width: 460px;
-                height: 85px;
+                width: 429px;
+                height: 65px;
                 border-radius: 10px;
                 margin-top: 10px;
                 border-radius: 6px;
@@ -134,8 +131,7 @@ const SingInContainer = styled.section`
                 font-weight: 700;
                 line-height: 40px;
                 margin-bottom: 30px;
-}
-    }
+} }
 `
 const Input = styled.input`
     width: 429px;
