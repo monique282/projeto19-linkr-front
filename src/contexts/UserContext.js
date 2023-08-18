@@ -19,7 +19,7 @@ export default function AuthProvider({ children }) {
         } else if (lsToken && localiza.pathname !== "/singup") {
             navigate("/");
         }
-    }, []);
+     }, []);
 
     return (
         <AuthContext.Provider value={{
