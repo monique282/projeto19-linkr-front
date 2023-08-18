@@ -21,17 +21,18 @@ export default function SigninPage() {
 
         // dados que vão pro servidor
         const data = {
-            email: email,
-            password: password,
+            email,
+            password,
         }
 
-        const url = `${process.env.REACT_APP_API_URL}signin`
+        const url = `${process.env.REACT_APP_API_URL}/signin`
         const promise = axios.post(url, data);
         setDisabled(true);
         promise.then(response => {
+            const {token} = response.data
             setToken(response.data.token);
             setName(response.data.name)
-            localStorage.setItem("token", response.data.token);
+            localStorage.setItem("token", token);
             localStorage.setItem("image", response.data.image);
             navigate("/timeline");
         });
@@ -110,12 +111,11 @@ const Slogam = styled.p`
 `
 
 const SingInContainer = styled.section`
-    height: 100%;
     width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-top: 317px;
+    justify-content: center;
     form{
         display: flex;
         flex-direction: column;

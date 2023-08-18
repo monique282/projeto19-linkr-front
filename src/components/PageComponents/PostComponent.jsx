@@ -7,7 +7,7 @@ import { Tooltip } from "react-tooltip";
 import { useState } from "react";
 
 export default function Post(props) {
-  const { name, picture, content, url, likes } = props.post;
+  const { name, image, content, url, numberLikes } = props.post;
 
   const navigate = useNavigate();
 
@@ -21,7 +21,7 @@ export default function Post(props) {
     <Container>
       <Info>
         <figure>
-          <img src={picture} alt="profile" />
+          <img src={image} alt="profile" />
         </figure>
         
         <StyledIcon 
@@ -34,7 +34,7 @@ export default function Post(props) {
         
         <Lato400 data-tooltip-id="my-tooltip" 
         data-tooltip-content={isLiked ? "Você, fulano e outras 11 pessoas curtiram" : "Fulano, beltrano e outras 10 pessoas curtiram"} style={{ color: "#fff", fontSize: "11px" }}>
-          {Number(likes) === 1 ? (`${likes} Like`) : (`${likes} Likes`)} 
+          {Number(numberLikes) === 1 ? (`${numberLikes} Like`) : (`${numberLikes} Likes`)} 
         </Lato400>
       </Info>
       <Content>
@@ -60,7 +60,7 @@ isLiked ? <AiFillHeart {...rest} /> : <AiOutlineHeart {...rest} />
 const Content = styled.div`
   width: 100%;
   height: 100%;
-
+  gap: 7px;
   display: flex;
   flex-direction: column;
 

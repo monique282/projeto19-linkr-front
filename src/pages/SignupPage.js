@@ -21,7 +21,7 @@ export default function SignupPage() {
 
 
         //para quando tiver o deploy 
-        const url = `${process.env.REACT_APP_API_URL}signup`
+        const url = `${process.env.REACT_APP_API_URL}/signup`
 
         // dados a ser enviados para o back
         const data = {
@@ -111,12 +111,11 @@ const Slogam = styled.p`
 `
 
 const SingInContainer = styled.section`
-    height: 100%;
     width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-top: 317px;
+    justify-content: center;
     form{
         display: flex;
         flex-direction: column;
