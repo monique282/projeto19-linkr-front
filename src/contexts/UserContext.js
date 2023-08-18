@@ -13,13 +13,13 @@ export default function AuthProvider({ children }) {
     const localiza = useLocation();
 
     
-    // useEffect(() => {
-    //     if (lsToken === null && localiza.pathname !== "/signup") {
-    //         navigate("/");
-    //     } else if (lsToken && localiza.pathname !== "/singup") {
-    //         navigate("/");
-    //     }
-    //  }, []);
+    useEffect(() => {
+        if (lsToken === null && localiza.pathname !== "/signup") {
+            navigate("/");
+        } else if (lsToken && localiza.pathname !== "/singup") {
+            navigate("/");
+        }
+     }, []);
 
     return (
         <AuthContext.Provider value={{
