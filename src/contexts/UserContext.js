@@ -6,9 +6,8 @@ export const AuthContext = createContext({})
 export default function AuthProvider({ children }) {
     const lsToken = localStorage.getItem("token"); 
     const [token, setToken] = useState(lsToken);
-    const lsPhoto = localStorage.getItem("photo"); 
-    const [name, setName] = useState('');
-    const [photo, setPhoto] = useState(lsPhoto);
+    const lsImage = localStorage.getItem("image"); 
+    const [image, setImage] = useState(lsImage);
     const navigate = useNavigate();
     const localiza = useLocation();
 
@@ -23,9 +22,8 @@ export default function AuthProvider({ children }) {
 
     return (
         <AuthContext.Provider value={{
-            name, setName,
             token, setToken,
-            photo, setPhoto
+            image, setImage
         }}>
             {children}
         </AuthContext.Provider>

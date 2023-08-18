@@ -10,7 +10,7 @@ import { ThreeDots } from "react-loader-spinner";
 
 export default function SigninPage() {
 
-    const { setToken, setName } = useContext(AuthContext);
+    const { setToken, setImage } = useContext(AuthContext);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [disabled, setDisabled] = useState(false);
@@ -22,7 +22,7 @@ export default function SigninPage() {
         // dados que vão pro servidor
         const data = {
             email: email,
-            password: password,
+            password: password
         }
 
         const url = `${process.env.REACT_APP_API_URL}signin`
@@ -30,7 +30,7 @@ export default function SigninPage() {
         setDisabled(true);
         promise.then(response => {
             setToken(response.data.token);
-            setName(response.data.name)
+            setImage(response.data.image)
             localStorage.setItem("token", response.data.token);
             localStorage.setItem("image", response.data.image);
             navigate("/timeline");
