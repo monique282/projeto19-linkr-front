@@ -31,7 +31,6 @@ export default function SigninPage() {
         promise.then(response => {
             const {token} = response.data
             setToken(response.data.token);
-            setName(response.data.name)
             localStorage.setItem("token", response.data.token);
             localStorage.setItem("image", response.data.image);
             navigate("/timeline");
