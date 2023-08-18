@@ -29,8 +29,8 @@ export default function SigninPage() {
         const promise = axios.post(url, data);
         setDisabled(true);
         promise.then(response => {
+            const {token} = response.data
             setToken(response.data.token);
-            setImage(response.data.image)
             localStorage.setItem("token", response.data.token);
             localStorage.setItem("image", response.data.image);
             navigate("/timeline");
@@ -110,12 +110,11 @@ const Slogam = styled.p`
 `
 
 const SingInContainer = styled.section`
-    height: 100%;
     width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-top: 317px;
+    justify-content: center;
     form{
         display: flex;
         flex-direction: column;

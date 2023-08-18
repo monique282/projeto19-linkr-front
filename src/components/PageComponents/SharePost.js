@@ -6,10 +6,18 @@ import reactStringReplace from "react-string-replace"
 import { configToken } from "../../services/api"
 
 export default function SharePost({userPhoto}) { 
-  const [post, setPost] = useState({url:"", content:""})
+  const [post, setPost] = useState({url:"", content:""});
   const [hashtags, setHashtags] = useState([]);
-  const [loading, setLoading] = useState(false)
-  const headers = configToken()
+  const [loading, setLoading] = useState(false);
+  const [image, setImage] = useState(localStorage.getItem("image"));
+  const token = localStorage.getItem('token');
+
+  useEffect(()=>{
+    const localImage = localStorage.getItem("image");
+    setImage(localImage);
+  },[])
+  
+  const object = {headers: {'Authorization': `Bearer ${token}`}}
   useEffect(() => {
     const extractedHashtags = [];
 
@@ -25,10 +33,9 @@ export default function SharePost({userPhoto}) {
 
     const obj = {url: post.url, content:post.content, hashtags}
     setLoading(true)
-    console.log(obj)
 
-    axios.post(`${process.env.REACT_APP_API_URL}new-post`, {url: post.url, content:post.content, hashtags}, headers)
-    .then(res => console.log(res))
+    if(token) axios.post(`${process.env.REACT_APP_API_URL}/new-post`, obj, object)
+    .then(res => setPost({url:"", content:""}))
     .catch(err => console.log(err))
     .finally(setLoading(false))
   }
@@ -36,7 +43,7 @@ export default function SharePost({userPhoto}) {
   return (
     <Container>
       <ContainerImg>
-        <img src={userPhoto} alt={"profile-img"}/>
+        <img src={image} alt={"profile-img"}/>
       </ContainerImg>
       <ContainerContent>
         <ShareTitle>
@@ -141,6 +148,7 @@ const TextArea = styled.textarea`
 const BtnContainer = styled.div`
   display: flex;
   justify-content: flex-end;
+  margin-bottom: 15px;
 `
 const Button = styled.button`
   width: 110px;

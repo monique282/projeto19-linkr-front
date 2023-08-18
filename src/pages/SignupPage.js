@@ -121,13 +121,12 @@ const Slogam = styled.p`
 `
 
 const SingInContainer = styled.section`
-    width: 500px;
     height: 100%;
+    width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    background-color: red;
+    margin-top: 317px;
     form{
         display: flex;
         flex-direction: column;
