@@ -14,7 +14,8 @@ function App() {
     <BrowserRouter>
       <AuthProvider>
         <Routes >
-          <Route path='/sign-up' element={<SignupPage />} />
+
+          <Route path='/singnup' element={<SignupPage />} />
           <Route path='/' element={<SigninPage />} />
           <Route path='/timeline' element={<TimelinePage />} />
           <Route path='/hashtag/:hashtag' element={<HashtagPage />} />
