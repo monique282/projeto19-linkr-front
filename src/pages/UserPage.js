@@ -15,6 +15,7 @@ export default function UserPage() {
       likes: 13,
     },
   ]);
+
   const [image, setImage] = useState(
     "https://i.pinimg.com/originals/52/37/04/5237042f152ca9cf6c54daf824f1dc5d.jpg"
   );
@@ -46,7 +47,6 @@ const Container = styled.div`
   min-height: calc(100vh - 72px);
   height: 100%;
   margin-top: 53px;
-
   display: flex;
   justify-content: center;
 `;
@@ -69,6 +69,8 @@ const Content = styled.main`
       height: 100%;
       display: flex;
       align-items: center;
+      flex-direction: column;
+      gap: 15px;
     }
   }
 

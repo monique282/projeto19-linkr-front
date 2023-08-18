@@ -7,6 +7,7 @@ import reactStringReplace from "react-string-replace"
 export default function SharePost({userPhoto, config}) { 
   const [post, setPost] = useState({url:"", content:""})
   const [hashtags, setHashtags] = useState([]);
+  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
     const extractedHashtags = [];
@@ -22,10 +23,13 @@ export default function SharePost({userPhoto, config}) {
     e.preventDefault();
 
     const obj = {url: post.url, content:post.content, hashtags}
-
+    setLoading(true)
     console.log(obj)
 
     axios.post(`${process.env.REACT_APP_API_URL}/new-post`, {url: post.url, content:post.content, hashtags}, config)
+    .then(res => console.log(res))
+    .catch(err => console.log(err))
+    .finally(setLoading(false))
   }
 
   return (
@@ -35,7 +39,7 @@ export default function SharePost({userPhoto, config}) {
       </ContainerImg>
       <ContainerContent>
         <ShareTitle>
-          <Title>What are you going to share today?</Title>
+          <Lato300 style={{  fontSize: "20px", color: "#707070"}}>What are you going to share today?</Lato300>
         </ShareTitle>
         <Form onSubmit={handlePublish}>
           <Input 
@@ -43,6 +47,7 @@ export default function SharePost({userPhoto, config}) {
           type="url"
           name="url"
           required
+          disabled={loading}
           onChange={event => {
             const newValue = event.target.value
             setPost(prevState => {
@@ -53,6 +58,7 @@ export default function SharePost({userPhoto, config}) {
           })}}/>
           <TextArea rows="5" 
           placeholder="Awesome article about #javascript"
+          disabled={loading}
           onChange={event => {
             const newValue = event.target.value
             setPost(prevState => {
@@ -62,10 +68,10 @@ export default function SharePost({userPhoto, config}) {
             }
           })}}/>
           <BtnContainer>
-            <Button onClick={handlePublish}>
-              <FontBtn>
-                Publish
-              </FontBtn>
+            <Button disabled={loading} onClick={handlePublish}>
+              <Lato700 style={{  color: "#FFF",  fontSize: "14px"}}>
+                {loading ? "Publishing..." : "Publish"}
+              </Lato700>
             </Button>
           </BtnContainer>
           
@@ -100,10 +106,6 @@ const ContainerContent = styled.div`
   width: 90%;
 `
 const ShareTitle = styled.div`
-`
-const Title = styled(Lato300)`
-  font-size: 20px;
-  color: #707070
 `
 const Form = styled.form`
   display: flex;
@@ -146,6 +148,3 @@ const Button = styled.button`
   background: #1877F2;
   border-radius: 5px;`
 
-const FontBtn = styled(Lato700)`
-  color: #FFF;
-  font-size: 14px;`

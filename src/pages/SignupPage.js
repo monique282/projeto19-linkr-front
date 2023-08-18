@@ -11,7 +11,7 @@ export default function SignupPage() {
     const [name, setName] = useState('');
     const [disabled, setDisabled] = useState(false);
     const [email, setEmail] = useState('');
-    const [photo, setPhoto] = useState('');
+    const [image, setImage] = useState('');
     const [password, setPassword] = useState('');
     const navigate = useNavigate();
 
@@ -25,9 +25,9 @@ export default function SignupPage() {
 
         // dados a ser enviados para o back
         const data = {
-            name: name,
-            email: email,
-            photo: photo,
+            name,
+            email,
+            image,
             password: password
         };
 
@@ -54,7 +54,7 @@ export default function SignupPage() {
                         <Input placeholder="e-mail" type="email" required value={email} onChange={(e) => setEmail(e.target.value)} disabled={disabled} />
                         <Input placeholder="password" type="password" autoComplete="new-password" required value={password} onChange={(e) => setPassword(e.target.value)} disabled={disabled} />
                         <Input placeholder="username" type="text" required value={name} onChange={(e) => setName(e.target.value)} disabled={disabled} />
-                        <Input placeholder="picture url" type="text" required value={photo} onChange={(e) => setPhoto(e.target.value)} disabled={disabled} />
+                        <Input placeholder="picture url" type="text" required value={image} onChange={(e) => setImage(e.target.value)} disabled={disabled} />
                         <button type='submit' disabled={disabled} data-test="sign-in-submit">
                             {disabled ? (
                                 <ThreeDots width={32} height={21} border-radius={4.5} background-color="#d540e9" color="#FFFFFF" font-size={9} diplay />

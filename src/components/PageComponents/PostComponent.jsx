@@ -1,13 +1,21 @@
-import { AiOutlineHeart } from "react-icons/ai";
+import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
 import styled from "styled-components";
 import { Lato400 } from "../StyleComponents/StylesComponents.js";
 import reactStringReplace from 'react-string-replace';
 import { useNavigate } from "react-router-dom";
+import { Tooltip } from "react-tooltip";
+import { useState } from "react";
 
 export default function Post(props) {
   const { name, picture, content, url, likes } = props.post;
 
   const navigate = useNavigate();
+
+  const [isLiked, setIsLiked] = useState(false);
+
+  function handleToggleLike () {
+    setIsLiked((prevIsLiked) => !prevIsLiked);
+  };
 
   return (
     <Container>
@@ -15,9 +23,14 @@ export default function Post(props) {
         <figure>
           <img src={picture} alt="profile" />
         </figure>
-        <StyledIcon />
+        <StyledIcon 
+        data-tooltip-id="my-tooltip" 
+        data-tooltip-content={isLiked ? "Você, fulano e outras 11 pessoas curtiram" : "Fulano, beltrano e outras 10 pessoas curtiram"}
+        onClick={handleToggleLike}
+        isLiked={isLiked}/>
+        <Tooltip id="my-tooltip" />
         <Lato400 style={{ color: "#fff", fontSize: "11px" }}>
-          {likes} Likes
+          {Number(likes) === 1 ? (`${likes} Like`) : (`${likes} Likes`)} 
         </Lato400>
       </Info>
       <Content>
@@ -32,9 +45,12 @@ export default function Post(props) {
   );
 }
 
-const StyledIcon = styled(AiOutlineHeart)`
+const StyledIcon = styled(({ isLiked, ...rest }) =>
+isLiked ? <AiFillHeart {...rest} /> : <AiOutlineHeart {...rest} />
+)`
   font-size: 16px;
-  color: #fff;
+  color: ${(props) => (props.isLiked ? '#AC0000' : '#fff')};
+  cursor: pointer;
 `;
 
 const Content = styled.div`
@@ -77,7 +93,6 @@ const Container = styled.div`
   flex-shrink: 0;
   padding: 18px;
   gap: 15px;
-
   display: flex;
   border-radius: 16px;
   background: #171717;
