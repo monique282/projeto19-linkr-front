@@ -13,9 +13,9 @@ export default function AuthProvider({ children }) {
 
     
     useEffect(() => {
-        if (lsToken === null && localiza.pathname !== "/signup") {
+        if (lsToken === null && localiza.pathname !== "/sign-up") {
             navigate("/");
-        } else if (lsToken && localiza.pathname !== "/singup") {
+        } else if (lsToken && localiza.pathname !== "/sing-up") {
             navigate("/");
         }
      }, []);
