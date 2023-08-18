@@ -25,9 +25,9 @@ export default function SignupPage() {
 
         // dados a ser enviados para o back
         const data = {
-            name,
-            email,
-            image,
+            name: name,
+            email: email,
+            image: image,
             password: password
         };
 
@@ -35,7 +35,7 @@ export default function SignupPage() {
         setDisabled(true);
         promise.then(() => navigate('/'));
         promise.catch(err => {
-            alert(err.response.data);
+            alert(err.response.data.message);
             setDisabled(false);
         });
 
