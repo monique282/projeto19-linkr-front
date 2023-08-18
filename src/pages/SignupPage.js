@@ -21,7 +21,7 @@ export default function SignupPage() {
 
 
         //para quando tiver o deploy 
-        const url = `${process.env.REACT_APP_API_URL}signup`
+        const url = `${process.env.REACT_APP_API_URL}/signup`
 
         // dados a ser enviados para o back
         const data = {
