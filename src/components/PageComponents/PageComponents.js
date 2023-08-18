@@ -6,4 +6,5 @@ export const Background = styled.div`
     height: 100vh;
     display: flex;
     justify-content:center;
+    gap: 25px;
 `

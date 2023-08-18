@@ -32,7 +32,7 @@ export default function SigninPage() {
             setToken(response.data.token);
             setName(response.data.name)
             localStorage.setItem("token", response.data.token);
-            localStorage.setItem("photo", response.data.photo);
+            localStorage.setItem("image", response.data.image);
             navigate("/timeline");
         });
         promise.catch(err => {
@@ -61,7 +61,7 @@ export default function SigninPage() {
                                 <p>Log In</p>
                             )}
                         </button>
-                        <Register to={"/sing-up"}>First time? Create an account!</Register>
+                        <Register to={"/sign-up"}>First time? Create an account!</Register>
                     </form>
                 </SingInContainer>
             </Backgroun>
