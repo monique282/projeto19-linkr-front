@@ -10,14 +10,15 @@ import NavBar from "../components/PageComponents/NavBar"
 import { FontPageTitle } from "../components/StyleComponents/StylesComponents"
 
 export default function TimelinePage(){
-
     const [posts, setPosts] = useState([]);
-
-    useEffect(()=>{
-        const headers = configToken();
-        axios.get(`${process.env.REACT_APP_API_URL}timeline`, headers)
-        .then(res => console.log(res))
+    const token = localStorage.getItem('token')
+    const object = {headers: {'Authorization': `Bearer ${token}`}}
+    
+    useEffect(()=>{  
+        if(token) axios.get(`${process.env.REACT_APP_API_URL}/timeline`, object)
+        .then(res => setPosts(res.data.rows))
         .catch(err => console.log(err))
+        console.log(posts)
     }, [])
 
     return (
@@ -30,9 +31,9 @@ export default function TimelinePage(){
                     </FontPageTitle>
                     <SharePost />
                     <Posts>
-                    {posts.map(post => (
+                    {posts.length === 0 ? (<FontPageTitle style={{textAlign:"center"}}>There are no posts yes</FontPageTitle>) : (posts.map(post => (
                         <Post post={post}/>
-                    ))}
+                    )))}
                     </Posts>
                 </Feed>
                 <Trending>

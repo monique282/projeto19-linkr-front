@@ -1,12 +1,15 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md";
 import styled from "styled-components";
 import { FontHeader, Lato700 } from "../StyleComponents/StylesComponents";
 
 export default function NavBar() {
-  const [image, setImage] = useState(
-    "https://i.pinimg.com/originals/52/37/04/5237042f152ca9cf6c54daf824f1dc5d.jpg"
-  );
+  const [image, setImage] = useState(localStorage.getItem("image"));
+  useEffect(()=>{
+    const localImage = localStorage.getItem("image");
+    setImage(localImage);
+  },[])
+  
   const [isClicked, setClicked] = useState("false");
   function handleClick(value) {
     setClicked(value);
