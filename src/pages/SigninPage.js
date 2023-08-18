@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useContext, useState } from "react";
 import axios from "axios";
 import { AuthContext } from "../contexts/UserContext";
+import { ThreeDots } from "react-loader-spinner";
 
 
 
@@ -24,14 +25,14 @@ export default function SigninPage() {
             password: password,
         }
 
-        const url = `${process.env.REACT_APP_API_URL}/signin`
+        const url = `${process.env.REACT_APP_API_URL}signin`
         const promise = axios.post(url, data);
         setDisabled(true);
         promise.then(response => {
             setToken(response.data.token);
             setName(response.data.name)
             localStorage.setItem("token", response.data.token);
-            localStorage.setItem("photo", response.data.photo);
+            localStorage.setItem("image", response.data.image);
             navigate("/timeline");
         });
         promise.catch(err => {
@@ -54,8 +55,11 @@ export default function SigninPage() {
                         <Input placeholder="e-mail" type="email" required value={email} onChange={(e) => setEmail(e.target.value)} disabled={disabled} />
                         <Input placeholder="password" type="password" autoComplete="new-password" required value={password} onChange={(e) => setPassword(e.target.value)} disabled={disabled} />
                         <button type='submit' disabled={disabled} data-test="sign-in-submit">
-                           
-                            <p>Log In</p>
+                            {disabled ? (
+                                <ThreeDots width={32} height={21} border-radius={4.5} background-color="#d540e9" color="#FFFFFF" font-size={9} diplay />
+                            ) : (
+                                <p>Log In</p>
+                            )}
                         </button>
                         <Register to = {"/singup"}>First time? Create an account!</Register>
                     </form>
@@ -132,6 +136,7 @@ const SingInContainer = styled.section`
                 font-weight: 700;
                 line-height: 40px;
                 margin-bottom: 30px;
+                font-family: 'Oswald';
                 display: flex;
                 justify-content: center;
                 align-items: center;
