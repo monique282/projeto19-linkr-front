@@ -25,7 +25,7 @@ export default function SigninPage() {
             password: password,
         }
 
-        const url = `${process.env.REACT_APP_API_URL}/signin`
+        const url = `${process.env.REACT_APP_API_URL}signin`
         const promise = axios.post(url, data);
         setDisabled(true);
         promise.then(response => {

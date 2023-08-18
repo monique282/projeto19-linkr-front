@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md";
 import styled from "styled-components";
-import { FontHeader } from "../StyleComponents/StylesComponents";
+import { FontHeader, Lato700 } from "../StyleComponents/StylesComponents";
 
 export default function NavBar() {
   const [image, setImage] = useState(
@@ -23,14 +23,16 @@ export default function NavBar() {
         />
       </form>
       <figure>
+      
         {isClicked === "false" ? (
           <StyledIconDown onClick={() => handleClick("true")} />
         ) : (
           <div>
             <StyledIconUp onClick={() => handleClick("false")} />
-            <button>LogOut</button>
+            <button><Lato700 style={{letterSpacing:"0.75px", fontSize:"15px", color:"#FFF"}}>LogOut</Lato700></button>
           </div>
         )}
+        
         <img src={image} alt="profile" />
       </figure>
     </Container>
@@ -51,7 +53,10 @@ const StyledIconUp = styled(MdKeyboardArrowUp)`
 const Container = styled.nav`
   width: 100%;
   height: 72px;
-
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 5;
   background-color: #151515;
   padding: 0px 30px 0px 30px;
 

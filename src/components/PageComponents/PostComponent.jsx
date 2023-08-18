@@ -1,6 +1,6 @@
 import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
 import styled from "styled-components";
-import { Lato400 } from "../StyleComponents/StylesComponents.js";
+import { Lato400, Lato700 } from "../StyleComponents/StylesComponents.js";
 import reactStringReplace from 'react-string-replace';
 import { useNavigate } from "react-router-dom";
 import { Tooltip } from "react-tooltip";
@@ -23,13 +23,17 @@ export default function Post(props) {
         <figure>
           <img src={picture} alt="profile" />
         </figure>
+        
         <StyledIcon 
-        data-tooltip-id="my-tooltip" 
-        data-tooltip-content={isLiked ? "Você, fulano e outras 11 pessoas curtiram" : "Fulano, beltrano e outras 10 pessoas curtiram"}
         onClick={handleToggleLike}
         isLiked={isLiked}/>
-        <Tooltip id="my-tooltip" />
-        <Lato400 style={{ color: "#fff", fontSize: "11px" }}>
+
+        <Lato700>
+        <Tooltip id="my-tooltip" place="bottom" style={{ background:"rgba(255, 255, 255, 0.90)", borderRadius:"3px", color:"#505050", fontSize:"12px" }}/>
+        </Lato700>
+        
+        <Lato400 data-tooltip-id="my-tooltip" 
+        data-tooltip-content={isLiked ? "Você, fulano e outras 11 pessoas curtiram" : "Fulano, beltrano e outras 10 pessoas curtiram"} style={{ color: "#fff", fontSize: "11px" }}>
           {Number(likes) === 1 ? (`${likes} Like`) : (`${likes} Likes`)} 
         </Lato400>
       </Info>

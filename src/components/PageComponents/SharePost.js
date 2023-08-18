@@ -3,12 +3,13 @@ import { Lato300, Lato700 } from "../StyleComponents/StylesComponents"
 import { useEffect, useState } from "react"
 import axios from "axios"
 import reactStringReplace from "react-string-replace"
+import { configToken } from "../../services/api"
 
-export default function SharePost({userPhoto, config}) { 
+export default function SharePost({userPhoto}) { 
   const [post, setPost] = useState({url:"", content:""})
   const [hashtags, setHashtags] = useState([]);
   const [loading, setLoading] = useState(false)
-
+  const headers = configToken()
   useEffect(() => {
     const extractedHashtags = [];
 
@@ -26,7 +27,7 @@ export default function SharePost({userPhoto, config}) {
     setLoading(true)
     console.log(obj)
 
-    axios.post(`${process.env.REACT_APP_API_URL}/new-post`, {url: post.url, content:post.content, hashtags}, config)
+    axios.post(`${process.env.REACT_APP_API_URL}new-post`, {url: post.url, content:post.content, hashtags}, headers)
     .then(res => console.log(res))
     .catch(err => console.log(err))
     .finally(setLoading(false))
