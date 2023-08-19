@@ -8,6 +8,7 @@ export const FontHeader = styled.h1`
   font-weight: 700;
   line-height: normal;
   letter-spacing: 2.25px;
+  cursor: pointer;
 `
 export const FontPageTitle = styled.h2`
   color: #FFF;

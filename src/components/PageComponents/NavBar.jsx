@@ -2,8 +2,10 @@ import { useEffect, useState } from "react";
 import { MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md";
 import styled from "styled-components";
 import { FontHeader, Lato700 } from "../StyleComponents/StylesComponents";
+import { useNavigate } from "react-router-dom";
 
 export default function NavBar() {
+  const navigate = useNavigate()
   const [image, setImage] = useState(localStorage.getItem("image"));
   useEffect(()=>{
     const localImage = localStorage.getItem("image");
@@ -16,7 +18,7 @@ export default function NavBar() {
   }
   return (
     <Container>
-      <FontHeader>linkr</FontHeader>
+      <FontHeader onClick={()=> navigate("/timeline")}>linkr</FontHeader>
       <form>
         <input
           type="text"

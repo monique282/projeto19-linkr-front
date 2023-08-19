@@ -1,4 +1,6 @@
 import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
+import {TiPencil} from "react-icons/ti"
+import {TbTrashFilled} from "react-icons/tb"
 import styled from "styled-components";
 import { Lato400, Lato700 } from "../StyleComponents/StylesComponents.js";
 import reactStringReplace from 'react-string-replace';
@@ -7,10 +9,9 @@ import { Tooltip } from "react-tooltip";
 import { useState } from "react";
 
 export default function Post(props) {
-  const { name, image, content, url, numberLikes } = props.post;
-
+  const { name, image, content, url, numberLikes, userId:idUser } = props.post;
+  const userId = localStorage.getItem("userId")
   const navigate = useNavigate();
-
   const [isLiked, setIsLiked] = useState(false);
 
   function handleToggleLike () {
@@ -38,7 +39,14 @@ export default function Post(props) {
         </Lato400>
       </Info>
       <Content>
-        <Lato400 style={{ color: "#fff", fontSize: "19px" }}>{name}</Lato400>
+        <div className="userName">
+          <Lato400 style={{ color: "#fff", fontSize: "19px" }}>{name}</Lato400>
+          {Number(userId) === idUser ? (
+          <div>
+            <StyledPencil />
+            <StyledTrash />  
+          </div>) : ""}
+        </div>
         <Lato400 style={{ color: "#B7B7B7", fontSize: "17px" }}>
         {reactStringReplace(content, /#(\w+)/g, (match, i) => (
             <span key={i} onClick={() => navigate(`/hashtag/${match}`)} > #{match} </span>
@@ -56,6 +64,16 @@ isLiked ? <AiFillHeart {...rest} /> : <AiOutlineHeart {...rest} />
   color: ${(props) => (props.isLiked ? '#AC0000' : '#fff')};
   cursor: pointer;
 `;
+const StyledPencil = styled(TiPencil)`
+  color: #FFF;
+  height: 23px;
+  width: 23px;
+`
+const StyledTrash = styled(TbTrashFilled)`
+  color: #FFF;
+  height: 23px;
+  width: 23px;
+`
 
 const Content = styled.div`
   width: 100%;
@@ -63,7 +81,10 @@ const Content = styled.div`
   gap: 7px;
   display: flex;
   flex-direction: column;
-
+  .userName{
+    display: flex;
+    justify-content: space-between;
+  }
   span {
     color: #fff;
     font-family: Lato;
