@@ -3,24 +3,27 @@ import { Background } from "../components/PageComponents/PageComponents"
 import SharePost from "../components/PageComponents/SharePost"
 import Post from "../components/PageComponents/PostComponent"
 import HashtagBox from "../components/PageComponents/HashtagBox"
-import { useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import axios from "axios"
 import { configToken } from "../services/api"
 import NavBar from "../components/PageComponents/NavBar"
 import { FontPageTitle } from "../components/StyleComponents/StylesComponents"
+import { AuthContext } from "../contexts/UserContext"
 
 export default function TimelinePage(){
-    const [posts, setPosts] = useState([]);
+    const {setPosts, posts} = useContext(AuthContext)
     const token = localStorage.getItem('token')
     const object = {headers: {'Authorization': `Bearer ${token}`}}
     
-    useEffect(()=>{  
-        if(token) axios.get(`${process.env.REACT_APP_API_URL}/timeline`, object)
+    function getPosts(){
+        axios.get(`${process.env.REACT_APP_API_URL}/timeline`, object)
         .then(res => setPosts(res.data.rows))
         .catch(err => console.log(err))
-        console.log(posts)
+    }
+    useEffect(()=>{  
+        if(token) getPosts()
     }, [])
-
+    console.log(posts)
     return (
         <Background>
             <NavBar />
