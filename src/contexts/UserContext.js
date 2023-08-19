@@ -10,20 +10,23 @@ export default function AuthProvider({ children }) {
     const [image, setImage] = useState(lsImage);
     const navigate = useNavigate();
     const localiza = useLocation();
-
+    const [posts, setPosts] = useState([]);
     
     useEffect(() => {
-        if (lsToken === null && localiza.pathname !== "/signup") {
+        if (lsToken === null && localiza.pathname !== "/sign-up") {
             navigate("/");
-        } else if (lsToken && localiza.pathname !== "/singup") {
-            navigate("/");
+        } else if (lsToken && localiza.pathname !== "/timeline") {
+            navigate("/timeline");
         }
      }, []);
+
+     
 
     return (
         <AuthContext.Provider value={{
             token, setToken,
-            image, setImage
+            image, setImage, 
+            posts, setPosts
         }}>
             {children}
         </AuthContext.Provider>

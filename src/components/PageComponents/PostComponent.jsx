@@ -1,20 +1,47 @@
 import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
+import {TiPencil} from "react-icons/ti"
+import {TbTrashFilled} from "react-icons/tb"
 import styled from "styled-components";
 import { Lato400, Lato700 } from "../StyleComponents/StylesComponents.js";
 import reactStringReplace from 'react-string-replace';
 import { useNavigate } from "react-router-dom";
 import { Tooltip } from "react-tooltip";
-import { useState } from "react";
+import { useContext, useState } from "react";
+import axios from "axios";
+import { AuthContext } from "../../contexts/UserContext.js";
 
 export default function Post(props) {
-  const { name, image, content, url, numberLikes } = props.post;
-
+  const { name, image, content, url, numberLikes, userId:idUser, postId, likedUserIds } = props.post;
+  const userId = localStorage.getItem("userId");
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+  const [isLiked, setIsLiked] = useState(likedUserIds.includes(Number(userId)));
+  const token = localStorage.getItem('token');
+  const object = {headers: {'Authorization': `Bearer ${token}`}}
+  const {setPosts} = useContext(AuthContext)
 
-  const [isLiked, setIsLiked] = useState(false);
-
+  function getPosts(){
+    axios.get(`${process.env.REACT_APP_API_URL}/timeline`, object)
+    .then(res => setPosts(res.data.rows))
+    .catch(err => console.log(err))
+}
   function handleToggleLike () {
-    setIsLiked((prevIsLiked) => !prevIsLiked);
+    setLoading(true)
+    const obj = {
+      isLiked, userId:Number(userId), postId
+    }
+
+    if(token) {
+      axios.post(`${process.env.REACT_APP_API_URL}/like`, obj, object)
+      .then((res) => {
+        setIsLiked((prevIsLiked) => !prevIsLiked);
+        console.log(res)
+        getPosts();
+      })
+      .catch(err => {
+        console.log(`Error in like toggle: `, err)})
+      .finally(()=> setLoading(false))
+    }
   };
 
   return (
@@ -26,8 +53,8 @@ export default function Post(props) {
         
         <StyledIcon 
         onClick={handleToggleLike}
+        disabled={loading}
         isLiked={isLiked}/>
-
         <Lato700>
         <Tooltip id="my-tooltip" place="bottom" style={{ background:"rgba(255, 255, 255, 0.90)", borderRadius:"3px", color:"#505050", fontSize:"12px" }}/>
         </Lato700>
@@ -38,7 +65,14 @@ export default function Post(props) {
         </Lato400>
       </Info>
       <Content>
-        <Lato400 style={{ color: "#fff", fontSize: "19px" }}>{name}</Lato400>
+        <div className="userName">
+          <Lato400 style={{ color: "#fff", fontSize: "19px" }}>{name}</Lato400>
+          {Number(userId) === idUser ? (
+          <div>
+            <StyledPencil />
+            <StyledTrash />  
+          </div>) : ""}
+        </div>
         <Lato400 style={{ color: "#B7B7B7", fontSize: "17px" }}>
         {reactStringReplace(content, /#(\w+)/g, (match, i) => (
             <span key={i} onClick={() => navigate(`/hashtag/${match}`)} > #{match} </span>
@@ -56,6 +90,16 @@ isLiked ? <AiFillHeart {...rest} /> : <AiOutlineHeart {...rest} />
   color: ${(props) => (props.isLiked ? '#AC0000' : '#fff')};
   cursor: pointer;
 `;
+const StyledPencil = styled(TiPencil)`
+  color: #FFF;
+  height: 23px;
+  width: 23px;
+`
+const StyledTrash = styled(TbTrashFilled)`
+  color: #FFF;
+  height: 23px;
+  width: 23px;
+`
 
 const Content = styled.div`
   width: 100%;
@@ -63,7 +107,10 @@ const Content = styled.div`
   gap: 7px;
   display: flex;
   flex-direction: column;
-
+  .userName{
+    display: flex;
+    justify-content: space-between;
+  }
   span {
     color: #fff;
     font-family: Lato;

@@ -1,9 +1,10 @@
 import styled from "styled-components"
 import { Lato300, Lato700 } from "../StyleComponents/StylesComponents"
-import { useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import axios from "axios"
 import reactStringReplace from "react-string-replace"
 import { configToken } from "../../services/api"
+import { AuthContext } from "../../contexts/UserContext"
 
 export default function SharePost({userPhoto}) { 
   const [post, setPost] = useState({url:"", content:""});
@@ -11,13 +12,13 @@ export default function SharePost({userPhoto}) {
   const [loading, setLoading] = useState(false);
   const [image, setImage] = useState(localStorage.getItem("image"));
   const token = localStorage.getItem('token');
-
+  const object = {headers: {'Authorization': `Bearer ${token}`}}
+  const {setPosts} = useContext(AuthContext)
   useEffect(()=>{
     const localImage = localStorage.getItem("image");
     setImage(localImage);
   },[])
   
-  const object = {headers: {'Authorization': `Bearer ${token}`}}
   useEffect(() => {
     const extractedHashtags = [];
 
@@ -28,6 +29,12 @@ export default function SharePost({userPhoto}) {
     setHashtags(extractedHashtags);
   }, [post.content]);
 
+  function getPosts(){
+    axios.get(`${process.env.REACT_APP_API_URL}/timeline`, object)
+    .then(res => setPosts(res.data.rows))
+    .catch(err => console.log(err))
+}
+
   function handlePublish(e) {
     e.preventDefault();
 
@@ -35,7 +42,9 @@ export default function SharePost({userPhoto}) {
     setLoading(true)
 
     if(token) axios.post(`${process.env.REACT_APP_API_URL}/new-post`, obj, object)
-    .then(res => setPost({url:"", content:""}))
+    .then(res => {
+      setPost({url:"", content:""})
+      getPosts()})
     .catch(err => console.log(err))
     .finally(setLoading(false))
   }
@@ -54,6 +63,7 @@ export default function SharePost({userPhoto}) {
           placeholder="http://..." 
           type="url"
           name="url"
+          value={post.url}
           required
           disabled={loading}
           onChange={event => {
@@ -66,6 +76,7 @@ export default function SharePost({userPhoto}) {
           })}}/>
           <TextArea rows="5" 
           placeholder="Awesome article about #javascript"
+          value={post.content}
           disabled={loading}
           onChange={event => {
             const newValue = event.target.value

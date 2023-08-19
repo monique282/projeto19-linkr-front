@@ -29,10 +29,11 @@ export default function SigninPage() {
         const promise = axios.post(url, data);
         setDisabled(true);
         promise.then(response => {
-            const {token} = response.data
-            setToken(response.data.token);
-            localStorage.setItem("token", response.data.token);
-            localStorage.setItem("image", response.data.image);
+            const {token, image, userId} = response.data
+            setToken(token);
+            localStorage.setItem("token", token);
+            localStorage.setItem("image", image);
+            localStorage.setItem("userId", userId);
             navigate("/timeline");
         });
         promise.catch(err => {
@@ -61,7 +62,7 @@ export default function SigninPage() {
                                 <p>Log In</p>
                             )}
                         </button>
-                        <Register to = {"/singup"}>First time? Create an account!</Register>
+                        <Register to = {"/sign-up"}>First time? Create an account!</Register>
                     </form>
                 </SingInContainer>
             </Backgroun>
