@@ -11,23 +11,23 @@ export default function HashtagBox () {
     const navigate = useNavigate();
     const [hashtagsList, setHashtagsList] = useState([]);
 
-    // const URL = `${process.env.REACT_APP_API_URL}/hashtags`;
-    // const headers = configToken();
+    const URL = `${process.env.REACT_APP_API_URL}/hashtags`;
+    const headers = configToken();
 
-    // useEffect(() => {
+    useEffect(() => {
 
-    //     axios.get(URL, headers)
-    //         .then(res => setHashtagsList(res.data))
-    //         .catch(err => alert(err.response.data));
+        axios.get(URL, headers)
+            .then(res => setHashtagsList(res.data))
+            .catch(err => alert(err.response.data));
 
-    // },
-    // []) // COLOCAR DENTRO A VARIAVEL DE ESTADO QUE ATUALIZA O GET DOS POSTS!!!!!!!!!!!!!!!!!!
+    },
+    []) // COLOCAR DENTRO A VARIAVEL DE ESTADO QUE ATUALIZA O GET DOS POSTS!!!!!!!!!!!!!!!!!!
 
     return (
         <SCHashtagBox>
             <SCTrending> trending </SCTrending>
             <SCHashtagContent>
-                { hashtagsList.map(hashtag => <SCHashtagWord onClick={() => navigate(`/hashtag/${hashtag}`)} > # {hashtag} </SCHashtagWord>) }
+                { hashtagsList.map((hashtag, i) => <SCHashtagWord key={i} onClick={() => navigate(`/hashtag/${hashtag.hashtag}`)} > # {hashtag.hashtag} </SCHashtagWord>) }
             </SCHashtagContent>
         </SCHashtagBox>
     )

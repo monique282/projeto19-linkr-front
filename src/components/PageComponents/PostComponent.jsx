@@ -6,16 +6,42 @@ import { Lato400, Lato700 } from "../StyleComponents/StylesComponents.js";
 import reactStringReplace from 'react-string-replace';
 import { useNavigate } from "react-router-dom";
 import { Tooltip } from "react-tooltip";
-import { useState } from "react";
+import { useContext, useState } from "react";
+import axios from "axios";
+import { AuthContext } from "../../contexts/UserContext.js";
 
 export default function Post(props) {
-  const { name, image, content, url, numberLikes, userId:idUser } = props.post;
-  const userId = localStorage.getItem("userId")
+  const { name, image, content, url, numberLikes, userId:idUser, postId, likedUserIds } = props.post;
+  const userId = localStorage.getItem("userId");
   const navigate = useNavigate();
-  const [isLiked, setIsLiked] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [isLiked, setIsLiked] = useState(likedUserIds.includes(Number(userId)));
+  const token = localStorage.getItem('token');
+  const object = {headers: {'Authorization': `Bearer ${token}`}}
+  const {setPosts} = useContext(AuthContext)
 
+  function getPosts(){
+    axios.get(`${process.env.REACT_APP_API_URL}/timeline`, object)
+    .then(res => setPosts(res.data.rows))
+    .catch(err => console.log(err))
+}
   function handleToggleLike () {
-    setIsLiked((prevIsLiked) => !prevIsLiked);
+    setLoading(true)
+    const obj = {
+      isLiked, userId:Number(userId), postId
+    }
+
+    if(token) {
+      axios.post(`${process.env.REACT_APP_API_URL}/like`, obj, object)
+      .then((res) => {
+        setIsLiked((prevIsLiked) => !prevIsLiked);
+        console.log(res)
+        getPosts();
+      })
+      .catch(err => {
+        console.log(`Error in like toggle: `, err)})
+      .finally(()=> setLoading(false))
+    }
   };
 
   return (
@@ -27,8 +53,8 @@ export default function Post(props) {
         
         <StyledIcon 
         onClick={handleToggleLike}
+        disabled={loading}
         isLiked={isLiked}/>
-
         <Lato700>
         <Tooltip id="my-tooltip" place="bottom" style={{ background:"rgba(255, 255, 255, 0.90)", borderRadius:"3px", color:"#505050", fontSize:"12px" }}/>
         </Lato700>
