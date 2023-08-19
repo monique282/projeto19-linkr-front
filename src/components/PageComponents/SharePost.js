@@ -3,7 +3,6 @@ import { Lato300, Lato700 } from "../StyleComponents/StylesComponents"
 import { useContext, useEffect, useState } from "react"
 import axios from "axios"
 import reactStringReplace from "react-string-replace"
-import { configToken } from "../../services/api"
 import { AuthContext } from "../../contexts/UserContext"
 
 export default function SharePost({userPhoto}) { 
@@ -18,7 +17,7 @@ export default function SharePost({userPhoto}) {
     const localImage = localStorage.getItem("image");
     setImage(localImage);
   },[])
-  
+  console.log("inicializou a página")
   useEffect(() => {
     const extractedHashtags = [];
 
@@ -32,20 +31,21 @@ export default function SharePost({userPhoto}) {
   function getPosts(){
     axios.get(`${process.env.REACT_APP_API_URL}/timeline`, object)
     .then(res => setPosts(res.data.rows))
-    .catch(err => console.log(err))
+    .catch(err => alert(err.response.data))
 }
 
   function handlePublish(e) {
     e.preventDefault();
-
+console.log("dentro da handlePublish")
     const obj = {url: post.url, content:post.content, hashtags}
     setLoading(true)
 
     if(token) axios.post(`${process.env.REACT_APP_API_URL}/new-post`, obj, object)
     .then(res => {
+      console.log("dentro do then")
       setPost({url:"", content:""})
       getPosts()})
-    .catch(err => console.log(err))
+    .catch(err => alert(err.response.data))
     .finally(setLoading(false))
   }
 
