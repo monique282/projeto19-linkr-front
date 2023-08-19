@@ -5,11 +5,18 @@ import { FontHeader, Lato700 } from "../StyleComponents/StylesComponents";
 import { AuthContext } from "../../contexts/UserContext";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { DebounceInput } from 'react-debounce-input';
+
 
 export default function NavBar() {
   const navigate = useNavigate()
   const [image, setImage] = useState(localStorage.getItem("image"));
   const { setToken, token } = useContext(AuthContext);
+  const [searchResults, setSearchResults] = useState([]);
+  const [isMenuOpen, setMenuOpen] = useState(false);
+
+
+
   useEffect(() => {
     const localImage = localStorage.getItem("image");
     setImage(localImage);
@@ -19,7 +26,6 @@ export default function NavBar() {
   function handleClick(value) {
     setClicked(value);
   }
-
 
   // essa parte vai deslogar a pessoa
   function Logout() {
@@ -42,15 +48,51 @@ export default function NavBar() {
       });
   };
 
+  // Função para realizar a busca no servidor
+  function performSearchNoServer(name) {
+    const url = `${process.env.REACT_APP_API_URL}/search/${name}`
+    
+    const promise = axios.get(url)
+    promise.then((response) => {
+      // Atualiza os resultados da busca
+      // setSearchResults(response.data)
+      console.log(response.data)
+    });
+
+    promise.catch(err => {
+      alert(err.response.data);
+    })
+  }
+
+  // // essa junção é pra quando gor clicado em qualque ligar fora do logout, para ele fechar
+  // function handleClick(value) {
+  //   setMenuOpen(value === "true");
+  // }
+  
+
   return (
     <Container>
-      <FontHeader onClick={()=> navigate("/timeline")}>linkr</FontHeader>
+      <FontHeader onClick={() => navigate("/timeline")}>linkr</FontHeader>
       <form>
-        <input
+        <DebounceInput
           type="text"
           id="search"
           name="search"
           placeholder="Search for people"
+          minLength={3}
+          debounceTimeout={300}
+          onChange={(e) => {
+            const searchText = e.target.value;
+            console.log(e.target.value)
+            // if (searchText.length < 3) {
+            //   return alert("É necessário no mínimo 3 carateres para fazer a busca")
+            // }
+            if (searchText.length >= 3) {
+              performSearchNoServer(searchText); //  função de busca no servidor
+            } else {
+              setSearchResults([]); // Limpa os resultados se o texto for menor que 3 caracteres
+            }
+          }}
         />
       </form>
       <figure>
