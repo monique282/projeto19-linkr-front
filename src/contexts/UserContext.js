@@ -10,7 +10,7 @@ export default function AuthProvider({ children }) {
     const [image, setImage] = useState(lsImage);
     const navigate = useNavigate();
     const localiza = useLocation();
-
+    const [posts, setPosts] = useState([]);
     
     useEffect(() => {
         if (lsToken === null && localiza.pathname !== "/sign-up") {
@@ -23,7 +23,8 @@ export default function AuthProvider({ children }) {
     return (
         <AuthContext.Provider value={{
             token, setToken,
-            image, setImage
+            image, setImage, 
+            posts, setPosts
         }}>
             {children}
         </AuthContext.Provider>
