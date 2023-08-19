@@ -7,9 +7,9 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 export default function NavBar() {
+  const navigate = useNavigate()
   const [image, setImage] = useState(localStorage.getItem("image"));
   const { setToken, token } = useContext(AuthContext);
-  const navigate = useNavigate();
   useEffect(() => {
     const localImage = localStorage.getItem("image");
     setImage(localImage);
@@ -44,7 +44,7 @@ export default function NavBar() {
 
   return (
     <Container>
-      <FontHeader>linkr</FontHeader>
+      <FontHeader onClick={()=> navigate("/timeline")}>linkr</FontHeader>
       <form>
         <input
           type="text"
