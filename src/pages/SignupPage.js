@@ -44,11 +44,11 @@ export default function SignupPage() {
         < Total>
 
             <Backgroun>
-                <RegisteLogin>
+                <SloganMessage>
                     <Title>linkr</Title>
                     <Slogam>save, share and discover
                         the best links on the web</Slogam>
-                </RegisteLogin>
+                </SloganMessage>
                 <SingInContainer>
                     <form onSubmit={register}>
                         <Input placeholder="e-mail" type="email" required value={email} onChange={(e) => setEmail(e.target.value)} disabled={disabled} />
@@ -78,17 +78,27 @@ const Backgroun = styled.div`
 `
 const Total = styled.div`
     width: 100%;
-    height: 100vh; 
+    height: 100vh;
     display: flex;
+    @media (max-width: 667px) {
+        width: 100%;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
 `
-const RegisteLogin = styled.div`
-    width: 905px;
+const SloganMessage = styled.div`
+    width: 80vh;
     height: 100%;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     background-color: #151515;
+  @media (max-width: 667px) {
+    display: none;
+  }
 `
 const Title = styled.p`
     font-family: 'Passion One';
@@ -111,11 +121,12 @@ const Slogam = styled.p`
 `
 
 const SingInContainer = styled.section`
+    height: 100%;
     width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    margin-top: 317px;
     form{
         display: flex;
         flex-direction: column;
@@ -144,6 +155,13 @@ const SingInContainer = styled.section`
                 justify-content: center;
                 align-items: center;
 } }
+@media (max-width: 667px) {
+
+    width: 100%;
+    padding: 30px;
+    text-align: center;
+  
+  }
 `
 const Input = styled.input`
     width: 429px;

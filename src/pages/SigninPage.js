@@ -62,7 +62,7 @@ export default function SigninPage() {
                                 <p>Log In</p>
                             )}
                         </button>
-                        <Register to = {"/singup"}>First time? Create an account!</Register>
+                        <Register to = {"/sign-up"}>First time? Create an account!</Register>
                     </form>
                 </SingInContainer>
             </Backgroun>
