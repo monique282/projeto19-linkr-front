@@ -30,7 +30,6 @@ export default function NavBar() {
         Authorization: `Bearer ${token}`
       }
     };
-    console.log('ate aqui')
     const promise = axios.delete(url, confi);
     promise.then(resposta => {
       // apagar o local storage
