@@ -6,61 +6,50 @@ import HashtagBox from "../components/PageComponents/HashtagBox";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import { configToken } from "../services/api";
+import { Background } from "../components/PageComponents/PageComponents";
+import { FontPageTitle } from "../components/StyleComponents/StylesComponents";
 
 export default function HashtagPage() {
   const { hashtag } = useParams();
 
-  const [posts, setPosts] = useState([
-    {
-      name: "Vitor",
-      picture:
-        "https://i.pinimg.com/originals/52/37/04/5237042f152ca9cf6c54daf824f1dc5d.jpg",
-      content: "post 1 #anime #2023",
-      url: "https://www.aficionados.com.br/animes-2023/",
-      likes: 13,
-    },
-    {
-      name: "Vitor",
-      picture:
-        "https://i.pinimg.com/originals/52/37/04/5237042f152ca9cf6c54daf824f1dc5d.jpg",
-      content: "post 1 #anime #2023",
-      url: "https://www.aficionados.com.br/animes-2023/",
-      likes: 13,
-    },
-  ]);
+  const [posts, setPosts] = useState([]);
 
   useEffect(() => {
     const URL = process.env.REACT_APP_API_URL;
     const headers = configToken();
 
     axios
-      .get(`http://${URL}/hashtag/${hashtag}`, headers)
+      .get(`${URL}/hashtag/${hashtag}`, headers)
       .then((res) => {
         setPosts(res.data);
       })
       .catch((err) => console.log(err));
   }, []);
 
+  console.log(posts)
+
   return (
-    <>
-      <NavBar />
-      <Container>
-        <Content>
-          <header>
-            <h1> # {hashtag}</h1>
-          </header>
-          <section>
-            <article>
-              {posts.map((post) => (
-                <Post post={post} />
-              ))}
-            </article>
-          </section>
-        </Content>
-        <HashtagBox />
-      </Container>
-    </>
+    <Background>
+            <NavBar />
+            <Content>
+                <Feed>
+                    <FontPageTitle>
+                        # {hashtag}
+                    </FontPageTitle>
+                    <Posts>
+                    {posts.length === 0 ? (<FontPageTitle style={{textAlign:"center"}}>There are no posts yes</FontPageTitle>) : (posts.map(post => (
+                        <Post post={post}/>
+                    )))}
+                    </Posts>
+                </Feed>
+                <Trending>
+                    <HashtagBox />
+                </Trending>
+            </Content>
+        </Background>
   );
+
+  
 }
 
 const Container = styled.div`
@@ -72,50 +61,21 @@ const Container = styled.div`
   display: flex;
   justify-content: center;
 `;
-const Content = styled.main`
-  width: 35%;
-  height: 100%;
 
-  gap: 41px;
-
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-
-  background-color: #333333;
-
-  section {
-    width: 100%;
-    article {
-      width: 100%;
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 20px;
-    }
-  }
-
-  header {
-    width: 70%;
-    height: 100%;
+const Feed = styled.div`
     display: flex;
-    align-items: center;
-    gap: 15px;
+    flex-direction:column;
+    gap: 30px;`
 
-    h1 {
-      color: #fff;
-      font-family: Oswald;
-      font-size: 43px;
-      font-style: normal;
-      font-weight: 700;
-      line-height: normal;
-    }
+const Trending = styled.div`
+    padding-top: 77px`
 
-    img {
-      width: 50px;
-      height: 50px;
-      border-radius: 26.5px;
-    }
-  }
-`;
+const Posts = styled.div`
+    display:flex;
+    flex-direction: column;
+    gap:15px;`
+
+const Content = styled.div`
+    display:flex;
+    gap: 25px;
+    padding-top: 50px;`
