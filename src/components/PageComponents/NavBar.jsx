@@ -1,19 +1,48 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md";
 import styled from "styled-components";
 import { FontHeader, Lato700 } from "../StyleComponents/StylesComponents";
+import { AuthContext } from "../../contexts/UserContext";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 export default function NavBar() {
   const [image, setImage] = useState(localStorage.getItem("image"));
-  useEffect(()=>{
+  const { setToken, token } = useContext(AuthContext);
+  const navigate = useNavigate();
+  useEffect(() => {
     const localImage = localStorage.getItem("image");
     setImage(localImage);
-  },[])
-  
+  }, [])
+
   const [isClicked, setClicked] = useState("false");
   function handleClick(value) {
     setClicked(value);
   }
+
+
+  // essa parte vai deslogar a pessoa
+  function Logout() {
+
+    const url = `${process.env.REACT_APP_API_URL}/logout`
+    const confi = {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    };
+    console.log('ate aqui')
+    const promise = axios.delete(url, confi);
+    promise.then(resposta => {
+      // apagar o local storage
+      localStorage.clear();
+      setToken('');
+      navigate("/");
+    })
+      .catch(err => {
+        alert(err.response.data);
+      });
+  };
+
   return (
     <Container>
       <FontHeader>linkr</FontHeader>
@@ -26,16 +55,16 @@ export default function NavBar() {
         />
       </form>
       <figure>
-      
+
         {isClicked === "false" ? (
           <StyledIconDown onClick={() => handleClick("true")} />
         ) : (
           <div>
             <StyledIconUp onClick={() => handleClick("false")} />
-            <button><Lato700 style={{letterSpacing:"0.75px", fontSize:"15px", color:"#FFF"}}>LogOut</Lato700></button>
+            <button onClick={() => Logout()} ><Lato700 style={{ letterSpacing: "0.75px", fontSize: "15px", color: "#FFF" }}>LogOut</Lato700></button>
           </div>
         )}
-        
+
         <img src={image} alt="profile" />
       </figure>
     </Container>
