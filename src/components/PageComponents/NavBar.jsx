@@ -2,7 +2,7 @@ import axios from "axios";
 import { useContext, useEffect, useState } from "react";
 import { DebounceInput } from 'react-debounce-input';
 import { MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { AuthContext } from "../../contexts/UserContext";
 import { FontHeader, Lato700 } from "../StyleComponents/StylesComponents";
@@ -51,11 +51,11 @@ export default function NavBar() {
   // Função para realizar a busca no servidor
   function performSearchNoServer(name) {
     const url = `${process.env.REACT_APP_API_URL}/search/${name}`
-    
+
     const promise = axios.get(url)
     promise.then((response) => {
       // Atualiza os resultados da busca
-      // setSearchResults(response.data)
+      setSearchResults(response.data)
       console.log(response.data)
     });
 
@@ -64,37 +64,59 @@ export default function NavBar() {
     })
   }
 
+  // essa função serve pra mostrar o nome do usuario com a 1 letra de cada nome maiuscula
+  function formatName(name) {
+    // divide o nome em palavras separadas por espaços
+    const words = name.split(' ');
+  
+    // capitaliza a primeira letra de cada palavra
+    const capitalizedWords = words.map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase());
+  
+    // Junta as palavras de volta em um nome formatado
+    const formattedName = capitalizedWords.join(' ');
+  
+    return formattedName;
+  }
+
   // // essa junção é pra quando gor clicado em qualque ligar fora do logout, para ele fechar
   // function handleClick(value) {
   //   setMenuOpen(value === "true");
   // }
-  
+
 
   return (
     <Container>
       <FontHeader onClick={() => navigate("/timeline")}>linkr</FontHeader>
       <form>
-        <DebounceInput
-          type="text"
-          id="search"
-          name="search"
-          placeholder="Search for people"
-          value={searchResults}
-          minLength={3}
-          debounceTimeout={300}
-          onChange={(e) => {
-            const searchText = e.target.value;
-            console.log(e.target.value)
-            // if (searchText.length < 3) {
-            //   return alert("É necessário no mínimo 3 carateres para fazer a busca")
-            // }
-            if (searchText.length >= 3) {
-              performSearchNoServer(searchText); //  função de busca no servidor
-            } else {
-              setSearchResults([]); // Limpa os resultados se o texto for menor que 3 caracteres
-            }
-          }}
-        />
+        <UserSearch>
+          <DebounceInput
+            type="text"
+            id="search"
+            name="search"
+            placeholder="Search for people"
+            minLength={3}
+            value={searchResults}
+            debounceTimeout={300}
+            onChange={(e) => {
+              const searchText = e.target.value;
+              console.log(e.target.value)
+              // if (searchText.length < 3) {
+              //   return alert("É necessário no mínimo 3 carateres para fazer a busca")
+              // }
+              if (searchText.length >= 3) {
+                performSearchNoServer(searchText); //  função de busca no servidor
+              } else {
+                setSearchResults([]); // Limpa os resultados se o texto for menor que 3 caracteres
+              }
+            }}
+          />
+          {searchResults.map(searchResults => (
+            <DirectByLink to={`/user/${searchResults.id}`} key={searchResults.id} onClick={() => setSearchResults([])}>
+              <img src={searchResults.image} alt="" />
+              <Title>{formatName(searchResults.name)}</Title>
+            </DirectByLink>
+          ))}
+        </UserSearch>
       </form>
       <figure>
 
@@ -112,6 +134,40 @@ export default function NavBar() {
     </Container>
   );
 }
+const Title = styled.div`
+    font-family: 'Lato';
+    font-size: 19px;
+    font-weight: 400;
+    line-height: 23px;
+    letter-spacing: 0em;
+    text-align: center;
+    text-decoration: none;
+    color: rgba(81, 81, 81, 1);
+    margin-top: 5px;
+
+`
+const DirectByLink = styled(Link)`
+    margin-top: 10px;
+    display: flex;
+    margin-bottom: 10px;
+    text-decoration: none;
+      img{
+        width: 39px;
+        height: 39px;
+        border-radius: 304px;
+        margin-left: 10px;
+        margin-right: 10px;
+      }
+`
+const UserSearch = styled.div`
+    background-color: rgba(231, 231, 231, 1);
+    border: none;
+    border-radius: 8px;
+    position: absolute;
+    top: 20px;
+    left: calc(50% - 280px);
+
+`
 
 const StyledIconDown = styled(MdKeyboardArrowDown)`
   color: #fff;
@@ -138,11 +194,11 @@ const Container = styled.nav`
   justify-content: space-between;
   align-items: center;
 
+
   input {
     width: 563px;
     height: 45px;
     padding-left: 10px;
-
     border: none;
     border-radius: 8px;
     background: #fff;
@@ -153,6 +209,7 @@ const Container = styled.nav`
     font-style: normal;
     font-weight: 400;
     line-height: normal;
+   
   }
 
   figure {
@@ -181,3 +238,4 @@ const Container = styled.nav`
     }
   }
 `;
+
