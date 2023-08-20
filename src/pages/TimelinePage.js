@@ -36,7 +36,7 @@ export default function TimelinePage(){
                     </FontPageTitle>
                     <SharePost />
                     <Posts>
-                    {posts.length === 0 ? (<FontPageTitle style={{textAlign:"center"}}>{message}</FontPageTitle>) : (posts.map(post => (
+                    {posts.length === 0 ? (<FontPageTitle style={{textAlign:"center"}} data-test='message' >{message}</FontPageTitle>) : (posts.map(post => (
                         <Post post={post}/>
                     )))}
                     </Posts>

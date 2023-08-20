@@ -50,7 +50,7 @@ console.log("dentro da handlePublish")
   }
 
   return (
-    <Container>
+    <Container data-test='publish-box' >
       <ContainerImg>
         <img src={image} alt={"profile-img"}/>
       </ContainerImg>
@@ -73,7 +73,9 @@ console.log("dentro da handlePublish")
             ...prevState,
               url: newValue
             }
-          })}}/>
+          })}}
+          data-test='link'
+          />
           <TextArea rows="5" 
           placeholder="Awesome article about #javascript"
           value={post.content}
@@ -85,9 +87,11 @@ console.log("dentro da handlePublish")
             ...prevState,
               content: newValue
             }
-          })}}/>
+          })}}
+          data-test='description'
+          />
           <BtnContainer>
-            <Button disabled={loading} onClick={handlePublish}>
+            <Button disabled={loading} onClick={handlePublish} data-test='publish-btn' >
               <Lato700 style={{  color: "#FFF",  fontSize: "14px"}}>
                 {loading ? "Publishing..." : "Publish"}
               </Lato700>

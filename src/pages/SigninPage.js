@@ -53,16 +53,16 @@ export default function SigninPage() {
                 </RegisteLogin>
                 <SingInContainer>
                     <form onSubmit={login}>
-                        <Input placeholder="e-mail" type="email" required value={email} onChange={(e) => setEmail(e.target.value)} disabled={disabled} />
-                        <Input placeholder="password" type="password" autoComplete="new-password" required value={password} onChange={(e) => setPassword(e.target.value)} disabled={disabled} />
-                        <button type='submit' disabled={disabled} data-test="sign-in-submit">
+                        <Input placeholder="e-mail" type="email" required value={email} onChange={(e) => setEmail(e.target.value)} disabled={disabled} data-test='email' />
+                        <Input placeholder="password" type="password" autoComplete="new-password" required value={password} onChange={(e) => setPassword(e.target.value)} disabled={disabled} data-test='password' />
+                        <button type='submit' disabled={disabled} data-test="login-btn">
                             {disabled ? (
                                 <ThreeDots width={32} height={21} border-radius={4.5} background-color="#d540e9" color="#FFFFFF" font-size={9} diplay />
                             ) : (
                                 <p>Log In</p>
                             )}
                         </button>
-                        <Register to = {"/sign-up"}>First time? Create an account!</Register>
+                        <Register to = {"/sign-up"} data-test='sign-up-link' >First time? Create an account!</Register>
                     </form>
                 </SingInContainer>
             </Backgroun>
