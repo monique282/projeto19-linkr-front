@@ -18,16 +18,16 @@ export default function HashtagBox () {
 
         axios.get(URL, headers)
             .then(res => setHashtagsList(res.data))
-            .catch(err => alert(err.response.data));
+            .catch(err => console.log(err));
 
     },
     []) // COLOCAR DENTRO A VARIAVEL DE ESTADO QUE ATUALIZA O GET DOS POSTS!!!!!!!!!!!!!!!!!!
 
     return (
-        <SCHashtagBox>
+        <SCHashtagBox data-test='trending' > 
             <SCTrending> trending </SCTrending>
             <SCHashtagContent>
-                { hashtagsList.map((hashtag, i) => <SCHashtagWord key={i} onClick={() => navigate(`/hashtag/${hashtag.hashtag}`)} > # {hashtag.hashtag} </SCHashtagWord>) }
+                { hashtagsList.map((hashtag, i) => <SCHashtagWord key={i} onClick={() => navigate(`/hashtag/${hashtag.hashtag}`)} data-test='hashtag' > # {hashtag.hashtag} </SCHashtagWord>) }
             </SCHashtagContent>
         </SCHashtagBox>
     )

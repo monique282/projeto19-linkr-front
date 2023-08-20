@@ -6,12 +6,12 @@ import { Lato400, Lato700 } from "../StyleComponents/StylesComponents.js";
 import reactStringReplace from 'react-string-replace';
 import { useNavigate } from "react-router-dom";
 import { Tooltip } from "react-tooltip";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { AuthContext } from "../../contexts/UserContext.js";
 
 export default function Post(props) {
-  const { name, image, content, url, numberLikes, userId:idUser, postId, likedUserIds } = props.post;
+  const { name, image, content, url, numberLikes, userId:idUser, postId, likedUserIds, likedUserNames } = props.post;
   const userId = localStorage.getItem("userId");
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
@@ -19,6 +19,23 @@ export default function Post(props) {
   const token = localStorage.getItem('token');
   const object = {headers: {'Authorization': `Bearer ${token}`}}
   const {setPosts} = useContext(AuthContext)
+  const [metadata, setMetadata] = useState({ title: "", description: "", image: undefined})
+
+  useEffect(() => {
+    if (url) {
+      axios
+        .get(`https://jsonlink.io/api/extract?url=${url}`)
+        .then((res) => {
+          const { title, description, images } = res.data;
+          setMetadata((prevMetadata) => ({
+            title,
+            description,
+            image: images[0],
+          }));
+        })
+        .catch((err) => console.log(err));
+    }
+  }, [url]);
 
   function getPosts(){
     axios.get(`${process.env.REACT_APP_API_URL}/timeline`, object)
@@ -30,6 +47,7 @@ export default function Post(props) {
     const obj = {
       isLiked, userId:Number(userId), postId
     }
+    console.log('aqui', userId)
 
     if(token) {
       axios.post(`${process.env.REACT_APP_API_URL}/like`, obj, object)
@@ -39,13 +57,13 @@ export default function Post(props) {
         getPosts();
       })
       .catch(err => {
-        console.log(`Error in like toggle: `, err)})
+       console.log(`Error in like toggle: `, err)})
       .finally(()=> setLoading(false))
     }
   };
 
   return (
-    <Container>
+    <Container data-test='post' >
       <Info>
         <figure>
           <img src={image} alt="profile" />
@@ -54,34 +72,112 @@ export default function Post(props) {
         <StyledIcon 
         onClick={handleToggleLike}
         disabled={loading}
-        isLiked={isLiked}/>
+        isLiked={isLiked}
+        data-test='like-btn'/>
         <Lato700>
-        <Tooltip id="my-tooltip" place="bottom" style={{ background:"rgba(255, 255, 255, 0.90)", borderRadius:"3px", color:"#505050", fontSize:"12px" }}/>
+        <Tooltip id="my-tooltip" place="bottom" style={{ background:"rgba(255, 255, 255, 0.90)", borderRadius:"3px", color:"#505050", fontSize:"12px" }} data-test='tooltip'/>
         </Lato700>
         
         <Lato400 data-tooltip-id="my-tooltip" 
-        data-tooltip-content={isLiked ? "Você, fulano e outras 11 pessoas curtiram" : "Fulano, beltrano e outras 10 pessoas curtiram"} style={{ color: "#fff", fontSize: "11px" }}>
+          data-tooltip-content={
+            isLiked ?
+            `Você, ${likedUserNames[0]} e outras pessoas curtiram` :
+            likedUserNames.length > 0 ?
+            `${likedUserNames.slice(0, 2).join(', ')} e ${likedUserNames.length - 2} ${likedUserNames.length - 2 === 1 ? 'outra pessoa curtiu' : 'outras pessoas curtiram'}` :
+            "Ninguém curtiu ainda"
+          }
+          style={{ color: "#fff", fontSize: "11px" }}
+          data-test='counter'>
           {Number(numberLikes) === 1 ? (`${numberLikes} Like`) : (`${numberLikes} Likes`)} 
-        </Lato400>
+      </Lato400>
+
+
       </Info>
       <Content>
         <div className="userName">
-          <Lato400 style={{ color: "#fff", fontSize: "19px" }}>{name}</Lato400>
+          <Lato400 style={{ color: "#fff", fontSize: "19px" }} data-test='username' >{name}</Lato400>
           {Number(userId) === idUser ? (
           <div>
             <StyledPencil />
             <StyledTrash />  
           </div>) : ""}
         </div>
-        <Lato400 style={{ color: "#B7B7B7", fontSize: "17px" }}>
+        <Lato400 style={{ color: "#B7B7B7", fontSize: "17px" }} data-test='description' >
         {reactStringReplace(content, /#(\w+)/g, (match, i) => (
             <span key={i} onClick={() => navigate(`/hashtag/${match}`)} > #{match} </span>
           ))}
         </Lato400>
+
+        <SCMetadata>
+          <div>
+            <Lato400>{metadata.title}</Lato400>
+            <Lato400>{metadata.description}</Lato400>
+            <Lato400>{url}</Lato400>
+          </div>
+          <div>
+          {metadata.image && (
+            <img src={metadata.image} alt={metadata.title} />
+          )}
+          </div>
+        </SCMetadata>
+
       </Content>
+
     </Container>
   );
 }
+
+const SCMetadata = styled.div`
+  width:100%;
+  min-height:155px;
+  display: flex;
+  justify-content: space-between;
+  border: 1px solid #4D4D4D;
+  border-radius: 11px;
+
+  div {
+    :first-child{
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+      padding: 15px;
+      h3{
+        :first-child{
+          color: #CECECE;
+          font-size: 16px;
+        }
+        :nth-child(2){
+          color: #9B9595;
+          font-size: 11px;
+          line-height:13px;
+        }
+        :last-child{
+          color: #CECECE;
+          font-size: 11px;
+          line-height:13px;
+        }
+      }
+    }
+    :last-child {
+      width:155px;
+      height:155px;
+    }
+  }
+
+  p {
+    color: #fff;
+    font-family: Lato;
+    font-size: 14px;
+    font-weight: 400;
+    margin: 0;
+  }
+
+  img {
+    width:155px;
+    height:100%;
+    border-radius:11px;
+  }
+`;
 
 const StyledIcon = styled(({ isLiked, ...rest }) =>
 isLiked ? <AiFillHeart {...rest} /> : <AiOutlineHeart {...rest} />
