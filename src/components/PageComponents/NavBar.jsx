@@ -108,30 +108,30 @@ export default function NavBar() {
           />
           {searchResults.map(searchResults => (
             <DirectByLink data-test="user-search" to={`/user/${searchResults.id}`} key={searchResults.id} onClick={() => setSearchResults([])}>
-              <img src={searchResults.image} alt=""  />
+              <img src={searchResults.image} alt="" />
               <Title>{searchResults.name}</Title>
             </DirectByLink>
           ))}
         </UserSearch>
       </form>
-      <figure>
+      <figure >
 
         {isClicked === "false" ? (
           <StyledIconDown onClick={() => handleClick("true")} />
         ) : (
-          <div data-test="menu">
-            <StyledIconUp
+          <Menu  >
+            <StyledIconUp 
               onClick={() => {
                 handleClick("false");
               }}
               className="icon"
             />
-            <button data-test="logout" onClick={() => Logout()}>
-              <Lato700 style={{ letterSpacing: "0.75px", fontSize: "15px", color: "#FFF" }}>
+            <button data-test="menu" onClick={() => Logout()} >
+              <Lato700 data-test="logout" style={{ letterSpacing: "0.75px", fontSize: "15px", color: "#FFF" }}>
                 LogOut
               </Lato700>
             </button>
-          </div>
+          </Menu>
         )}
 
         <img data-test="avatar"
@@ -147,28 +147,7 @@ export default function NavBar() {
 }
 
 const Menu = styled.div`
-  position: relative;
-
-  .icon {
-    color: #fff;
-    font-size: 25px;
-    cursor: pointer;
-  }
-
-  .open {
-    display: block;
-  }
-
-  button {
-    width: 150px;
-    height: 47px;
-    flex-shrink: 0;
-    position: absolute;
-    top: 72px;
-    right: 0px;
-    border-radius: 0px 0px 20px 20px;
-    background: #171717;
-  }
+  
 `;
 
 
