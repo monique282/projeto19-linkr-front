@@ -4,9 +4,7 @@ import axios from "axios";
 import { configToken } from '../../services/api';
 import { useEffect, useState } from 'react';
 
-export default function HashtagBox () {
-
-    // const mockHashtagList = [ "javascript", "react", "react-native", "material", "web-dev", "mobile", "css", "html", "node", "sql"];
+export default function HashtagBox ({atualize}) {
 
     const navigate = useNavigate();
     const [hashtagsList, setHashtagsList] = useState([]);
@@ -16,12 +14,14 @@ export default function HashtagBox () {
 
     useEffect(() => {
 
+        console.log('rodandooo', atualize)
+
         axios.get(URL, headers)
             .then(res => setHashtagsList(res.data))
             .catch(err => console.log(err));
 
     },
-    []) // COLOCAR DENTRO A VARIAVEL DE ESTADO QUE ATUALIZA O GET DOS POSTS!!!!!!!!!!!!!!!!!!
+    [atualize])
 
     return (
         <SCHashtagBox data-test="trending" > 
