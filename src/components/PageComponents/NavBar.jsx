@@ -86,6 +86,7 @@ export default function NavBar() {
       <form>
         <UserSearch>
           <DebounceInput
+            data-test="search"
             type="text"
             id="search"
             name="search"
@@ -106,7 +107,7 @@ export default function NavBar() {
             }}
           />
           {searchResults.map(searchResults => (
-            <DirectByLink to={`/user/${searchResults.id}`} key={searchResults.id} onClick={() => setSearchResults([])}>
+            <DirectByLink data-test="user-search" to={`/user/${searchResults.id}`} key={searchResults.id} onClick={() => setSearchResults([])}>
               <img src={searchResults.image} alt="" />
               <Title>{formatName(searchResults.name)}</Title>
             </DirectByLink>

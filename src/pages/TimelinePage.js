@@ -9,21 +9,21 @@ import NavBar from "../components/PageComponents/NavBar"
 import { FontPageTitle } from "../components/StyleComponents/StylesComponents"
 import { AuthContext } from "../contexts/UserContext"
 
-export default function TimelinePage(){
-    const {setPosts, posts} = useContext(AuthContext);
+export default function TimelinePage() {
+    const { setPosts, posts } = useContext(AuthContext);
     const token = localStorage.getItem('token');
-    const object = {headers: {'Authorization': `Bearer ${token}`}};
+    const object = { headers: { 'Authorization': `Bearer ${token}` } };
     const [message, setMessage] = useState("Loading")
-    function getPosts(){
+    function getPosts() {
         axios.get(`${process.env.REACT_APP_API_URL}/timeline`, object)
-        .then(res => {
-            setPosts(res.data.rows)
-            if(res.data.rows.length === 0) setMessage("There are no posts yet")
-        })
-        .catch(err => setMessage(<><div>An error ocurred while trying to fetch the</div><div>posts, please refresh the page</div></>) )
+            .then(res => {
+                setPosts(res.data.rows)
+                if (res.data.rows.length === 0) setMessage("There are no posts yet")
+            })
+            .catch(err => setMessage(<><div>An error ocurred while trying to fetch the</div><div>posts, please refresh the page</div></>))
     }
-    useEffect(()=>{  
-        if(token) getPosts()
+    useEffect(() => {
+        if (token) getPosts()
     }, [])
 
     return (
@@ -36,9 +36,9 @@ export default function TimelinePage(){
                     </FontPageTitle>
                     <SharePost />
                     <Posts>
-                    {posts.length === 0 ? (<FontPageTitle style={{textAlign:"center"}} data-test='message' >{message}</FontPageTitle>) : (posts.map(post => (
-                        <Post post={post}/>
-                    )))}
+                        {posts.length === 0 ? (<FontPageTitle style={{ textAlign: "center" }} data-test="message" >{message}</FontPageTitle>) : (posts.map(post => (
+                            <Post post={post} />
+                        )))}
                     </Posts>
                 </Feed>
                 <Trending>
