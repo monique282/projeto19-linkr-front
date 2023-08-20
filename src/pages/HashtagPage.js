@@ -33,7 +33,7 @@ export default function HashtagPage() {
             <NavBar />
             <Content>
                 <Feed>
-                    <FontPageTitle>
+                    <FontPageTitle data-test='hashtag-title' >
                         # {hashtag}
                     </FontPageTitle>
                     <Posts>
