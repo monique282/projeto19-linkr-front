@@ -8,13 +8,18 @@ import axios from "axios"
 import NavBar from "../components/PageComponents/NavBar"
 import { FontPageTitle } from "../components/StyleComponents/StylesComponents"
 import { AuthContext } from "../contexts/UserContext"
+import { configToken } from "../services/api"
 
 export default function TimelinePage(){
-    const {setPosts, posts} = useContext(AuthContext);
+    const {setPosts, posts, likes, setLikes} = useContext(AuthContext);
     const token = localStorage.getItem('token');
     const object = {headers: {'Authorization': `Bearer ${token}`}};
     const [message, setMessage] = useState("Loading")
-    function getPosts(){
+    const [loading, setLoading] = useState(false);
+    const [atualize, setAtualize] = useState(false);
+
+
+    async function getPosts(){
         axios.get(`${process.env.REACT_APP_API_URL}/timeline`, object)
         .then(res => {
             setPosts(res.data.rows)
@@ -22,9 +27,19 @@ export default function TimelinePage(){
         })
         .catch(err => setMessage(<><div>An error ocurred while trying to fetch the</div><div>posts, please refresh the page</div></>) )
     }
+    async function getLikes () {
+        const URL = `${process.env.REACT_APP_API_URL}/likes`
+        const config = configToken();
+        axios.get(URL, config)
+            .then( res => setLikes(res.data) )
+            .catch(err => console.log(err))
+    }
     useEffect(()=>{  
-        if(token) getPosts()
-    }, [])
+        if(token) {
+            getLikes();
+            getPosts();
+        }
+    }, [loading])
 
     return (
         <Background>
@@ -34,15 +49,15 @@ export default function TimelinePage(){
                     <FontPageTitle>
                         timeline
                     </FontPageTitle>
-                    <SharePost />
+                    <SharePost loading={loading} setLoading={setLoading} setAtualize={setAtualize} />
                     <Posts>
-                    {posts.length === 0 ? (<FontPageTitle style={{textAlign:"center"}} data-test='message' >{message}</FontPageTitle>) : (posts.map(post => (
-                        <Post post={post}/>
-                    )))}
+                    {posts.length === 0 ? (<FontPageTitle style={{textAlign:"center"}} data-test='message' >{message}</FontPageTitle>) : (posts.map((post, i) => {
+                        return <Post post={post} likes={(likes[i].likedUserNames[0]===null) ? [] : likes[i].likedUserNames}/>
+                    }))}
                     </Posts>
                 </Feed>
                 <Trending>
-                    <HashtagBox />
+                    <HashtagBox atualize={atualize} />
                 </Trending>
             </Content>
         </Background>

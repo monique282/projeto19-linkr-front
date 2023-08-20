@@ -9,17 +9,21 @@ import { Tooltip } from "react-tooltip";
 import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { AuthContext } from "../../contexts/UserContext.js";
+import { configToken } from "../../services/api.js";
 
 export default function Post(props) {
-  const { name, image, content, url, numberLikes, userId:idUser, postId, likedUserIds, likedUserNames } = props.post;
+  const { name, image, content, url, numberLikes, userId:idUser, postId, likedUserIds } = props.post;
+  const { likes } = props;
   const userId = localStorage.getItem("userId");
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [isLiked, setIsLiked] = useState(likedUserIds.includes(Number(userId)));
   const token = localStorage.getItem('token');
   const object = {headers: {'Authorization': `Bearer ${token}`}}
-  const {setPosts} = useContext(AuthContext)
+  const {setPosts, setLikes} = useContext(AuthContext)
   const [metadata, setMetadata] = useState({ title: "", description: "", image: undefined})
+
+  console.log(likes)
 
   useEffect(() => {
     if (url) {
@@ -37,23 +41,32 @@ export default function Post(props) {
     }
   }, [url]);
 
-  function getPosts(){
+  async function getPosts(){
     axios.get(`${process.env.REACT_APP_API_URL}/timeline`, object)
     .then(res => setPosts(res.data.rows))
     .catch(err => console.log(err))
 }
+
+  async function getLikes () {
+  const URL = `${process.env.REACT_APP_API_URL}/likes`
+  const config = configToken();
+  axios.get(URL, config)
+      .then( res => setLikes(res.data) )
+      .catch(err => console.log(err))
+}
+
   function handleToggleLike () {
     setLoading(true)
     const obj = {
       isLiked, userId:Number(userId), postId
     }
-    console.log('aqui', userId)
 
     if(token) {
       axios.post(`${process.env.REACT_APP_API_URL}/like`, obj, object)
       .then((res) => {
         setIsLiked((prevIsLiked) => !prevIsLiked);
         console.log(res)
+        getLikes();
         getPosts();
       })
       .catch(err => {
@@ -80,11 +93,7 @@ export default function Post(props) {
         
         <Lato400 data-tooltip-id="my-tooltip" 
           data-tooltip-content={
-            isLiked ?
-            `Você, ${likedUserNames[0]} e outras pessoas curtiram` :
-            likedUserNames.length > 0 ?
-            `${likedUserNames.slice(0, 2).join(', ')} e ${likedUserNames.length - 2} ${likedUserNames.length - 2 === 1 ? 'outra pessoa curtiu' : 'outras pessoas curtiram'}` :
-            "Ninguém curtiu ainda"
+            (likes.length===0) ? 'Ninguém curtiu ainda' : (isLiked && likes.length===1) ? 'Apenas você curtiu' : (isLiked && likes.length>1) ? `Você, ${likedUserIds[0]!== userId ? likes[0] : likes[1]} e outros ${numberLikes - 2} curtiram` : (!isLiked && likes.length===1) ? `Apenas ${likes[0]} curtiu` : `${likes.slice(0,2).join(', ')} e outras ${numberLikes-2} curtiram`
           }
           style={{ color: "#fff", fontSize: "11px" }}
           data-test='counter'>
@@ -107,19 +116,20 @@ export default function Post(props) {
             <span key={i} onClick={() => navigate(`/hashtag/${match}`)} > #{match} </span>
           ))}
         </Lato400>
-
-        <SCMetadata>
-          <div>
-            <Lato400>{metadata.title}</Lato400>
-            <Lato400>{metadata.description}</Lato400>
-            <Lato400>{url}</Lato400>
-          </div>
-          <div>
-          {metadata.image && (
-            <img src={metadata.image} alt={metadata.title} />
-          )}
-          </div>
-        </SCMetadata>
+        <a href={url} target='_blank' data-test='link' >
+          <SCMetadata>
+            <div>
+              <Lato400>{metadata.title}</Lato400>
+              <Lato400>{metadata.description}</Lato400>
+              <Lato400>{url}</Lato400>
+            </div>
+            <div>
+            {metadata.image && (
+              <img src={metadata.image} alt={metadata.title} />
+            )}
+            </div>
+          </SCMetadata>
+        </a>
 
       </Content>
 
@@ -215,6 +225,9 @@ const Content = styled.div`
     font-weight: 700;
     line-height: normal;
     cursor: pointer;
+  }
+  a {
+    text-decoration:none;
   }
 `;
 

@@ -13,10 +13,15 @@ export default function HashtagPage() {
   const { hashtag } = useParams();
 
   const [posts, setPosts] = useState([]);
+  const [likes, setLikes] = useState([]);
 
   useEffect(() => {
     const URL = process.env.REACT_APP_API_URL;
     const headers = configToken();
+
+    axios.get(`${URL}/likes`, headers)
+      .then(res => setLikes(res.data))
+      .catch(err => console.log(err));
 
     axios
       .get(`${URL}/hashtag/${hashtag}`, headers)
@@ -24,9 +29,8 @@ export default function HashtagPage() {
         setPosts(res.data);
       })
       .catch((err) => console.log(err));
-  }, []);
+  }, [hashtag]);
 
-  console.log(posts)
 
   return (
     <Background>
@@ -37,8 +41,8 @@ export default function HashtagPage() {
                         # {hashtag}
                     </FontPageTitle>
                     <Posts>
-                    {posts.length === 0 ? (<FontPageTitle style={{textAlign:"center"}}>There are no posts yes</FontPageTitle>) : (posts.map(post => (
-                        <Post post={post}/>
+                    {posts.length === 0 ? (<FontPageTitle style={{textAlign:"center"}}>There are no posts yes</FontPageTitle>) : (posts.map((post, i) => (
+                        <Post post={post} likes={(likes[i].likedUserNames[0]===null) ? [] : likes[i].likedUserNames}/>
                     )))}
                     </Posts>
                 </Feed>

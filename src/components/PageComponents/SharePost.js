@@ -4,15 +4,15 @@ import { useContext, useEffect, useState } from "react"
 import axios from "axios"
 import reactStringReplace from "react-string-replace"
 import { AuthContext } from "../../contexts/UserContext"
+import { configToken } from "../../services/api"
 
-export default function SharePost({userPhoto}) { 
+export default function SharePost({userPhoto, loading, setLoading, setAtualize}) { 
   const [post, setPost] = useState({url:"", content:""});
   const [hashtags, setHashtags] = useState([]);
-  const [loading, setLoading] = useState(false);
   const [image, setImage] = useState(localStorage.getItem("image"));
   const token = localStorage.getItem('token');
   const object = {headers: {'Authorization': `Bearer ${token}`}}
-  const {setPosts} = useContext(AuthContext)
+  const {setPosts, setLikes} = useContext(AuthContext)
   useEffect(()=>{
     const localImage = localStorage.getItem("image");
     setImage(localImage);
@@ -28,10 +28,17 @@ export default function SharePost({userPhoto}) {
     setHashtags(extractedHashtags);
   }, [post.content]);
 
-  function getPosts(){
+  async function getPosts(){
     axios.get(`${process.env.REACT_APP_API_URL}/timeline`, object)
     .then(res => setPosts(res.data.rows))
     .catch(err => alert(err.response.data))
+}
+async function getLikes () {
+  const URL = `${process.env.REACT_APP_API_URL}/likes`
+  const config = configToken();
+  axios.get(URL, config)
+      .then( res => setLikes(res.data) )
+      .catch(err => console.log(err))
 }
 
   function handlePublish(e) {
@@ -39,12 +46,14 @@ export default function SharePost({userPhoto}) {
 console.log("dentro da handlePublish")
     const obj = {url: post.url, content:post.content, hashtags}
     setLoading(true)
+    setAtualize(prev => !prev)
 
     if(token) axios.post(`${process.env.REACT_APP_API_URL}/new-post`, obj, object)
     .then(res => {
       console.log("dentro do then")
       setPost({url:"", content:""})
-      getPosts()})
+      getLikes();
+      getPosts();})
     .catch(err => alert(err.response.data))
     .finally(setLoading(false))
   }

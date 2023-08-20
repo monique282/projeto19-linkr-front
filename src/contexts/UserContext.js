@@ -11,6 +11,7 @@ export default function AuthProvider({ children }) {
     const navigate = useNavigate();
     const localiza = useLocation();
     const [posts, setPosts] = useState([]);
+    const [likes, setLikes] = useState([]);
     
     useEffect(() => {
         if (lsToken === null && localiza.pathname !== "/sign-up") {
@@ -26,7 +27,8 @@ export default function AuthProvider({ children }) {
         <AuthContext.Provider value={{
             token, setToken,
             image, setImage, 
-            posts, setPosts
+            posts, setPosts,
+            likes, setLikes
         }}>
             {children}
         </AuthContext.Provider>
