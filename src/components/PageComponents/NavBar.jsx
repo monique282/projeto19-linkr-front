@@ -107,7 +107,7 @@ export default function NavBar() {
             }}
           />
           {searchResults.map(searchResults => (
-            <DirectByLink data-test="user-search" to={`/user/${searchResults.id}`} data-test="user-search"key={searchResults.id} onClick={() => setSearchResults([])}>
+            <DirectByLink data-test="user-search" to={`/user/${searchResults.id}`} key={searchResults.id} onClick={() => setSearchResults([])}>
               <img src={searchResults.image} alt=""  />
               <Title>{searchResults.name}</Title>
             </DirectByLink>
