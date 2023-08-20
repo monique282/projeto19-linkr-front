@@ -66,10 +66,10 @@ export default function NavBar() {
 
   // essa função serve pra mostrar o nome do usuario com a 1 letra de cada nome maiuscula
   function formatName(name) {
-    // Divide o nome em palavras separadas por espaços
+    // divide o nome em palavras separadas por espaços
     const words = name.split(' ');
   
-    // Capitaliza a primeira letra de cada palavra
+    // capitaliza a primeira letra de cada palavra
     const capitalizedWords = words.map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase());
   
     // Junta as palavras de volta em um nome formatado
@@ -110,7 +110,7 @@ export default function NavBar() {
             }}
           />
           {searchResults.map(searchResults => (
-            <DirectByLink to={`users/${searchResults.id}`} key={searchResults.id}>
+            <DirectByLink to={`/user/${searchResults.id}`} key={searchResults.id} onClick={() => setSearchResults([])}>
               <img src={searchResults.image} alt="" />
               <Title>{formatName(searchResults.name)}</Title>
             </DirectByLink>
@@ -162,6 +162,9 @@ const UserSearch = styled.div`
     background-color: rgba(231, 231, 231, 1);
     border: none;
     border-radius: 8px;
+    position: absolute;
+    top: 20px;
+    left: calc(50% - 280px);
 
 `
 
@@ -195,7 +198,6 @@ const Container = styled.nav`
     width: 563px;
     height: 45px;
     padding-left: 10px;
-
     border: none;
     border-radius: 8px;
     background: #fff;
