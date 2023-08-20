@@ -11,7 +11,7 @@ import axios from "axios";
 import { AuthContext } from "../../contexts/UserContext.js";
 
 export default function Post(props) {
-  const { name, image, content, url, numberLikes, userId:idUser, postId, likedUserIds } = props.post;
+  const { name, image, content, url, numberLikes, userId:idUser, postId, likedUserIds, likedUserNames } = props.post;
   const userId = localStorage.getItem("userId");
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
@@ -30,6 +30,7 @@ export default function Post(props) {
     const obj = {
       isLiked, userId:Number(userId), postId
     }
+    console.log('aqui', userId)
 
     if(token) {
       axios.post(`${process.env.REACT_APP_API_URL}/like`, obj, object)
@@ -39,7 +40,7 @@ export default function Post(props) {
         getPosts();
       })
       .catch(err => {
-        console.log(`Error in like toggle: `, err)})
+       console.log(`Error in like toggle: `, err)})
       .finally(()=> setLoading(false))
     }
   };
@@ -60,9 +61,14 @@ export default function Post(props) {
         </Lato700>
         
         <Lato400 data-tooltip-id="my-tooltip" 
-        data-tooltip-content={isLiked ? "Você, fulano e outras 11 pessoas curtiram" : "Fulano, beltrano e outras 10 pessoas curtiram"} style={{ color: "#fff", fontSize: "11px" }}>
+          data-tooltip-content={isLiked ? 
+            `Você, ${likedUserNames.length > 1 ? likedUserNames[likedUserNames.length - 2] : ''} e outras ${numberLikes - 1} pessoas curtiram` : 
+            likedUserNames.length > 0 ? `${likedUserNames[0]}, ${likedUserNames.length >= 2 ? likedUserNames[1] : ''} e outras ${likedUserNames.length > 2 ? likedUserNames.length - 2 : 0} pessoas curtiram` :
+            "Ninguém curtiu ainda"} 
+            style={{ color: "#fff", fontSize: "11px" }}>
           {Number(numberLikes) === 1 ? (`${numberLikes} Like`) : (`${numberLikes} Likes`)} 
         </Lato400>
+
       </Info>
       <Content>
         <div className="userName">
