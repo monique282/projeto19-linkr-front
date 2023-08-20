@@ -13,7 +13,7 @@ import { configToken } from "../services/api"
 export default function TimelinePage(){
     const {setPosts, posts, likes, setLikes} = useContext(AuthContext);
     const token = localStorage.getItem('token');
-    const object = {headers: {'Authorization': `Bearer ${token}`}};
+    const object = { headers: { 'Authorization': `Bearer ${token}` } };
     const [message, setMessage] = useState("Loading")
     const [loading, setLoading] = useState(false);
     const [atualize, setAtualize] = useState(false);
@@ -21,11 +21,11 @@ export default function TimelinePage(){
 
     async function getPosts(){
         axios.get(`${process.env.REACT_APP_API_URL}/timeline`, object)
-        .then(res => {
-            setPosts(res.data.rows)
-            if(res.data.rows.length === 0) setMessage("There are no posts yet")
-        })
-        .catch(err => setMessage(<><div>An error ocurred while trying to fetch the</div><div>posts, please refresh the page</div></>) )
+            .then(res => {
+                setPosts(res.data.rows)
+                if (res.data.rows.length === 0) setMessage("There are no posts yet")
+            })
+            .catch(err => setMessage(<><div>An error ocurred while trying to fetch the</div><div>posts, please refresh the page</div></>))
     }
     async function getLikes () {
         const URL = `${process.env.REACT_APP_API_URL}/likes`

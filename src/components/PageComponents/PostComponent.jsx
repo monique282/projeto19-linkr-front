@@ -1,6 +1,6 @@
 import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
-import {TiPencil} from "react-icons/ti"
-import {TbTrashFilled} from "react-icons/tb"
+import { TiPencil } from "react-icons/ti"
+import { TbTrashFilled } from "react-icons/tb"
 import styled from "styled-components";
 import { Lato400, Lato700 } from "../StyleComponents/StylesComponents.js";
 import reactStringReplace from 'react-string-replace';
@@ -58,10 +58,10 @@ export default function Post(props) {
   function handleToggleLike () {
     setLoading(true)
     const obj = {
-      isLiked, userId:Number(userId), postId
+      isLiked, userId: Number(userId), postId
     }
 
-    if(token) {
+    if (token) {
       axios.post(`${process.env.REACT_APP_API_URL}/like`, obj, object)
       .then((res) => {
         setIsLiked((prevIsLiked) => !prevIsLiked);
@@ -76,43 +76,43 @@ export default function Post(props) {
   };
 
   return (
-    <Container data-test='post' >
+    <Container data-test="post" >
       <Info>
         <figure>
           <img src={image} alt="profile" />
         </figure>
-        
-        <StyledIcon 
-        onClick={handleToggleLike}
-        disabled={loading}
-        isLiked={isLiked}
-        data-test='like-btn'/>
+
+        <StyledIcon
+          onClick={handleToggleLike}
+          disabled={loading}
+          isLiked={isLiked}
+          data-test="like-btn" />
         <Lato700>
-        <Tooltip id="my-tooltip" place="bottom" style={{ background:"rgba(255, 255, 255, 0.90)", borderRadius:"3px", color:"#505050", fontSize:"12px" }} data-test='tooltip'/>
+          <Tooltip id="my-tooltip" place="bottom" style={{ background: "rgba(255, 255, 255, 0.90)", borderRadius: "3px", color: "#505050", fontSize: "12px" }} data-test="tooltip" />
         </Lato700>
-        
-        <Lato400 data-tooltip-id="my-tooltip" 
+
+        <Lato400 data-tooltip-id="my-tooltip"
           data-tooltip-content={
             (likes.length===0) ? 'Ninguém curtiu ainda' : (isLiked && likes.length===1) ? 'Apenas você curtiu' : (isLiked && likes.length>1) ? `Você, ${likedUserIds[0]!== userId ? likes[0] : likes[1]} e outros ${numberLikes - 2} curtiram` : (!isLiked && likes.length===1) ? `Apenas ${likes[0]} curtiu` : `${likes.slice(0,2).join(', ')} e outras ${numberLikes-2} curtiram`
           }
           style={{ color: "#fff", fontSize: "11px" }}
-          data-test='counter'>
-          {Number(numberLikes) === 1 ? (`${numberLikes} Like`) : (`${numberLikes} Likes`)} 
-      </Lato400>
+          data-test="counter">
+          {Number(numberLikes) === 1 ? (`${numberLikes} Like`) : (`${numberLikes} Likes`)}
+        </Lato400>
 
 
       </Info>
       <Content>
         <div className="userName">
-          <Lato400 style={{ color: "#fff", fontSize: "19px" }} data-test='username' >{name}</Lato400>
+          <Lato400 style={{ color: "#fff", fontSize: "19px" }} data-test="username" >{name}</Lato400>
           {Number(userId) === idUser ? (
-          <div>
-            <StyledPencil />
-            <StyledTrash />  
-          </div>) : ""}
+            <div>
+              <StyledPencil />
+              <StyledTrash />
+            </div>) : ""}
         </div>
-        <Lato400 style={{ color: "#B7B7B7", fontSize: "17px" }} data-test='description' >
-        {reactStringReplace(content, /#(\w+)/g, (match, i) => (
+        <Lato400 style={{ color: "#B7B7B7", fontSize: "17px" }} data-test="description" >
+          {reactStringReplace(content, /#(\w+)/g, (match, i) => (
             <span key={i} onClick={() => navigate(`/hashtag/${match}`)} > #{match} </span>
           ))}
         </Lato400>
@@ -190,7 +190,7 @@ const SCMetadata = styled.div`
 `;
 
 const StyledIcon = styled(({ isLiked, ...rest }) =>
-isLiked ? <AiFillHeart {...rest} /> : <AiOutlineHeart {...rest} />
+  isLiked ? <AiFillHeart {...rest} /> : <AiOutlineHeart {...rest} />
 )`
   font-size: 16px;
   color: ${(props) => (props.isLiked ? '#AC0000' : '#fff')};
