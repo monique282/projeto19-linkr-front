@@ -51,10 +51,10 @@ export default function SignupPage() {
                 </SloganMessage>
                 <SingInContainer>
                     <form onSubmit={register}>
-                        <Input placeholder="e-mail" type="email" required value={email} onChange={(e) => setEmail(e.target.value)} disabled={disabled} data-test='email' />
-                        <Input placeholder="password" type="password" autoComplete="new-password" required value={password} onChange={(e) => setPassword(e.target.value)} disabled={disabled} data-test='password' />
-                        <Input placeholder="username" type="text" required value={name} onChange={(e) => setName(e.target.value)} disabled={disabled} data-test='username' />
-                        <Input placeholder="picture url" type="text" required value={image} onChange={(e) => setImage(e.target.value)} disabled={disabled} data-test='picture-url' />
+                        <Input placeholder="e-mail" type="email" required value={email} onChange={(e) => setEmail(e.target.value)} disabled={disabled} data-test="email" />
+                        <Input placeholder="password" type="password" autoComplete="new-password" required value={password} onChange={(e) => setPassword(e.target.value)} disabled={disabled}  data-test="password" />
+                        <Input placeholder="username" type="text" required value={name} onChange={(e) => setName(e.target.value)} disabled={disabled} data-test="username" />
+                        <Input placeholder="picture url" type="text" required value={image} onChange={(e) => setImage(e.target.value)} disabled={disabled} data-test="picture-url" />
                         <button type='submit' disabled={disabled} data-test="sign-up-btn">
                             {disabled ? (
                                 <ThreeDots width={32} height={21} border-radius={4.5} background-color="#d540e9" color="#FFFFFF" font-size={9} diplay />
@@ -62,7 +62,7 @@ export default function SignupPage() {
                                 <p>Sign Up</p>
                             )}
                         </button>
-                        <Register to={"/"} data-test='login-link' >Switch back to log in</Register>
+                        <Register to={"/"} data-test="login-link" >Switch back to log in</Register>
                     </form>
                 </SingInContainer>
             </Backgroun>

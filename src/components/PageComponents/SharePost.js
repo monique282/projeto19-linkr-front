@@ -4,19 +4,19 @@ import { useContext, useEffect, useState } from "react"
 import axios from "axios"
 import reactStringReplace from "react-string-replace"
 import { AuthContext } from "../../contexts/UserContext"
+import { configToken } from "../../services/api"
 
-export default function SharePost({userPhoto}) { 
+export default function SharePost({userPhoto, loading, setLoading, setAtualize}) { 
   const [post, setPost] = useState({url:"", content:""});
   const [hashtags, setHashtags] = useState([]);
-  const [loading, setLoading] = useState(false);
   const [image, setImage] = useState(localStorage.getItem("image"));
   const token = localStorage.getItem('token');
   const object = {headers: {'Authorization': `Bearer ${token}`}}
-  const {setPosts} = useContext(AuthContext)
+  const {setPosts, setLikes} = useContext(AuthContext)
   useEffect(()=>{
     const localImage = localStorage.getItem("image");
     setImage(localImage);
-  },[])
+  }, [])
   console.log("inicializou a página")
   useEffect(() => {
     const extractedHashtags = [];
@@ -28,76 +28,88 @@ export default function SharePost({userPhoto}) {
     setHashtags(extractedHashtags);
   }, [post.content]);
 
-  function getPosts(){
+  async function getPosts(){
     axios.get(`${process.env.REACT_APP_API_URL}/timeline`, object)
     .then(res => setPosts(res.data.rows))
     .catch(err => alert(err.response.data))
 }
+async function getLikes () {
+  const URL = `${process.env.REACT_APP_API_URL}/likes`
+  const config = configToken();
+  axios.get(URL, config)
+      .then( res => setLikes(res.data) )
+      .catch(err => console.log(err))
+}
 
   function handlePublish(e) {
     e.preventDefault();
-console.log("dentro da handlePublish")
-    const obj = {url: post.url, content:post.content, hashtags}
+    console.log("dentro da handlePublish")
+    const obj = { url: post.url, content: post.content, hashtags }
     setLoading(true)
+    setAtualize(prev => !prev)
 
     if(token) axios.post(`${process.env.REACT_APP_API_URL}/new-post`, obj, object)
     .then(res => {
       console.log("dentro do then")
       setPost({url:"", content:""})
-      getPosts()})
+      getLikes();
+      getPosts();})
     .catch(err => alert(err.response.data))
     .finally(setLoading(false))
   }
 
   return (
-    <Container data-test='publish-box' >
+    <Container data-test="publish-box" >
       <ContainerImg>
-        <img src={image} alt={"profile-img"}/>
+        <img src={image} alt={"profile-img"} />
       </ContainerImg>
       <ContainerContent>
         <ShareTitle>
-          <Lato300 style={{  fontSize: "20px", color: "#707070"}}>What are you going to share today?</Lato300>
+          <Lato300 style={{ fontSize: "20px", color: "#707070" }}>What are you going to share today?</Lato300>
         </ShareTitle>
         <Form onSubmit={handlePublish}>
-          <Input 
-          placeholder="http://..." 
-          type="url"
-          name="url"
-          value={post.url}
-          required
-          disabled={loading}
-          onChange={event => {
-            const newValue = event.target.value
-            setPost(prevState => {
-            return {
-            ...prevState,
-              url: newValue
-            }
-          })}}
-          data-test='link'
+          <Input
+            data-test="link"
+            placeholder="http://..."
+            type="url"
+            name="url"
+            value={post.url}
+            required
+            disabled={loading}
+            onChange={event => {
+              const newValue = event.target.value
+              setPost(prevState => {
+                return {
+                  ...prevState,
+                  url: newValue
+                }
+              })
+            }}
           />
-          <TextArea rows="5" 
-          placeholder="Awesome article about #javascript"
-          value={post.content}
-          disabled={loading}
-          onChange={event => {
-            const newValue = event.target.value
-            setPost(prevState => {
-            return {
-            ...prevState,
-              content: newValue
-            }
-          })}}
-          data-test='description'
+          <TextArea
+            data-test="description"
+            rows="5"
+            placeholder="Awesome article about #javascript"
+            value={post.content}
+            disabled={loading}
+            onChange={event => {
+              const newValue = event.target.value
+              setPost(prevState => {
+                return {
+                  ...prevState,
+                  content: newValue
+                }
+              })
+            }}
           />
           <BtnContainer>
-            <Button disabled={loading} onClick={handlePublish} data-test='publish-btn' >
-              <Lato700 style={{  color: "#FFF",  fontSize: "14px"}}>
+            <Button disabled={loading} onClick={handlePublish} data-test="publish-btn" >
+              <Lato700 style={{ color: "#FFF", fontSize: "14px" }}>
                 {loading ? "Publishing..." : "Publish"}
               </Lato700>
             </Button>
           </BtnContainer>
-          
+
         </Form>
       </ContainerContent>
     </Container>

@@ -1,25 +1,26 @@
-import axios from "axios";
-import { useContext, useEffect, useState } from "react";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import { TbTrashFilled } from "react-icons/tb";
 import { TiPencil } from "react-icons/ti";
-import { useNavigate } from "react-router-dom";
 import reactStringReplace from 'react-string-replace';
 import { Tooltip } from "react-tooltip";
 import styled from "styled-components";
 import { AuthContext } from "../../contexts/UserContext.js";
+import { configToken } from "../../services/api.js";
 import { Lato400, Lato700 } from "../StyleComponents/StylesComponents.js";
 
 export default function Post(props) {
-  const { name, image, content, url, numberLikes, userId:idUser, postId, likedUserIds, likedUserNames } = props.post;
+  const { name, image, content, url, numberLikes, userId:idUser, postId, likedUserIds } = props.post;
+  const { likes } = props;
   const userId = localStorage.getItem("userId");
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [isLiked, setIsLiked] = useState(likedUserIds.includes(Number(userId)));
   const token = localStorage.getItem('token');
   const object = {headers: {'Authorization': `Bearer ${token}`}}
-  const {setPosts} = useContext(AuthContext)
+  const {setPosts, setLikes} = useContext(AuthContext)
   const [metadata, setMetadata] = useState({ title: "", description: "", image: undefined})
+
+  console.log(likes)
 
   useEffect(() => {
     if (url) {
@@ -37,23 +38,32 @@ export default function Post(props) {
     }
   }, [url]);
 
-  function getPosts(){
+  async function getPosts(){
     axios.get(`${process.env.REACT_APP_API_URL}/timeline`, object)
     .then(res => setPosts(res.data.rows))
     .catch(err => console.log(err))
 }
+
+  async function getLikes () {
+  const URL = `${process.env.REACT_APP_API_URL}/likes`
+  const config = configToken();
+  axios.get(URL, config)
+      .then( res => setLikes(res.data) )
+      .catch(err => console.log(err))
+}
+
   function handleToggleLike () {
     setLoading(true)
     const obj = {
-      isLiked, userId:Number(userId), postId
+      isLiked, userId: Number(userId), postId
     }
-    console.log('aqui', userId)
 
-    if(token) {
+    if (token) {
       axios.post(`${process.env.REACT_APP_API_URL}/like`, obj, object)
       .then((res) => {
         setIsLiked((prevIsLiked) => !prevIsLiked);
         console.log(res)
+        getLikes();
         getPosts();
       })
       .catch(err => {
@@ -63,63 +73,60 @@ export default function Post(props) {
   };
 
   return (
-    <Container data-test='post' >
+    <Container data-test="post" >
       <Info>
         <figure>
           <img src={image} alt="profile" />
         </figure>
-        
-        <StyledIcon 
-        onClick={handleToggleLike}
-        disabled={loading}
-        isLiked={isLiked}
-        data-test='like-btn'/>
+
+        <StyledIcon
+          onClick={handleToggleLike}
+          disabled={loading}
+          isLiked={isLiked}
+          data-test="like-btn" />
         <Lato700>
-        <Tooltip id="my-tooltip" place="bottom" style={{ background:"rgba(255, 255, 255, 0.90)", borderRadius:"3px", color:"#505050", fontSize:"12px" }} data-test='tooltip'/>
+          <Tooltip id="my-tooltip" place="bottom" style={{ background: "rgba(255, 255, 255, 0.90)", borderRadius: "3px", color: "#505050", fontSize: "12px" }} data-test="tooltip" />
         </Lato700>
-        
-        <Lato400 data-tooltip-id="my-tooltip" 
+
+        <Lato400 data-tooltip-id="my-tooltip"
           data-tooltip-content={
-            isLiked ?
-            `Você, ${likedUserNames[0]} e outras pessoas curtiram` :
-            likedUserNames.length > 0 ?
-            `${likedUserNames.slice(0, 2).join(', ')} e ${likedUserNames.length - 2} ${likedUserNames.length - 2 === 1 ? 'outra pessoa curtiu' : 'outras pessoas curtiram'}` :
-            "Ninguém curtiu ainda"
+            (likes.length===0) ? 'Ninguém curtiu ainda' : (isLiked && likes.length===1) ? 'Apenas você curtiu' : (isLiked && likes.length>1) ? `Você, ${likedUserIds[0]!== userId ? likes[0] : likes[1]} e outros ${numberLikes - 2} curtiram` : (!isLiked && likes.length===1) ? `Apenas ${likes[0]} curtiu` : `${likes.slice(0,2).join(', ')} e outras ${numberLikes-2} curtiram`
           }
           style={{ color: "#fff", fontSize: "11px" }}
-          data-test='counter'>
-          {Number(numberLikes) === 1 ? (`${numberLikes} Like`) : (`${numberLikes} Likes`)} 
-      </Lato400>
+          data-test="counter">
+          {Number(numberLikes) === 1 ? (`${numberLikes} Like`) : (`${numberLikes} Likes`)}
+        </Lato400>
 
 
       </Info>
       <Content>
         <div className="userName">
-          <Lato400 style={{ color: "#fff", fontSize: "19px" }} data-test='username' >{name}</Lato400>
+          <Lato400 style={{ color: "#fff", fontSize: "19px" }} data-test="username" >{name}</Lato400>
           {Number(userId) === idUser ? (
-          <div>
-            <StyledPencil />
-            <StyledTrash />  
-          </div>) : ""}
+            <div>
+              <StyledPencil />
+              <StyledTrash />
+            </div>) : ""}
         </div>
-        <Lato400 style={{ color: "#B7B7B7", fontSize: "17px" }} data-test='description' >
-        {reactStringReplace(content, /#(\w+)/g, (match, i) => (
+        <Lato400 style={{ color: "#B7B7B7", fontSize: "17px" }} data-test="description" >
+          {reactStringReplace(content, /#(\w+)/g, (match, i) => (
             <span key={i} onClick={() => navigate(`/hashtag/${match}`)} > #{match} </span>
           ))}
         </Lato400>
-
-        <SCMetadata>
-          <div>
-            <Lato400>{metadata.title}</Lato400>
-            <Lato400>{metadata.description}</Lato400>
-            <Lato400>{url}</Lato400>
-          </div>
-          <div>
-          {metadata.image && (
-            <img src={metadata.image} alt={metadata.title} />
-          )}
-          </div>
-        </SCMetadata>
+        <a href={url} target='_blank' data-test='link' >
+          <SCMetadata>
+            <div>
+              <Lato400>{metadata.title}</Lato400>
+              <Lato400>{metadata.description}</Lato400>
+              <Lato400>{url}</Lato400>
+            </div>
+            <div>
+            {metadata.image && (
+              <img src={metadata.image} alt={metadata.title} />
+            )}
+            </div>
+          </SCMetadata>
+        </a>
 
       </Content>
 
@@ -180,7 +187,7 @@ const SCMetadata = styled.div`
 `;
 
 const StyledIcon = styled(({ isLiked, ...rest }) =>
-isLiked ? <AiFillHeart {...rest} /> : <AiOutlineHeart {...rest} />
+  isLiked ? <AiFillHeart {...rest} /> : <AiOutlineHeart {...rest} />
 )`
   font-size: 16px;
   color: ${(props) => (props.isLiked ? '#AC0000' : '#fff')};
@@ -215,6 +222,9 @@ const Content = styled.div`
     font-weight: 700;
     line-height: normal;
     cursor: pointer;
+  }
+  a {
+    text-decoration:none;
   }
 `;
 
