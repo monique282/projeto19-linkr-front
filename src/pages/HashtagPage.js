@@ -1,13 +1,13 @@
+import axios from "axios";
 import { useEffect, useState } from "react";
-import NavBar from "../components/PageComponents/NavBar";
-import Post from "../components/PageComponents/PostComponent";
+import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import HashtagBox from "../components/PageComponents/HashtagBox";
-import { useParams } from "react-router-dom";
-import axios from "axios";
-import { configToken } from "../services/api";
+import NavBar from "../components/PageComponents/NavBar";
 import { Background } from "../components/PageComponents/PageComponents";
+import Post from "../components/PageComponents/PostComponent";
 import { FontPageTitle } from "../components/StyleComponents/StylesComponents";
+import { configToken } from "../services/api";
 
 export default function HashtagPage() {
   const { hashtag } = useParams();
@@ -68,7 +68,7 @@ const Feed = styled.div`
     gap: 30px;`
 
 const Trending = styled.div`
-    padding-top: 77px`
+    padding-top: 77px;`
 
 const Posts = styled.div`
     display:flex;
