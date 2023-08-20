@@ -24,10 +24,10 @@ export default function HashtagBox () {
     []) // COLOCAR DENTRO A VARIAVEL DE ESTADO QUE ATUALIZA O GET DOS POSTS!!!!!!!!!!!!!!!!!!
 
     return (
-        <SCHashtagBox data-test='trending' > 
+        <SCHashtagBox data-test="trending" > 
             <SCTrending> trending </SCTrending>
             <SCHashtagContent>
-                { hashtagsList.map((hashtag, i) => <SCHashtagWord key={i} onClick={() => navigate(`/hashtag/${hashtag.hashtag}`)} data-test='hashtag' > # {hashtag.hashtag} </SCHashtagWord>) }
+                { hashtagsList.map((hashtag, i) => <SCHashtagWord key={i} onClick={() => navigate(`/hashtag/${hashtag.hashtag}`)} data-test="hashtag" > # {hashtag.hashtag} </SCHashtagWord>) }
             </SCHashtagContent>
         </SCHashtagBox>
     )

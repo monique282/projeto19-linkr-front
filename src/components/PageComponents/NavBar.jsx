@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md";
 import styled from "styled-components";
 import { FontHeader, Lato700 } from "../StyleComponents/StylesComponents";
@@ -13,7 +13,8 @@ export default function NavBar() {
   const [image, setImage] = useState(localStorage.getItem("image"));
   const { setToken, token } = useContext(AuthContext);
   const [searchResults, setSearchResults] = useState([]);
-  const [isMenuOpen, setMenuOpen] = useState(false);
+
+  const [isClicked, setClicked] = useState("false");
 
 
 
@@ -22,7 +23,7 @@ export default function NavBar() {
     setImage(localImage);
   }, [])
 
-  const [isClicked, setClicked] = useState("false");
+  // função para identificar se ouve algum clique na seta
   function handleClick(value) {
     setClicked(value);
   }
@@ -68,20 +69,15 @@ export default function NavBar() {
   function formatName(name) {
     // divide o nome em palavras separadas por espaços
     const words = name.split(' ');
-  
+
     // capitaliza a primeira letra de cada palavra
     const capitalizedWords = words.map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase());
-  
+
     // Junta as palavras de volta em um nome formatado
     const formattedName = capitalizedWords.join(' ');
-  
+
     return formattedName;
   }
-
-  // // essa junção é pra quando gor clicado em qualque ligar fora do logout, para ele fechar
-  // function handleClick(value) {
-  //   setMenuOpen(value === "true");
-  // }
 
 
   return (
@@ -90,6 +86,7 @@ export default function NavBar() {
       <form>
         <UserSearch>
           <DebounceInput
+            data-test="search"
             type="text"
             id="search"
             name="search"
@@ -105,12 +102,12 @@ export default function NavBar() {
               if (searchText.length >= 3) {
                 performSearchNoServer(searchText); //  função de busca no servidor
               } else {
-                setSearchResults([]); // Limpa os resultados se o texto for menor que 3 caracteres
+                setSearchResults([]); // limpa os resultados se o texto for menor que 3 caracteres
               }
             }}
           />
           {searchResults.map(searchResults => (
-            <DirectByLink to={`/user/${searchResults.id}`} key={searchResults.id} onClick={() => setSearchResults([])}>
+            <DirectByLink data-test="user-search" to={`/user/${searchResults.id}`} key={searchResults.id} onClick={() => setSearchResults([])}>
               <img src={searchResults.image} alt="" />
               <Title>{formatName(searchResults.name)}</Title>
             </DirectByLink>
@@ -122,17 +119,59 @@ export default function NavBar() {
         {isClicked === "false" ? (
           <StyledIconDown onClick={() => handleClick("true")} />
         ) : (
-          <div>
-            <StyledIconUp onClick={() => handleClick("false")} />
-            <button onClick={() => Logout()} ><Lato700 style={{ letterSpacing: "0.75px", fontSize: "15px", color: "#FFF" }}>LogOut</Lato700></button>
+          <div data-test="menu">
+            <StyledIconUp
+              onClick={() => {
+                handleClick("false");
+              }}
+              className="icon"
+            />
+            <button data-test="logout" onClick={() => Logout()}>
+              <Lato700 style={{ letterSpacing: "0.75px", fontSize: "15px", color: "#FFF" }}>
+                LogOut
+              </Lato700>
+            </button>
           </div>
         )}
 
-        <img src={image} alt="profile" />
+        <img ata-test="avatar"
+          src={image}
+          alt="profile"
+          onClick={() => {
+            handleClick("false");
+          }}
+        />
       </figure>
     </Container>
   );
 }
+
+const Menu = styled.div`
+  position: relative;
+
+  .icon {
+    color: #fff;
+    font-size: 25px;
+    cursor: pointer;
+  }
+
+  .open {
+    display: block;
+  }
+
+  button {
+    width: 150px;
+    height: 47px;
+    flex-shrink: 0;
+    position: absolute;
+    top: 72px;
+    right: 0px;
+    border-radius: 0px 0px 20px 20px;
+    background: #171717;
+  }
+`;
+
+
 const Title = styled.div`
     font-family: 'Lato';
     font-size: 19px;
