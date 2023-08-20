@@ -1,14 +1,14 @@
-import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
-import {TiPencil} from "react-icons/ti"
-import {TbTrashFilled} from "react-icons/tb"
-import styled from "styled-components";
-import { Lato400, Lato700 } from "../StyleComponents/StylesComponents.js";
-import reactStringReplace from 'react-string-replace';
-import { useNavigate } from "react-router-dom";
-import { Tooltip } from "react-tooltip";
-import { useContext, useState } from "react";
 import axios from "axios";
+import { useContext, useState } from "react";
+import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
+import { TbTrashFilled } from "react-icons/tb";
+import { TiPencil } from "react-icons/ti";
+import { useNavigate } from "react-router-dom";
+import reactStringReplace from 'react-string-replace';
+import { Tooltip } from "react-tooltip";
+import styled from "styled-components";
 import { AuthContext } from "../../contexts/UserContext.js";
+import { Lato400, Lato700 } from "../StyleComponents/StylesComponents.js";
 
 export default function Post(props) {
   const { name, image, content, url, numberLikes, userId:idUser, postId, likedUserIds } = props.post;
