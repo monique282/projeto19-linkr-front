@@ -23,8 +23,6 @@ export default function Post(props) {
   const {setPosts, setLikes} = useContext(AuthContext)
   const [metadata, setMetadata] = useState({ title: "", description: "", image: undefined})
 
-  console.log(likes)
-
   useEffect(() => {
     if (url) {
       axios
@@ -93,7 +91,7 @@ export default function Post(props) {
 
         <Lato400 data-tooltip-id="my-tooltip"
           data-tooltip-content={
-            (likes.length===0) ? 'Ninguém curtiu ainda' : (isLiked && likes.length===1) ? 'Apenas você curtiu' : (isLiked && likes.length>1) ? `Você, ${likedUserIds[0]!== userId ? likes[0] : likes[1]} e outros ${numberLikes - 2} curtiram` : (!isLiked && likes.length===1) ? `Apenas ${likes[0]} curtiu` : `${likes.slice(0,2).join(', ')} e outras ${numberLikes-2} curtiram`
+            (likes.length===0) ? 'Ninguém curtiu ainda' : (isLiked && likes.length===1) ? 'Apenas você curtiu' : (isLiked && likes.length>1) ? `Você, ${likedUserIds[0]!== userId ? likes[1] : likes[0]} e outros ${numberLikes - 2} curtiram` : (!isLiked && likes.length===1) ? `Apenas ${likes[0]} curtiu` : `${likes.slice(0,2).join(', ')} e outras ${numberLikes-2} curtiram`
           }
           style={{ color: "#fff", fontSize: "11px" }}
           data-test="counter">
