@@ -1,5 +1,6 @@
 import { useState } from "react";
 import styled from "styled-components";
+import HashtagBox from "../components/PageComponents/HashtagBox.js";
 import NavBar from "../components/PageComponents/NavBar.jsx";
 import Post from "../components/PageComponents/PostComponent.jsx";
 
@@ -34,6 +35,9 @@ export default function UserPage() {
               {posts.map((post) => (
                 <Post post={post} />
               ))}
+            </article>
+            <article>
+              <HashtagBox />
             </article>
           </section>
         </Content>

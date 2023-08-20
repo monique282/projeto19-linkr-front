@@ -1,11 +1,11 @@
-import styled from "styled-components"
-import { Background } from "../components/PageComponents/PageComponents"
-import SharePost from "../components/PageComponents/SharePost"
-import Post from "../components/PageComponents/PostComponent"
-import HashtagBox from "../components/PageComponents/HashtagBox"
-import { useContext, useEffect, useState } from "react"
 import axios from "axios"
+import { useContext, useEffect, useState } from "react"
+import styled from "styled-components"
+import HashtagBox from "../components/PageComponents/HashtagBox"
 import NavBar from "../components/PageComponents/NavBar"
+import { Background } from "../components/PageComponents/PageComponents"
+import Post from "../components/PageComponents/PostComponent"
+import SharePost from "../components/PageComponents/SharePost"
 import { FontPageTitle } from "../components/StyleComponents/StylesComponents"
 import { AuthContext } from "../contexts/UserContext"
 
@@ -17,6 +17,7 @@ export default function TimelinePage(){
     function getPosts(){
         axios.get(`${process.env.REACT_APP_API_URL}/timeline`, object)
         .then(res => {
+            console.log(res)
             setPosts(res.data.rows)
             if(res.data.rows.length === 0) setMessage("There are no posts yet")
         })
@@ -54,7 +55,7 @@ const Feed = styled.div`
     gap: 30px;`
 
 const Trending = styled.div`
-    padding-top: 77px`
+    padding-top: 77px;`
 
 const Posts = styled.div`
     display:flex;
