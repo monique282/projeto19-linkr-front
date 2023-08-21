@@ -75,20 +75,43 @@ const Backgroun = styled.div`
     height: 100%;
     display: flex;
     justify-content:center;
+
+    @media (max-width: 430px) {
+        width: 100%;
+        height: 100%;
+        flex-direction: column;
+    }
 `
 const Total = styled.div`
     width: 100%;
     height: 100vh; 
     display: flex;
+
+    @media (max-width: 430px) {
+        width: 100%;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
 `
 const RegisteLogin = styled.div`
-    width: 905px;
+    width: 60vw;
     height: 100%;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     background-color: #151515;
+
+    @media (max-width: 430px) {
+        width: 100vw;
+        height: 25vh;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+  }
 `
 const Title = styled.p`
     font-family: 'Passion One';
@@ -98,20 +121,35 @@ const Title = styled.p`
     text-align: left;
     color: rgba(255, 255, 255, 1);
     margin-left: -228px;
+
+    @media (max-width: 430px) {
+        font-size: 56px;
+        text-align: center;
+        line-height: normal;
+        margin-left: 0px;
+    }
 `
 const Slogam = styled.p`
     width: 442px;
-    height: 128px;
-    font-family: Oswald;
+    font-family: 'Oswald';
     font-size: 43px;
     font-weight: 700;
     line-height: 64px;
     text-align: left;
     color: rgba(255, 255, 255, 1);
+
+    @media (max-width: 430px) {
+        width: 70%;
+
+        font-size: 23px;
+        line-height: normal;
+        text-align: center;
+    }
 `
 
 const SingInContainer = styled.section`
-    width: 100%;
+    width: 40vw;
+    height: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -140,7 +178,19 @@ const SingInContainer = styled.section`
                 display: flex;
                 justify-content: center;
                 align-items: center;
+
+                @media (max-width: 430px) {
+                    width: 330px;
+                    height: 55px;
+                    font-size: 22px;
+                }
 } }
+@media (max-width: 430px) {
+    width: 100%;
+    padding: 30px;
+    text-align: center;
+    justify-content: flex-start;
+}
 `
 const Input = styled.input`
     width: 429px;
@@ -158,6 +208,11 @@ const Input = styled.input`
     line-height: 40px;
     text-align: left;
 
+    @media (max-width: 430px) {
+        width: 330px;
+        height: 55px;
+        font-size: 22px;
+    }
 `
 const Register = styled(Link)`
     font-family: 'Lato';
@@ -167,6 +222,10 @@ const Register = styled(Link)`
     letter-spacing: 0em;
     text-align: left;
     color: rgba(255, 255, 255, 1);
+
+    @media (max-width: 430px) {
+        font-size: 17px;
+    }
 `
 
 
