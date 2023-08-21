@@ -1,10 +1,10 @@
-import styled from "styled-components"
-import { Lato300, Lato700 } from "../StyleComponents/StylesComponents"
-import { useContext, useEffect, useState } from "react"
 import axios from "axios"
+import { useContext, useEffect, useState } from "react"
 import reactStringReplace from "react-string-replace"
+import styled from "styled-components"
 import { AuthContext } from "../../contexts/UserContext"
 import { configToken } from "../../services/api"
+import { Lato300, Lato700 } from "../StyleComponents/StylesComponents"
 
 export default function SharePost({userPhoto, loading, setLoading, setAtualize}) { 
   const [post, setPost] = useState({url:"", content:""});
