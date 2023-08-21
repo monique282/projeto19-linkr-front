@@ -118,10 +118,12 @@ export default function NavBar() {
       <figure >
 
         {isClicked === "false" ? (
+
           <StyledIconDown onClick={() => handleClick("true")} />
+
         ) : (
           <Menu  >
-            <StyledIconUp 
+            <StyledIconUp
               onClick={() => {
                 handleClick("false");
               }}
@@ -135,13 +137,25 @@ export default function NavBar() {
           </Menu>
         )}
 
-        <img data-test="avatar"
+        {isClicked === "false" ? (
+          <img data-test="avatar"
+          src={image}
+          alt="profile"
+          onClick={() => {
+            handleClick("true");
+          }}
+        />
+        ) : (
+          <img data-test="avatar"
           src={image}
           alt="profile"
           onClick={() => {
             handleClick("false");
           }}
         />
+         
+        )}
+        
       </figure>
     </Container>
   );

@@ -30,7 +30,8 @@ export default function Post(props) {
   const [isLiked, setIsLiked] = useState(likedUserIds.includes(Number(userId)));
   const token = localStorage.getItem("token");
   const object = { headers: { Authorization: `Bearer ${token}` } };
-  const { setPosts, setLikes, posts } = useContext(AuthContext);
+
+  const { setPosts, setLikes } = useContext(AuthContext);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [metadata, setMetadata] = useState({
     title: "",
@@ -139,21 +140,20 @@ export default function Post(props) {
   function handleDeleteConfirmation() {
     setIsModalOpen(false);
     Delete(postId);
-  }
+  };
+
   function Delete(id) {
     console.log(id)
     const url = `${process.env.REACT_APP_API_URL}/postDelete/${id}`
     const promise = axios.delete(url)
     promise.then(response => {
-      alert("Produto deletado");
-      handleToggleLike();
-      setIsModalOpen(false)
+      setIsModalOpen(false);
+      window.location.reload()
     })
     promise.catch(err => {
       alert(err.response.data);
     });
   }
-
 
   return (
     <Container data-test="post">
@@ -208,7 +208,7 @@ export default function Post(props) {
           {Number(userId) === idUser ? (
             <div>
               <StyledPencil />
-              <StyledTrash onClick={() => { setIsModalOpen(true); }} />
+              <StyledTrash onClick={() => setIsModalOpen(true)} />
             </div>
           ) : (
             ""
@@ -247,9 +247,9 @@ export default function Post(props) {
         onRequestClose={() => setIsModalOpen(false)}
         style={{
           overlay: {
-            backgroundColor: "rgba(0, 0, 0, 0.5)",
+            // backgroundColor: "rgba(0, 0, 0, 0.5)",
             zIndex: 1000,
-            backgroundColor: "rgba(255, 255, 255, 0.9)",
+            backgroundColor: " rgba(255, 255, 255, 0.9)",
           },
           content: {
             width: "597px",
@@ -267,7 +267,7 @@ export default function Post(props) {
             color: "rgba(255, 255, 255, 1)",
             top: "50%",
             left: "50%",
-            transform: "translate(-50%, -50%)",
+            transform: "translate(-50%, -50%)"
           },
         }}
         contentLabel="Delete Confirmation"
@@ -280,7 +280,7 @@ export default function Post(props) {
           textAlign: "center",
           marginBottom: "30px"
         }} >Are you sure you want to delete this post?</p>
-        <div style={{ display: "flex", }} >
+        <div style={{ display: "flex" }} >
           <button onClick={() => setIsModalOpen(false)}
             style={{
               marginRight: "10px",
@@ -311,6 +311,7 @@ export default function Post(props) {
         </div>
 
       </Modal>
+
     </Container>
   );
 }

@@ -165,8 +165,8 @@ export default function Post(props) {
           {Number(userId) === idUser ? (
             <div>
               {/* <StyledPencil /> */}
-              <StyledTrash onClick={() => setIsModalOpen(true)} />
 
+              <StyledTrash onClick={() => setIsModalOpen(true)} />
             </div>) : ""}
         </div>
         <Lato400 style={{ color: "#B7B7B7", fontSize: "17px" }} data-test="description" >
