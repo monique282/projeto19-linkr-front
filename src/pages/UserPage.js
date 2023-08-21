@@ -3,27 +3,26 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import HashtagBox from "../components/PageComponents/HashtagBox.js";
-import NavBar from "../components/PageComponents/NavBar.jsx";
-import Post from "../components/PageComponents/PostComponent.jsx";
+import NavBar from "../components/PageComponents/NavBar.js";
+import Post from "../components/PageComponents/PostComponent.js";
 import { FontPageTitle } from "../components/StyleComponents/StylesComponents.js";
 
 export default function UserPage() {
-  // const { setPosts, posts } = useContext(AuthContext);
-  const [userPosts, setUserPosts] = useState([]);
+  const [posts, setPosts] = useState([]);
   const [likes, setLikes] = useState([]);
   const [info, setInfo] = useState([]);
   const { id } = useParams();
   const token = localStorage.getItem("token");
   const object = { headers: { Authorization: `Bearer ${token}` } };
   console.log(likes);
-  console.log(userPosts);
+  console.log(posts);
 
   function getPosts() {
     axios
       .get(`${process.env.REACT_APP_API_URL}/user/${id}`, object)
       .then((res) => {
         setInfo(res.data);
-        setUserPosts(res.data.posts);
+        setPosts(res.data.posts);
 
         console.log(res);
       })
@@ -43,12 +42,11 @@ export default function UserPage() {
 
   useEffect(() => {
     if (token) {
-      setUserPosts([]);
+      setPosts([]);
       setLikes([]);
-      // getPosts();
       getLikes();
     }
-  }, [id]);
+  }, []);
 
   return (
     <>
@@ -61,15 +59,15 @@ export default function UserPage() {
           </header>
           <section>
             <article>
-              {userPosts.length === 0 ? (
+              {posts.length === 0 ? (
                 <FontPageTitle>O usuário não tem posts!</FontPageTitle>
               ) : (
-                userPosts.map((post, i) => (
+                posts.map((post, i) => (
                   <Post
                     key={post.postId}
                     post={post}
-                    userPosts={userPosts}
-                    setUserPosts={setUserPosts}
+                    userPosts={posts}
+                    setUserPosts={setPosts}
                     setInfo={setInfo}
                     id={id}
                     likes={
