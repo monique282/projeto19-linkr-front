@@ -43,9 +43,11 @@ async function getLikes () {
     async function handlePublish(e) {
       e.preventDefault();
       const obj = { url: post.url, content: post.content, hashtags };
-      setLoading(true); // Set loading to true before making the request
+      setLoading(true); 
       setAtualize((prev) => !prev);
-
+      if(obj.url.length === 0) {
+        setLoading(false)
+        return alert('Campo URL é obrigatório!')}
       if (token) {
         try {
           await axios.post(`${process.env.REACT_APP_API_URL}/new-post`, obj, object);
@@ -56,8 +58,7 @@ async function getLikes () {
           alert(error.response.data);
         }
       }
-
-      setLoading(false); // Set loading to false after the request is done
+      setLoading(false);
   }
 
   return (
@@ -76,7 +77,7 @@ async function getLikes () {
             type="url"
             name="url"
             value={post.url}
-            required={true}
+            required
             disabled={loading}
             onChange={event => {
               const newValue = event.target.value
