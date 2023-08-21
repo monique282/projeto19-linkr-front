@@ -72,6 +72,7 @@ export default function Post(props) {
     }
   }, [url]);
 
+
   function likesTooltip() {
     if (likes.length === 0) {
       return "Ninguém curtiu ainda";
@@ -245,7 +246,7 @@ export default function Post(props) {
           {Number(userId) === idUser ? (
             <div>
               <StyledPencil />
-              <StyledTrash onClick={() => setIsModalOpen(true)} />
+              <StyledTrash data-test="delete-btn" onClick={() => setIsModalOpen(true)} />
             </div>
           ) : (
             ""
