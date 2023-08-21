@@ -17,7 +17,7 @@ export default function TimelinePage(){
     const [message, setMessage] = useState("Loading")
     const [loading, setLoading] = useState(false);
     const [atualize, setAtualize] = useState(false);
-
+    console.log(likes)
 
     async function getPosts(){
         axios.get(`${process.env.REACT_APP_API_URL}/timeline`, object)
@@ -27,6 +27,7 @@ export default function TimelinePage(){
             })
             .catch(err => setMessage(<><div>An error ocurred while trying to fetch the</div><div>posts, please refresh the page</div></>))
     }
+    
     async function getLikes () {
         const URL = `${process.env.REACT_APP_API_URL}/likes`
         const config = configToken();
@@ -52,7 +53,7 @@ export default function TimelinePage(){
                     <SharePost loading={loading} setLoading={setLoading} setAtualize={setAtualize} />
                     <Posts>
                     {posts.length === 0 ? (<FontPageTitle style={{textAlign:"center"}} data-test='message' >{message}</FontPageTitle>) : (posts.map((post, i) => {
-                        return <Post post={post} likes={(likes[i].likedUserNames[0]===null) ? [] : likes[i].likedUserNames}/>
+                        return <Post post={post} likes={likes.length === 0 ? [] : (likes[i].likedUserNames[0]===null) ? [] : likes[i].likedUserNames}/>
                     }))}
                     </Posts>
                 </Feed>

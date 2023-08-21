@@ -1,25 +1,45 @@
-import { useState } from "react";
+import axios from "axios";
+import { useContext, useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import HashtagBox from "../components/PageComponents/HashtagBox.js";
 import NavBar from "../components/PageComponents/NavBar.jsx";
 import Post from "../components/PageComponents/PostComponent.jsx";
+import { FontPageTitle } from "../components/StyleComponents/StylesComponents.js";
+import { AuthContext } from "../contexts/UserContext.js";
 
 export default function UserPage() {
-  const [posts, setPosts] = useState([
-    {
-      name: "Vitor",
-      picture:
-        "https://i.pinimg.com/originals/52/37/04/5237042f152ca9cf6c54daf824f1dc5d.jpg",
-      content: "post 1 #anime #2023",
-      url: "https://www.aficionados.com.br/animes-2023/",
-      tags: [],
-      likes: 13,
-    },
-  ]);
+  const { setPosts, posts } = useContext(AuthContext);
+  const [likes, setLikes] = useState([]);
+  const [info, setInfo] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const { id } = useParams();
+  const token = localStorage.getItem("token");
+  const object = { headers: { Authorization: `Bearer ${token}` } };
+  console.log(likes);
+  function getPosts() {
+    axios
+      .get(`${process.env.REACT_APP_API_URL}/user/${id}`, object)
+      .then((res) => {
+        setInfo(res.data);
+        setPosts(res.data.posts);
+        console.log(res)
+      })
+      .catch((res) => console.log(res))
+  }
 
-  const [image, setImage] = useState(
-    "https://i.pinimg.com/originals/52/37/04/5237042f152ca9cf6c54daf824f1dc5d.jpg"
-  );
+  async function getLikes() {
+    const URL = `${process.env.REACT_APP_API_URL}/likes/${id}`;
+    axios
+      .get(URL, object)
+      .then((res) => setLikes(res.data))
+      .catch((err) => console.log(err));
+  }
+
+  useEffect(() => {
+    getPosts();
+    getLikes();
+  }, [id]);
 
   return (
     <>
@@ -27,14 +47,29 @@ export default function UserPage() {
       <Container>
         <Content>
           <header>
-            <img src={image} alt="profile" />
-            <h1>{"Vitor"} posts</h1>
+            <img src={info.image} alt="profile" />
+            <h1>{info.name} posts</h1>
           </header>
           <section>
             <article>
-              {posts.map((post) => (
-                <Post post={post} />
-              ))}
+              {posts.length === 0 ? (
+                <FontPageTitle>O usuário não tem posts!</FontPageTitle>
+              ) : (
+                posts.map((post, i) => (
+                  <Post
+                    post={post}
+                    id={id}
+                    setInfo={setInfo}
+                    likes={
+                      likes.length === 0
+                        ? []
+                        : likes[i].likedUserNames[0] === null
+                        ? []
+                        : likes[i].likedUserNames
+                    }
+                  />
+                ))
+              )}
             </article>
             <article>
               <HashtagBox />
@@ -58,18 +93,20 @@ const Content = styled.main`
   width: 80%;
   height: 100%;
 
-  gap: 41px;
-
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
+  padding-top: 50px;
+  gap: 25px;
 
   background-color: #333333;
 
   section {
     width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 25px;
     article {
-      width: 100%;
       height: 100%;
       display: flex;
       align-items: center;

@@ -1,6 +1,9 @@
+import axios from "axios";
+import { useContext, useEffect, useState } from "react";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import { TbTrashFilled } from "react-icons/tb";
 import { TiPencil } from "react-icons/ti";
+import { useNavigate } from "react-router-dom";
 import reactStringReplace from 'react-string-replace';
 import { Tooltip } from "react-tooltip";
 import styled from "styled-components";
@@ -10,6 +13,8 @@ import { Lato400, Lato700 } from "../StyleComponents/StylesComponents.js";
 
 export default function Post(props) {
   const { name, image, content, url, numberLikes, userId:idUser, postId, likedUserIds } = props.post;
+  const { id } = props;
+  const { setInfo } = props;
   const { likes } = props;
   const userId = localStorage.getItem("userId");
   const navigate = useNavigate();
@@ -20,9 +25,8 @@ export default function Post(props) {
   const {setPosts, setLikes} = useContext(AuthContext)
   const [metadata, setMetadata] = useState({ title: "", description: "", image: undefined})
 
-  console.log(likes)
-
   useEffect(() => {
+
     if (url) {
       axios
         .get(`https://jsonlink.io/api/extract?url=${url}`)
@@ -39,9 +43,21 @@ export default function Post(props) {
   }, [url]);
 
   async function getPosts(){
-    axios.get(`${process.env.REACT_APP_API_URL}/timeline`, object)
-    .then(res => setPosts(res.data.rows))
-    .catch(err => console.log(err))
+    if (id) {
+      axios
+      .get(`${process.env.REACT_APP_API_URL}/user/${id}`, object)
+      .then((res) => {
+        setInfo(res.data);
+        setPosts(res.data.posts);
+        console.log(res)
+      })
+      .catch((res) => console.log(res))
+    }
+    else {
+      axios.get(`${process.env.REACT_APP_API_URL}/timeline`, object)
+      .then(res => setPosts(res.data.rows))
+      .catch(err => console.log(err))
+    }
 }
 
   async function getLikes () {
