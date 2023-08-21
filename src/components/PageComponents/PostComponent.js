@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import { TbTrashFilled } from "react-icons/tb";
 import { TiPencil } from "react-icons/ti";
@@ -39,22 +39,56 @@ export default function Post(props) {
   const userId = localStorage.getItem("userId");
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-  const [isLiked, setIsLiked] = useState(likedUserIds.includes(Number(userId)));
-
-  const token = localStorage.getItem("token");
-  const object = { headers: { Authorization: `Bearer ${token}` } };
-
-  const { setPosts, setLikes } = useContext(AuthContext);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [postContent, setContent] = useState(content);
+  const [hashtags, setHashtags] = useState([]);
+  const [isLiked, setIsLiked] = useState(likedUserIds.includes(Number(userId)));
+  
   const [metadata, setMetadata] = useState({
     title: "",
     description: "",
     image: undefined,
   });
+  const [isEditign, setIsEditing] = useState(false)
+  const token = localStorage.getItem("token");
+  const object = { headers: { Authorization: `Bearer ${token}` } };
+
+  const { setPosts, setLikes } = useContext(AuthContext);
+  const contentEdit = useCallback((inputElement)=> {
+    if(inputElement) inputElement.focus()
+  }, [])
+  function getPosts(){
+    axios
+    .get(`${process.env.REACT_APP_API_URL}/timeline`, object)
+    .then((res) => setPosts(res.data.rows))
+    .catch((err) =>alert(err.response.data))
+  }
+  function getLikes(){
+    const URL = `${process.env.REACT_APP_API_URL}/likes`;
+    axios
+      .get(URL, object)
+      .then((res) => {setLikes(res.data)})
+      .catch((err) => alert(err.response.data));
+    }
+  useEffect(() => {
+    const extractedHashtags = [];
+    reactStringReplace(postContent, /#(\w+)/g, (match, i) => {
+      extractedHashtags.push(match);
+    });
+    setHashtags(extractedHashtags)
+    console.log(hashtags)
+  }, [postContent]);
+
   useEffect(()=>{
-    console.log('passou ', numberLikes)
     if ( setAtualizeHashtag ) setAtualizeHashtag(prev => !prev);
   },[numberLikes])
+
+  useEffect(() => {
+    if (token) {
+      getPosts();
+      getLikes();
+    }
+  }, [loading]);
 
   useEffect(() => {
     if (url) {
@@ -105,6 +139,10 @@ export default function Post(props) {
         } curtiram`;
       }
     }
+  }
+
+  function handleEditPost() {
+    setIsEditing(!isEditign)
   }
 
   function handleToggleLike() {
@@ -167,7 +205,6 @@ export default function Post(props) {
               .then((res) => setLikes(res.data))
               .catch((err) => console.log(err));
           }
-          // getPosts();
         })
         .catch((err) => {
           console.log(`Error in like toggle: `, err);
@@ -181,7 +218,24 @@ export default function Post(props) {
     setIsModalOpen(false);
     Delete(postId);
   }
-
+  function handleKeyEvent(event){
+      if(event.key === "Escape") {
+        setIsEditing(false)
+        setContent(content)
+      }
+      if(event.key === "Enter") {
+        setLoading(true)
+        const obj = {
+          postContent,
+          hashtags
+        }
+        axios.patch(`${process.env.REACT_APP_API_URL}/edit/${postId}`, obj)
+        .then()
+        .catch(err => alert(err.response.data))
+        .finally(()=> setLoading(false))
+      }
+  }
+  
   function Delete(id) {
     console.log(id);
     const url = `${process.env.REACT_APP_API_URL}/postDelete/${id}`;
@@ -245,24 +299,32 @@ export default function Post(props) {
           </Link>
           {Number(userId) === idUser ? (
             <div>
-              <StyledPencil />
+              <StyledPencil data-test="edit-btn" onClick={handleEditPost}/>
               <StyledTrash data-test="delete-btn" onClick={() => setIsModalOpen(true)} />
             </div>
           ) : (
             ""
           )}
         </div>
-        <Lato400
+        {isEditign ? 
+        (<EditInput 
+          value={postContent}
+          disabled={loading} 
+          onBlur={()=> {setIsEditing(false)
+          setContent(content)}}
+          onKeyDown={handleKeyEvent}
+          onChange={(event)=> setContent(event.target.value)} 
+          ref={contentEdit}/>) : 
+        (<Lato400
           style={{ color: "#B7B7B7", fontSize: "17px" }}
-          data-test="description"
-        >
+          data-test="description">
           {reactStringReplace(content, /#(\w+)/g, (match, i) => (
             <span key={i} onClick={() => navigate(`/hashtag/${match}`)}>
               {" "}
               #{match}{" "}
             </span>
-          ))}
-        </Lato400>
+          ))}</Lato400>)
+          }
         <a href={url} target="_blank" data-test="link">
           <SCMetadata>
             <div>
@@ -285,7 +347,6 @@ export default function Post(props) {
         onRequestClose={() => setIsModalOpen(false)}
         style={{
           overlay: {
-            // backgroundColor: "rgba(0, 0, 0, 0.5)",
             zIndex: 1000,
             backgroundColor: " rgba(255, 255, 255, 0.9)",
           },
@@ -426,6 +487,15 @@ const StyledTrash = styled(TbTrashFilled)`
   height: 23px;
   width: 23px;
 `;
+const EditInput = styled.input`
+  font-size: 14px;
+  color: #4c4c4c;
+  font-family: Lato;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  border-radius: 7px;
+`
 
 const Content = styled.div`
   width: 100%;
