@@ -189,6 +189,7 @@ const SingInContainer = styled.section`
     width: 100%;
     padding: 30px;
     text-align: center;
+    justify-content: flex-start;
   
   }
 `
