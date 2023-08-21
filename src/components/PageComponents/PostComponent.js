@@ -4,6 +4,7 @@ import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import { TbTrashFilled } from "react-icons/tb";
 import { TiPencil } from "react-icons/ti";
 import { Link, useNavigate } from "react-router-dom";
+import reactStringReplace from "react-string-replace";
 import { Tooltip } from "react-tooltip";
 import styled from "styled-components";
 import { AuthContext } from "../../contexts/UserContext.js";
@@ -21,7 +22,7 @@ export default function Post(props) {
     postId,
     likedUserIds,
   } = props.post;
-  const {setUserPosts, id, likes, setInfo } = props;
+  const { setUserPosts, id, likes, setUserLikes, setInfo } = props;
 
   const userId = localStorage.getItem("userId");
   const navigate = useNavigate();
@@ -54,42 +55,6 @@ export default function Post(props) {
     }
   }, [url]);
 
-  async function getPosts() {
-    if (id) {
-      axios
-        .get(`${process.env.REACT_APP_API_URL}/user/${id}`, object)
-        .then((res) => {
-          setInfo(res.data);
-          setUserPosts(res.data.posts);
-
-          console.log(res);
-        })
-        .catch((res) => console.log(res));
-    } else {
-      axios
-        .get(`${process.env.REACT_APP_API_URL}/timeline`, object)
-        .then((res) => setPosts(res.data.rows))
-        .catch((err) => console.log(err));
-    }
-  }
-
-  async function getLikes() {
-    if (id) {
-      const URL = `${process.env.REACT_APP_API_URL}/likes/${id}`;
-      axios
-        .get(URL, object)
-        .then((res) => setLikes(res.data))
-        .catch((err) => console.log(err));
-    } else {
-      const URL = `${process.env.REACT_APP_API_URL}/likes`;
-      const config = configToken();
-      axios
-        .get(URL, config)
-        .then((res) => setLikes(res.data))
-        .catch((err) => console.log(err));
-    }
-  }
-
   function handleToggleLike() {
     setLoading(true);
     const obj = {
@@ -103,9 +68,36 @@ export default function Post(props) {
         .post(`${process.env.REACT_APP_API_URL}/like`, obj, object)
         .then((res) => {
           setIsLiked((prevIsLiked) => !prevIsLiked);
-          console.log(res);
-          getLikes();
-          getPosts();
+          if (id !== undefined) {
+            axios
+              .get(`${process.env.REACT_APP_API_URL}/user/${id}`, object)
+              .then((res) => {
+                setInfo(res.data);
+                setUserPosts(res.data.posts);
+
+                console.log(res);
+              })
+              .catch((res) => console.log(res));
+
+            const URL = `${process.env.REACT_APP_API_URL}/likes/${id}`;
+            axios
+              .get(URL, object)
+              .then((res) => setUserLikes(res.data))
+              .catch((err) => console.log(err));
+          } else {
+            axios
+              .get(`${process.env.REACT_APP_API_URL}/timeline`, object)
+              .then((res) => setPosts(res.data.rows))
+              .catch((err) => console.log(err));
+
+            const URL = `${process.env.REACT_APP_API_URL}/likes`;
+            const config = configToken();
+            axios
+              .get(URL, config)
+              .then((res) => setLikes(res.data))
+              .catch((err) => console.log(err));
+          }
+          // getPosts();
         })
         .catch((err) => {
           console.log(`Error in like toggle: `, err);
@@ -168,12 +160,12 @@ export default function Post(props) {
       </Info>
       <Content>
         <div className="userName">
-          <Link to={`/user/${props.userId}`}>
+          <Link to={`/user/${props.post.userId}`}>
             <Lato400
               style={{ color: "#fff", fontSize: "19px" }}
               data-test="username"
             >
-             {name}
+              {name}
             </Lato400>
           </Link>
           {Number(userId) === idUser ? (
