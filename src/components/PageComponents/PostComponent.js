@@ -33,6 +33,7 @@ export default function Post(props) {
     setHashtagPosts,
     setHashtagLikes,
     hashtag,
+    setAtualizeHashtag
   } = props;
 
   const userId = localStorage.getItem("userId");
@@ -51,7 +52,8 @@ export default function Post(props) {
     image: undefined,
   });
   useEffect(()=>{
-    console.log(numberLikes)
+    console.log('passou ', numberLikes)
+    if ( setAtualizeHashtag ) setAtualizeHashtag(prev => !prev);
   },[numberLikes])
 
   useEffect(() => {

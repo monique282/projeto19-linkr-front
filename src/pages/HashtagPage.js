@@ -15,6 +15,8 @@ export default function HashtagPage() {
   const [posts, setPosts] = useState([]);
   const [likes, setLikes] = useState([]);
 
+  const [atualizeHashtag, setAtualizeHashtag] = useState(false)
+
   useEffect(() => {
     const URL = process.env.REACT_APP_API_URL;
     const headers = configToken();
@@ -22,7 +24,7 @@ export default function HashtagPage() {
     axios
       .get(`${URL}/hashtags/likes/${hashtag}`, headers)
       .then((res) => {
-        console.log(res.data)
+        console.log('likessss  ', res.data)
         setLikes(res.data)})
       .catch((err) => console.log(err));
 
@@ -33,7 +35,7 @@ export default function HashtagPage() {
         console.log('posts    ', res.data)
       })
       .catch((err) => console.log(err));
-  }, [hashtag]);
+  }, [hashtag, atualizeHashtag]);
 
   return (
     <Background>
@@ -53,6 +55,7 @@ export default function HashtagPage() {
                   post={post}
                   setHashtagPosts={setPosts}
                   setHashtagLikes={setLikes}
+                  setAtualizeHashtag={setAtualizeHashtag}
                   hashtag={hashtag}
                   likes={
                     likes[i]?.likedUserNames[0] === null
