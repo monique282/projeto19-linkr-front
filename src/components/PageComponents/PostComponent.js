@@ -38,9 +38,11 @@ export default function Post(props) {
   const userId = localStorage.getItem("userId");
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-  const [postContent, setContent] = useState(content);
-  const [isLiked, setIsLiked] = useState(likedUserIds.includes(Number(userId)));
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [postContent, setContent] = useState(content);
+  const [hashtags, setHashtags] = useState([]);
+  const [isLiked, setIsLiked] = useState(likedUserIds.includes(Number(userId)));
+  
   const [metadata, setMetadata] = useState({
     title: "",
     description: "",
@@ -54,8 +56,37 @@ export default function Post(props) {
   const contentEdit = useCallback((inputElement)=> {
     if(inputElement) inputElement.focus()
   }, [])
+  function getPosts(){
+    axios
+    .get(`${process.env.REACT_APP_API_URL}/timeline`, object)
+    .then((res) => setPosts(res.data.rows))
+    .catch((err) =>alert(err.response.data))
+  }
+  function getLikes(){
+    const URL = `${process.env.REACT_APP_API_URL}/likes`;
+    axios
+      .get(URL, object)
+      .then((res) => {setLikes(res.data)})
+      .catch((err) => alert(err.response.data));
+    }
+  useEffect(() => {
+    const extractedHashtags = [];
+    reactStringReplace(postContent, /#(\w+)/g, (match, i) => {
+      extractedHashtags.push(match);
+    });
+    setHashtags(extractedHashtags)
+    console.log(hashtags)
+  }, [postContent]);
+
   useEffect(()=>{
   },[numberLikes])
+
+  useEffect(() => {
+    if (token) {
+      getPosts();
+      getLikes();
+    }
+  }, [loading]);
 
   useEffect(() => {
     if (url) {
@@ -171,7 +202,6 @@ export default function Post(props) {
               .then((res) => setLikes(res.data))
               .catch((err) => console.log(err));
           }
-          // getPosts();
         })
         .catch((err) => {
           console.log(`Error in like toggle: `, err);
@@ -185,7 +215,24 @@ export default function Post(props) {
     setIsModalOpen(false);
     Delete(postId);
   }
-
+  function handleKeyEvent(event){
+      if(event.key === "Escape") {
+        setIsEditing(false)
+        setContent(content)
+      }
+      if(event.key === "Enter") {
+        setLoading(true)
+        const obj = {
+          postContent,
+          hashtags
+        }
+        axios.patch(`${process.env.REACT_APP_API_URL}/edit/${postId}`, obj)
+        .then()
+        .catch(err => alert(err.response.data))
+        .finally(()=> setLoading(false))
+      }
+  }
+  
   function Delete(id) {
     console.log(id);
     const url = `${process.env.REACT_APP_API_URL}/postDelete/${id}`;
@@ -257,7 +304,14 @@ export default function Post(props) {
           )}
         </div>
         {isEditign ? 
-        (<EditInput  onChange={(event)=> setContent(event.target.value)} ref={contentEdit}/>) : 
+        (<EditInput 
+          value={postContent}
+          disabled={loading} 
+          onBlur={()=> {setIsEditing(false)
+          setContent(content)}}
+          onKeyDown={handleKeyEvent}
+          onChange={(event)=> setContent(event.target.value)} 
+          ref={contentEdit}/>) : 
         (<Lato400
           style={{ color: "#B7B7B7", fontSize: "17px" }}
           data-test="description">

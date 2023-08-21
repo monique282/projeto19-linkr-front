@@ -78,6 +78,8 @@ export default function TimelinePage() {
                   <Post
                     key={post.postId}
                     post={post}
+                    loading={loading}
+                    setLoading={setLoading}
                     likes={
                       likes[i]?.likedUserNames[0] === null
                         ? []
