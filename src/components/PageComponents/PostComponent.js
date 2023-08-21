@@ -3,8 +3,7 @@ import { useContext, useEffect, useState } from "react";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import { TbTrashFilled } from "react-icons/tb";
 import { TiPencil } from "react-icons/ti";
-import { useNavigate } from "react-router-dom";
-import reactStringReplace from "react-string-replace";
+import { Link, useNavigate } from "react-router-dom";
 import { Tooltip } from "react-tooltip";
 import styled from "styled-components";
 import { AuthContext } from "../../contexts/UserContext.js";
@@ -169,12 +168,14 @@ export default function Post(props) {
       </Info>
       <Content>
         <div className="userName">
-          <Lato400
-            style={{ color: "#fff", fontSize: "19px" }}
-            data-test="username"
-          >
-            {name}
-          </Lato400>
+          <Link to={`/user/${props.userId}`}>
+            <Lato400
+              style={{ color: "#fff", fontSize: "19px" }}
+              data-test="username"
+            >
+             {name}
+            </Lato400>
+          </Link>
           {Number(userId) === idUser ? (
             <div>
               <StyledPencil />
