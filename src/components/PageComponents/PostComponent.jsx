@@ -84,7 +84,7 @@ export default function Post(props) {
   function handleDeleteConfirmation() {
     setIsModalOpen(false);
     Delete(postId);
-  }
+  };
 
   function Delete(id) {
     console.log(id)
@@ -135,8 +135,9 @@ export default function Post(props) {
           <Lato400 style={{ color: "#fff", fontSize: "19px" }} data-test="username" >{name}</Lato400>
           {Number(userId) === idUser ? (
             <div>
-              <StyledPencil />
-              <StyledTrash onClick={() => { setIsModalOpen(true); }} />
+              {/* <StyledPencil /> */}
+              <StyledTrash onClick={() => setIsModalOpen(true)} />
+
             </div>) : ""}
         </div>
         <Lato400 style={{ color: "#B7B7B7", fontSize: "17px" }} data-test="description" >
@@ -144,7 +145,7 @@ export default function Post(props) {
             <span key={i} onClick={() => navigate(`/hashtag/${match}`)} > #{match} </span>
           ))}
         </Lato400>
-        <a href={url} target='_blank' data-test='link' >
+        <a href={url} target='_blank' data-test="link" >
           <SCMetadata>
             <div>
               <Lato400>{metadata.title}</Lato400>
@@ -167,7 +168,7 @@ export default function Post(props) {
         onRequestClose={() => setIsModalOpen(false)}
         style={{
           overlay: {
-            backgroundColor: "rgba(0, 0, 0, 0.5)",
+            // backgroundColor: "rgba(0, 0, 0, 0.5)",
             zIndex: 1000,
             backgroundColor: " rgba(255, 255, 255, 0.9)",
           },
@@ -187,7 +188,7 @@ export default function Post(props) {
             color: "rgba(255, 255, 255, 1)",
             top: "50%",
             left: "50%",
-            transform: "translate(-50%, -50%)",
+            transform: "translate(-50%, -50%)"
           },
         }}
         contentLabel="Delete Confirmation"
@@ -200,7 +201,7 @@ export default function Post(props) {
           textAlign: "center",
           marginBottom: "30px"
         }} >Are you sure you want to delete this post?</p>
-        <div style={{ display: "flex", }} >
+        <div style={{ display: "flex" }} >
           <button onClick={() => setIsModalOpen(false)}
             style={{
               marginRight: "10px",
@@ -295,12 +296,12 @@ const StyledIcon = styled(({ isLiked, ...rest }) =>
   cursor: pointer;
 `;
 const StyledPencil = styled(TiPencil)`
-  color: #FFF;
+  color: #fff;
   height: 23px;
   width: 23px;
 `
 const StyledTrash = styled(TbTrashFilled)`
-  color: #FFF;
+  color: #ef1717;
   height: 23px;
   width: 23px;
 `
