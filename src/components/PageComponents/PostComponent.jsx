@@ -135,7 +135,7 @@ export default function Post(props) {
           <Lato400 style={{ color: "#fff", fontSize: "19px" }} data-test="username" >{name}</Lato400>
           {Number(userId) === idUser ? (
             <div>
-              {/* <StyledPencil /> */}
+              <StyledPencil />
               <StyledTrash onClick={() => { setIsModalOpen(true); }} />
             </div>) : ""}
         </div>
@@ -300,7 +300,7 @@ const StyledPencil = styled(TiPencil)`
   width: 23px;
 `
 const StyledTrash = styled(TbTrashFilled)`
-  color: #fa0505;
+  color: #FFF;
   height: 23px;
   width: 23px;
 `

@@ -1,10 +1,10 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import SignupPage from "./pages/SignupPage";
-import SigninPage from "./pages/SigninPage";
-import TimelinePage from "./pages/TimelinePage";
-import HashtagPage from "./pages/HashtagPage";
-import UserPage from "./pages/UserPage";
 import AuthProvider from "./contexts/UserContext.js";
+import HashtagPage from "./pages/HashtagPage";
+import SigninPage from "./pages/SigninPage";
+import SignupPage from "./pages/SignupPage";
+import TimelinePage from "./pages/TimelinePage";
+import UserPage from "./pages/UserPage";
 
 
 

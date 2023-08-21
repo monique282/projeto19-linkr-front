@@ -1,9 +1,9 @@
 
-import styled from "styled-components";
-import { Link, useNavigate } from "react-router-dom";
-import { useState } from "react";
 import axios from "axios";
+import { useState } from "react";
 import { ThreeDots } from "react-loader-spinner";
+import { Link, useNavigate } from "react-router-dom";
+import styled from "styled-components";
 
 
 export default function SignupPage() {
@@ -75,12 +75,18 @@ const Backgroun = styled.div`
     height: 100%;
     display: flex;
     justify-content:center;
+
+    @media (max-width: 430px) {
+        width: 100%;
+        height: 100%;
+        flex-direction: column;
+    }
 `
 const Total = styled.div`
     width: 100%;
     height: 100vh;
     display: flex;
-    @media (max-width: 667px) {
+    @media (max-width: 430px) {
         width: 100%;
         height: 100vh;
         display: flex;
@@ -89,15 +95,22 @@ const Total = styled.div`
     }
 `
 const SloganMessage = styled.div`
-    width: 80vh;
+    min-width: 60vw;
     height: 100%;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     background-color: #151515;
-  @media (max-width: 667px) {
-    display: none;
+    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+
+    @media (max-width: 430px) {
+        width: 100vw;
+        height: 25vh;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
   }
 `
 const Title = styled.p`
@@ -108,25 +121,39 @@ const Title = styled.p`
     text-align: left;
     color: rgba(255, 255, 255, 1);
     margin-left: -228px;
+
+    @media (max-width: 430px) {
+        font-size: 56px;
+        text-align: center;
+        line-height: normal;
+        margin-left: 0px;
+    }
 `
 const Slogam = styled.p`
     width: 442px;
-    height: 128px;
     font-family: 'Oswald';
     font-size: 43px;
     font-weight: 700;
     line-height: 64px;
     text-align: left;
     color: rgba(255, 255, 255, 1);
+
+    @media (max-width: 430px) {
+        width: 70%;
+
+        font-size: 23px;
+        line-height: normal;
+        text-align: center;
+    }
 `
 
 const SingInContainer = styled.section`
     height: 100%;
-    width: 100%;
+    width: 40vw;
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-top: 317px;
+    justify-content: center;
     form{
         display: flex;
         flex-direction: column;
@@ -148,14 +175,16 @@ const SingInContainer = styled.section`
                 line-height: 40px;
                 margin-bottom: 30px;
                 font-family: 'Oswald';
-                font-size: 27px;
-                font-weight: 700;
-                line-height: 40px;
                 display: flex;
                 justify-content: center;
                 align-items: center;
+                @media (max-width: 430px) {
+                    width: 330px;
+                    height: 55px;
+                    font-size: 22px;
+                }
 } }
-@media (max-width: 667px) {
+@media (max-width: 430px) {
 
     width: 100%;
     padding: 30px;
@@ -179,6 +208,12 @@ const Input = styled.input`
     line-height: 40px;
     text-align: left;
 
+    @media (max-width: 430px) {
+        width: 330px;
+        height: 55px;
+        font-size: 22px;
+    }
+
 `
 const Register = styled(Link)`
     font-family: 'Lato';
@@ -188,6 +223,10 @@ const Register = styled(Link)`
     letter-spacing: 0em;
     text-align: left;
     color: rgba(255, 255, 255, 1);
+
+    @media (max-width: 430px) {
+        font-size: 17px;
+    }
 `
 
 
