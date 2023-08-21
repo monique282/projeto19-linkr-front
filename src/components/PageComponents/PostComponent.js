@@ -33,6 +33,7 @@ export default function Post(props) {
     setHashtagPosts,
     setHashtagLikes,
     hashtag,
+    setAtualizeHashtag
   } = props;
 
   const userId = localStorage.getItem("userId");
@@ -79,6 +80,7 @@ export default function Post(props) {
   }, [postContent]);
 
   useEffect(()=>{
+    if ( setAtualizeHashtag ) setAtualizeHashtag(prev => !prev);
   },[numberLikes])
 
   useEffect(() => {
@@ -103,6 +105,7 @@ export default function Post(props) {
         .catch((err) => console.log(err));
     }
   }, [url]);
+
 
   function likesTooltip() {
     if (likes.length === 0) {
@@ -297,7 +300,7 @@ export default function Post(props) {
           {Number(userId) === idUser ? (
             <div>
               <StyledPencil onClick={handleEditPost}/>
-              <StyledTrash onClick={() => setIsModalOpen(true)} />
+              <StyledTrash data-test="delete-btn" onClick={() => setIsModalOpen(true)} />
             </div>
           ) : (
             ""

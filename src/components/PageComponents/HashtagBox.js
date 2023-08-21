@@ -14,8 +14,6 @@ export default function HashtagBox ({atualize}) {
 
     useEffect(() => {
 
-        console.log('rodandooo', atualize)
-
         axios.get(URL, headers)
             .then(res => setHashtagsList(res.data))
             .catch(err => console.log(err));
