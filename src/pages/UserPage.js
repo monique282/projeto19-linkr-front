@@ -4,7 +4,6 @@ import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import HashtagBox from "../components/PageComponents/HashtagBox.js";
 import NavBar from "../components/PageComponents/NavBar.js";
-import { Background } from "../components/PageComponents/PageComponents.js";
 import Post from "../components/PageComponents/PostComponent.js";
 import { FontPageTitle } from "../components/StyleComponents/StylesComponents.js";
 
@@ -25,6 +24,7 @@ export default function UserPage() {
         .then((res) => {
           setInfo(res.data);
           setPosts(res.data.posts);
+
           console.log(res);
         })
         .catch((res) => console.log(res));
@@ -34,20 +34,19 @@ export default function UserPage() {
         .get(URL, object)
         .then((res) => {
           setLikes(res.data);
-          getPosts();
         })
         .catch((err) => console.log(err));
     }
   }, [id]);
 
   return (
-    <Background>
+    <>
       <NavBar />
       <Container>
         <Content>
           <header>
             <img src={info.image} alt={info.image} />
-            <h1>{info.name}'s posts</h1>
+            <h1>{info.name} posts</h1>
           </header>
           <section>
             <article>
@@ -64,9 +63,9 @@ export default function UserPage() {
                     setUserLikes={setLikes}
                     id={id}
                     likes={
-                      likes[i]?.likedUserNames[0] === null
+                      likes[i].likedUserNames[0] === null
                         ? []
-                        : likes[i]?.likedUserNames
+                        : likes[i].likedUserNames
                     }
                   />
                 ))
@@ -78,7 +77,7 @@ export default function UserPage() {
           </section>
         </Content>
       </Container>
-    </Background>
+    </>
   );
 }
 
@@ -86,15 +85,20 @@ const Container = styled.div`
   width: 100%;
   min-height: calc(100vh - 72px);
   height: 100%;
+  margin-top: 53px;
   display: flex;
   justify-content: center;
 `;
 const Content = styled.main`
+  width: 80%;
   height: 100%;
+
   display: flex;
   flex-direction: column;
+  align-items: center;
   padding-top: 50px;
   gap: 25px;
+
   background-color: #333333;
 
   section {
@@ -112,9 +116,9 @@ const Content = styled.main`
   }
 
   header {
-    width: 100%;
+    width: 70%;
+    height: 100%;
     display: flex;
-    padding-left:20px;
     align-items: center;
     gap: 15px;
 
