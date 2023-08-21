@@ -17,7 +17,6 @@ export default function SharePost({userPhoto, loading, setLoading, setAtualize})
     const localImage = localStorage.getItem("image");
     setImage(localImage);
   }, [])
-  console.log("inicializou a página")
   useEffect(() => {
     const extractedHashtags = [];
 
@@ -43,14 +42,12 @@ async function getLikes () {
 
   function handlePublish(e) {
     e.preventDefault();
-    console.log("dentro da handlePublish")
     const obj = { url: post.url, content: post.content, hashtags }
     setLoading(true)
     setAtualize(prev => !prev)
 
     if(token) axios.post(`${process.env.REACT_APP_API_URL}/new-post`, obj, object)
     .then(res => {
-      console.log("dentro do then")
       setPost({url:"", content:""})
       getLikes();
       getPosts();})

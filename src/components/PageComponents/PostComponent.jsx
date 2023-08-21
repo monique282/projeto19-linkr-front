@@ -63,12 +63,11 @@ export default function Post(props) {
       axios.post(`${process.env.REACT_APP_API_URL}/like`, obj, object)
       .then((res) => {
         setIsLiked((prevIsLiked) => !prevIsLiked);
-        console.log(res)
         getLikes();
         getPosts();
       })
       .catch(err => {
-       console.log(`Error in like toggle: `, err)})
+      console.log(`Error in like toggle: `, err)})
       .finally(()=> setLoading(false))
     }
   };
@@ -77,7 +76,7 @@ export default function Post(props) {
     <Container data-test="post" >
       <Info>
         <figure>
-          <img src={image} alt="profile" />
+          <img onClick={navigate("/")}src={image} alt="profile" />
         </figure>
 
         <StyledIcon
@@ -114,7 +113,7 @@ export default function Post(props) {
             <span key={i} onClick={() => navigate(`/hashtag/${match}`)} > #{match} </span>
           ))}
         </Lato400>
-        <a href={url} target='_blank' data-test='link' >
+        <a href={url} target='blank' data-test='link' >
           <SCMetadata>
             <div>
               <Lato400>{metadata.title}</Lato400>
