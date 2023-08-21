@@ -243,7 +243,7 @@ export default function Post(props) {
           {Number(userId) === idUser ? (
             <div>
               <StyledPencil />
-              <StyledTrash onClick={() => setIsModalOpen(true)} />
+              <StyledTrash data-test="delete-btn" onClick={() => setIsModalOpen(true)} />
             </div>
           ) : (
             ""
