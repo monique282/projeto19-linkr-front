@@ -29,14 +29,14 @@ export default function SharePost({userPhoto, loading, setLoading, setAtualize})
 
   async function getPosts(){
     axios.get(`${process.env.REACT_APP_API_URL}/timeline`, object)
-    .then(res => setPosts(res.data.rows))
+    .then(res => setPosts(res?.data.rows))
     .catch(err => alert(err.response.data))
 }
 async function getLikes () {
   const URL = `${process.env.REACT_APP_API_URL}/likes`
   const config = configToken();
   axios.get(URL, config)
-      .then( res => setLikes(res.data) )
+      .then( res => setLikes(res?.data) )
       .catch(err => console.log(err))
 }
 

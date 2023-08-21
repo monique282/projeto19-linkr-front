@@ -49,9 +49,9 @@ export default function HashtagPage() {
                   key={post.postId}
                   post={post}
                   likes={
-                    likes[i].likedUserNames[0] === null
+                    likes[i]?.likedUserNames[0] === null
                       ? []
-                      : likes[i].likedUserNames
+                      : likes[i]?.likedUserNames
                   }
                 />
               ))

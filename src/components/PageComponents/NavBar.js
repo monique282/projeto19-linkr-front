@@ -152,7 +152,6 @@ export default function NavBar() {
             handleClick("false");
           }}
         />
-         
         )}
         
       </figure>
