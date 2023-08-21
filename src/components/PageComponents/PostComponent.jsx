@@ -17,7 +17,7 @@ export default function Post(props) {
   const userId = localStorage.getItem("userId");
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-  const [isLiked, setIsLiked] = useState(likedUserIds.includes(Number(userId)));
+  const [isLiked, setIsLiked] = useState(likedUserIds?.includes(Number(userId)));
   const token = localStorage.getItem('token');
   const object = {headers: {'Authorization': `Bearer ${token}`}}
   const {setPosts, setLikes} = useContext(AuthContext)
@@ -52,7 +52,36 @@ export default function Post(props) {
       .then( res => setLikes(res.data) )
       .catch(err => console.log(err))
 }
-
+  function likesMessage(){
+    if (likes.length === 0) {
+      return 'Ninguém curtiu ainda';
+    } else if (isLiked) {
+      if (likes.length === 1) {
+        return 'Apenas você curtiu';
+      } else {
+        const firstLikedUser = likedUserIds[0] !== userId ? likes[1] : likes[0];
+        const otherLikedUsers = likedUserIds[0] !== userId ? likes.slice(2) : likes.slice(1);
+        
+        const othersText = `e outros ${numberLikes - 2} curtiram`;
+    
+        if (otherLikedUsers.length === 0) {
+          return `Você e ${firstLikedUser} curtiram`;
+        } else if (otherLikedUsers.length === 1) {
+          return `Você, ${firstLikedUser} e ${otherLikedUsers[0]} curtiram`;
+        } else {
+          return `Você, ${firstLikedUser}, ${otherLikedUsers[0]} ${othersText}`;
+        }
+      }
+    } else {
+      if (likes.length === 1) {
+        return `Apenas ${likes[0]} curtiu`;
+      } else if (likes.length === 2) {
+        return `${likes[0]} e ${likes[1]} curtiram`;
+      } else {
+        return `${likes.slice(0, 2).join(', ')} e outros ${numberLikes - 2} curtiram`;
+      }
+    }
+  }
   function handleToggleLike () {
     setLoading(true)
     const obj = {
@@ -76,7 +105,7 @@ export default function Post(props) {
     <Container data-test="post" >
       <Info>
         <figure>
-          <img onClick={navigate("/")}src={image} alt="profile" />
+          <img onClick={() => navigate(`/user/${idUser}`)}src={image} alt="profile" />
         </figure>
 
         <StyledIcon
@@ -89,9 +118,7 @@ export default function Post(props) {
         </Lato700>
 
         <Lato400 data-tooltip-id="my-tooltip"
-          data-tooltip-content={
-            (likes.length===0) ? 'Ninguém curtiu ainda' : (isLiked && likes.length===1) ? 'Apenas você curtiu' : (isLiked && likes.length>1) ? `Você, ${likedUserIds[0]!== userId ? likes[1] : likes[0]} e outros ${numberLikes - 2} curtiram` : (!isLiked && likes.length===1) ? `Apenas ${likes[0]} curtiu` : `${likes.slice(0,2).join(', ')} e outras ${numberLikes-2} curtiram`
-          }
+          data-tooltip-content={likesMessage()}
           style={{ color: "#fff", fontSize: "11px" }}
           data-test="counter">
           {Number(numberLikes) === 1 ? (`${numberLikes} Like`) : (`${numberLikes} Likes`)}

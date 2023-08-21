@@ -40,19 +40,24 @@ async function getLikes () {
       .catch(err => console.log(err))
 }
 
-  function handlePublish(e) {
-    e.preventDefault();
-    const obj = { url: post.url, content: post.content, hashtags }
-    setLoading(true)
-    setAtualize(prev => !prev)
+    async function handlePublish(e) {
+      e.preventDefault();
+      const obj = { url: post.url, content: post.content, hashtags };
+      setLoading(true); // Set loading to true before making the request
+      setAtualize((prev) => !prev);
 
-    if(token) axios.post(`${process.env.REACT_APP_API_URL}/new-post`, obj, object)
-    .then(res => {
-      setPost({url:"", content:""})
-      getLikes();
-      getPosts();})
-    .catch(err => alert(err.response.data))
-    .finally(setLoading(false))
+      if (token) {
+        try {
+          await axios.post(`${process.env.REACT_APP_API_URL}/new-post`, obj, object);
+          setPost({ url: "", content: "" });
+          getLikes();
+          getPosts();
+        } catch (error) {
+          alert(error.response.data);
+        }
+      }
+
+      setLoading(false); // Set loading to false after the request is done
   }
 
   return (
@@ -71,7 +76,7 @@ async function getLikes () {
             type="url"
             name="url"
             value={post.url}
-            required
+            required={true}
             disabled={loading}
             onChange={event => {
               const newValue = event.target.value
