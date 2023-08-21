@@ -226,11 +226,11 @@ export default function Post(props) {
       if(event.key === "Enter") {
         setLoading(true)
         const obj = {
-          postContent,
+          content: postContent,
           hashtags
         }
         axios.patch(`${process.env.REACT_APP_API_URL}/edit/${postId}`, obj)
-        .then()
+        .then(() => setIsEditing(false))
         .catch(err => alert(err.response.data))
         .finally(()=> setLoading(false))
       }
