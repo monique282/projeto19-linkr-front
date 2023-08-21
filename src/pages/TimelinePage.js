@@ -32,12 +32,13 @@ export default function TimelinePage() {
       if (res.data.rows.length === 0) setMessage("There are no posts yet");
     })
     .catch((err) =>
+      {alert(err.response.data)
       setMessage(
         <>
           <div>An error ocurred while trying to fetch the</div>
           <div>posts, please refresh the page</div>
         </>
-      )
+      )}
     );
   }
   useEffect(()=> {

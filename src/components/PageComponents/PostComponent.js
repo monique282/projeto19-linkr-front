@@ -277,7 +277,6 @@ export default function Post(props) {
         }}
         contentLabel="Delete Confirmation"
       >
-        {/* <h2 style={{ fontFamily: "Lato", fontSize: "34px", fontWeight: "700"  }} >Confirm Deletion</h2> */}
         <p style={{
           fontFamily: "Lato",
           fontSize: "34px",

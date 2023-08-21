@@ -48,16 +48,16 @@ export default function UserPage() {
         .then((res) => {
           setInfo(res.data);
           setPosts(res.data.posts);
-
           console.log(res);
         })
         .catch((res) => console.log(res));
-      // getLikes();
+
       const URL = `${process.env.REACT_APP_API_URL}/likes/${id}`;
       axios
         .get(URL, object)
         .then((res) => {
           setLikes(res.data);
+          getLikes();
           getPosts();
         })
         .catch((err) => console.log(err));
@@ -137,7 +137,6 @@ const Content = styled.main`
 
   header {
     width: 100%;
-    height: 100%;
     display: flex;
     padding-left:20px;
     align-items: center;
