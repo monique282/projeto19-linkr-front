@@ -1,16 +1,19 @@
+import axios from "axios";
+import Modal from "react-modal";
+import styled from "styled-components";
+import reactStringReplace from 'react-string-replace';
 import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
 import { TiPencil } from "react-icons/ti"
 import { TbTrashFilled } from "react-icons/tb"
-import styled from "styled-components";
 import { Lato400, Lato700 } from "../StyleComponents/StylesComponents.js";
-import reactStringReplace from 'react-string-replace';
+
 import { useNavigate } from "react-router-dom";
 import { Tooltip } from "react-tooltip";
 import { useContext, useEffect, useState } from "react";
-import axios from "axios";
+
 import { AuthContext } from "../../contexts/UserContext.js";
 import { configToken } from "../../services/api.js";
-import Modal from "react-modal";
+
 
 
 
@@ -20,7 +23,7 @@ export default function Post(props) {
   const userId = localStorage.getItem("userId");
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-  const [isLiked, setIsLiked] = useState(likedUserIds.includes(Number(userId)));
+  const [isLiked, setIsLiked] = useState(likedUserIds?.includes(Number(userId)));
   const token = localStorage.getItem('token');
   const object = { headers: { 'Authorization': `Bearer ${token}` } }
   const { setPosts, setLikes, posts } = useContext(AuthContext)
@@ -50,16 +53,44 @@ export default function Post(props) {
       .catch(err => console.log(err))
   }
 
-  console.log(posts)
   async function getLikes() {
     const URL = `${process.env.REACT_APP_API_URL}/likes`
     const config = configToken();
     axios.get(URL, config)
       .then(res => setLikes(res.data))
       .catch(err => console.log(err))
+}
+  function likesMessage(){
+    if (likes.length === 0) {
+      return 'Ninguém curtiu ainda';
+    } else if (isLiked) {
+      if (likes.length === 1) {
+        return 'Apenas você curtiu';
+      } else {
+        const firstLikedUser = likedUserIds[0] !== userId ? likes[1] : likes[0];
+        const otherLikedUsers = likedUserIds[0] !== userId ? likes.slice(2) : likes.slice(1);
+        
+        const othersText = `e outros ${numberLikes - 2} curtiram`;
+    
+        if (otherLikedUsers.length === 0) {
+          return `Você e ${firstLikedUser} curtiram`;
+        } else if (otherLikedUsers.length === 1) {
+          return `Você, ${firstLikedUser} e ${otherLikedUsers[0]} curtiram`;
+        } else {
+          return `Você, ${firstLikedUser}, ${otherLikedUsers[0]} ${othersText}`;
+        }
+      }
+    } else {
+      if (likes.length === 1) {
+        return `Apenas ${likes[0]} curtiu`;
+      } else if (likes.length === 2) {
+        return `${likes[0]} e ${likes[1]} curtiram`;
+      } else {
+        return `${likes.slice(0, 2).join(', ')} e outros ${numberLikes - 2} curtiram`;
+      }
+    }
   }
-
-  function handleToggleLike() {
+  function handleToggleLike () {
     setLoading(true)
     const obj = {
       isLiked, userId: Number(userId), postId
@@ -100,14 +131,11 @@ export default function Post(props) {
     });
   }
 
-
-
-
   return (
     <Container data-test="post" >
       <Info>
         <figure>
-          <img src={image} alt="profile" />
+          <img onClick={() => navigate(`/user/${idUser}`)}src={image} alt="profile" />
         </figure>
 
         <StyledIcon
@@ -121,7 +149,8 @@ export default function Post(props) {
 
         <Lato400 data-tooltip-id="my-tooltip"
           data-tooltip-content={
-            (likes.length === 0) ? 'Ninguém curtiu ainda' : (isLiked && likes.length === 1) ? 'Apenas você curtiu' : (isLiked && likes.length > 1) ? `Você, ${likedUserIds[0] !== userId ? likes[1] : likes[0]} e outros ${numberLikes - 2} curtiram` : (!isLiked && likes.length === 1) ? `Apenas ${likes[0]} curtiu` : `${likes.slice(0, 2).join(', ')} e outras ${numberLikes - 2} curtiram`
+            likesMessage()
+            // (likes.length===0) ? 'Ninguém curtiu ainda' : (isLiked && likes.length===1) ? 'Apenas você curtiu' : (isLiked && likes.length>1) ? `Você, ${likedUserIds[0]!== userId ? likes[1] : likes[0]} e outros ${numberLikes - 2} curtiram` : (!isLiked && likes.length===1) ? `Apenas ${likes[0]} curtiu` : `${likes.slice(0,2).join(', ')} e outras ${numberLikes-2} curtiram`
           }
           style={{ color: "#fff", fontSize: "11px" }}
           data-test="counter">
@@ -132,7 +161,7 @@ export default function Post(props) {
       </Info>
       <Content>
         <div className="userName">
-          <Lato400 style={{ color: "#fff", fontSize: "19px" }} data-test="username" >{name}</Lato400>
+          <Lato400 style={{ color: "#fff", fontSize: "19px" }} onClick={() => navigate(`/user/${idUser}`)} data-test="username" >{name}</Lato400>
           {Number(userId) === idUser ? (
             <div>
               {/* <StyledPencil /> */}
