@@ -18,6 +18,7 @@ export default function TimelinePage(){
     const [loading, setLoading] = useState(false);
     const [atualize, setAtualize] = useState(false);
     console.log(likes)
+    console.log(posts)
 
     async function getPosts(){
         axios.get(`${process.env.REACT_APP_API_URL}/timeline`, object)
@@ -37,8 +38,8 @@ export default function TimelinePage(){
     }
     useEffect(()=>{  
         if(token) {
-            getLikes();
             getPosts();
+            getLikes();
         }
     }, [loading])
 
@@ -53,7 +54,7 @@ export default function TimelinePage(){
                     <SharePost loading={loading} setLoading={setLoading} setAtualize={setAtualize} />
                     <Posts>
                     {posts.length === 0 ? (<FontPageTitle style={{textAlign:"center"}} data-test='message' >{message}</FontPageTitle>) : (posts.map((post, i) => {
-                        return <Post post={post} likes={likes.length === 0 ? [] : (likes[i].likedUserNames[0]===null) ? [] : likes[i].likedUserNames}/>
+                        return <Post key={post.postId} post={post} likes={(likes[i].likedUserNames[0]===null) ? [] : likes[i].likedUserNames}/>
                     }))}
                     </Posts>
                 </Feed>

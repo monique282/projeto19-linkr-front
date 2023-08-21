@@ -1,44 +1,53 @@
 import axios from "axios";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import HashtagBox from "../components/PageComponents/HashtagBox.js";
 import NavBar from "../components/PageComponents/NavBar.jsx";
 import Post from "../components/PageComponents/PostComponent.jsx";
 import { FontPageTitle } from "../components/StyleComponents/StylesComponents.js";
-import { AuthContext } from "../contexts/UserContext.js";
 
 export default function UserPage() {
-  const { setPosts, posts } = useContext(AuthContext);
+  // const { setPosts, posts } = useContext(AuthContext);
+  const [userPosts, setUserPosts] = useState([]);
   const [likes, setLikes] = useState([]);
   const [info, setInfo] = useState([]);
-  const [loading, setLoading] = useState(false);
   const { id } = useParams();
   const token = localStorage.getItem("token");
   const object = { headers: { Authorization: `Bearer ${token}` } };
   console.log(likes);
+  console.log(userPosts);
+
   function getPosts() {
     axios
       .get(`${process.env.REACT_APP_API_URL}/user/${id}`, object)
       .then((res) => {
         setInfo(res.data);
-        setPosts(res.data.posts);
-        console.log(res)
+        setUserPosts(res.data.posts);
+
+        console.log(res);
       })
-      .catch((res) => console.log(res))
+      .catch((res) => console.log(res));
   }
 
   async function getLikes() {
     const URL = `${process.env.REACT_APP_API_URL}/likes/${id}`;
     axios
       .get(URL, object)
-      .then((res) => setLikes(res.data))
+      .then((res) => {
+        setLikes(res.data);
+        getPosts();
+      })
       .catch((err) => console.log(err));
   }
 
   useEffect(() => {
-    getPosts();
-    getLikes();
+    if (token) {
+      setUserPosts([]);
+      setLikes([]);
+      // getPosts();
+      getLikes();
+    }
   }, [id]);
 
   return (
@@ -47,23 +56,24 @@ export default function UserPage() {
       <Container>
         <Content>
           <header>
-            <img src={info.image} alt="profile" />
+            <img src={info.image} alt={info.image} />
             <h1>{info.name} posts</h1>
           </header>
           <section>
             <article>
-              {posts.length === 0 ? (
+              {userPosts.length === 0 ? (
                 <FontPageTitle>O usuário não tem posts!</FontPageTitle>
               ) : (
-                posts.map((post, i) => (
+                userPosts.map((post, i) => (
                   <Post
+                    key={post.postId}
                     post={post}
-                    id={id}
+                    userPosts={userPosts}
+                    setUserPosts={setUserPosts}
                     setInfo={setInfo}
+                    id={id}
                     likes={
-                      likes.length === 0
-                        ? []
-                        : likes[i].likedUserNames[0] === null
+                      likes[i].likedUserNames[0] === null
                         ? []
                         : likes[i].likedUserNames
                     }
