@@ -17,29 +17,6 @@ export default function UserPage() {
   console.log(likes);
   console.log(posts);
 
-  function getPosts() {
-    axios
-      .get(`${process.env.REACT_APP_API_URL}/user/${id}`, object)
-      .then((res) => {
-        setInfo(res.data);
-        setPosts(res.data.posts);
-
-        console.log(res);
-      })
-      .catch((res) => console.log(res));
-  }
-
-  async function getLikes() {
-    const URL = `${process.env.REACT_APP_API_URL}/likes/${id}`;
-    axios
-      .get(URL, object)
-      .then((res) => {
-        setLikes(res.data);
-        getPosts();
-      })
-      .catch((err) => console.log(err));
-  }
-
   useEffect(() => {
     if (token) {
       axios
@@ -51,13 +28,12 @@ export default function UserPage() {
           console.log(res);
         })
         .catch((res) => console.log(res));
-      // getLikes();
+
       const URL = `${process.env.REACT_APP_API_URL}/likes/${id}`;
       axios
         .get(URL, object)
         .then((res) => {
           setLikes(res.data);
-          getPosts();
         })
         .catch((err) => console.log(err));
     }

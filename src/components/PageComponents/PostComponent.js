@@ -3,6 +3,7 @@ import { useContext, useEffect, useState } from "react";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import { TbTrashFilled } from "react-icons/tb";
 import { TiPencil } from "react-icons/ti";
+import Modal from "react-modal";
 import { Link, useNavigate } from "react-router-dom";
 import reactStringReplace from "react-string-replace";
 import { Tooltip } from "react-tooltip";
@@ -10,7 +11,6 @@ import styled from "styled-components";
 import { AuthContext } from "../../contexts/UserContext.js";
 import { configToken } from "../../services/api.js";
 import { Lato400, Lato700 } from "../StyleComponents/StylesComponents.js";
-import Modal from "react-modal";
 
 export default function Post(props) {
   const {
@@ -23,7 +23,18 @@ export default function Post(props) {
     postId,
     likedUserIds,
   } = props.post;
-  const { setUserPosts, id, likes, setUserLikes, setInfo } = props;
+
+  const {
+    setUserPosts,
+    id,
+    likes = [],
+    setUserLikes,
+    setInfo,
+    setHashtagPosts,
+    setHashtagLikes,
+    hashtag,
+  } = props;
+
   const userId = localStorage.getItem("userId");
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
@@ -38,6 +49,9 @@ export default function Post(props) {
     description: "",
     image: undefined,
   });
+  useEffect(()=>{
+    console.log(numberLikes)
+  },[numberLikes])
 
   useEffect(() => {
     if (url) {
@@ -55,18 +69,19 @@ export default function Post(props) {
     }
   }, [url]);
 
-  function likesTooltip(){
+  function likesTooltip() {
     if (likes.length === 0) {
-      return 'Ninguém curtiu ainda';
+      return "Ninguém curtiu ainda";
     } else if (isLiked) {
       if (likes.length === 1) {
-        return 'Apenas você curtiu';
+        return "Apenas você curtiu";
       } else {
         const firstLikedUser = likedUserIds[0] === userId ? likes[1] : likes[0];
-        const otherLikedUsers = likedUserIds[0] !== userId ? likes.slice(2) : likes.slice(1);
-        
+        const otherLikedUsers =
+          likedUserIds[0] !== userId ? likes.slice(2) : likes.slice(1);
+
         const othersText = `e outros ${numberLikes - 2} curtiram`;
-    
+
         if (otherLikedUsers.length === 0) {
           return `Você e ${firstLikedUser} curtiram`;
         } else if (otherLikedUsers.length === 1) {
@@ -81,7 +96,9 @@ export default function Post(props) {
       } else if (likes.length === 2) {
         return `${likes[0]} e ${likes[1]} curtiram`;
       } else {
-        return `${likes.slice(0, 2).join(', ')} e outros ${numberLikes - 2} curtiram`;
+        return `${likes.slice(0, 2).join(", ")} e outros ${
+          numberLikes - 2
+        } curtiram`;
       }
     }
   }
@@ -105,7 +122,6 @@ export default function Post(props) {
               .then((res) => {
                 setInfo(res.data);
                 setUserPosts(res.data.posts);
-
               })
               .catch((res) => console.log(res));
 
@@ -113,6 +129,26 @@ export default function Post(props) {
             axios
               .get(URL, object)
               .then((res) => setUserLikes(res.data))
+              .catch((err) => console.log(err));
+          }
+
+          if (hashtag !== undefined) {
+            const URL = process.env.REACT_APP_API_URL;
+            const headers = configToken();
+
+            axios
+              .get(`${URL}/likes`, headers)
+              .then((res) => {
+                setLikes(res.data)
+                setHashtagLikes(res.data);
+              })
+              .catch((err) => console.log(err));
+
+            axios
+              .get(`${URL}/hashtag/${hashtag}`, headers)
+              .then((res) => {
+                setHashtagPosts(res.data);
+              })
               .catch((err) => console.log(err));
           } else {
             axios
@@ -140,17 +176,17 @@ export default function Post(props) {
   function handleDeleteConfirmation() {
     setIsModalOpen(false);
     Delete(postId);
-  };
+  }
 
   function Delete(id) {
-    console.log(id)
-    const url = `${process.env.REACT_APP_API_URL}/postDelete/${id}`
-    const promise = axios.delete(url)
-    promise.then(response => {
+    console.log(id);
+    const url = `${process.env.REACT_APP_API_URL}/postDelete/${id}`;
+    const promise = axios.delete(url);
+    promise.then((response) => {
       setIsModalOpen(false);
-      window.location.reload()
-    })
-    promise.catch(err => {
+      window.location.reload();
+    });
+    promise.catch((err) => {
       alert(err.response.data);
     });
   }
@@ -184,9 +220,7 @@ export default function Post(props) {
 
         <Lato400
           data-tooltip-id="my-tooltip"
-          data-tooltip-content={
-            likesTooltip()
-          }
+          data-tooltip-content={likesTooltip()}
           style={{ color: "#fff", fontSize: "11px" }}
           data-test="counter"
         >
@@ -267,12 +301,11 @@ export default function Post(props) {
             color: "rgba(255, 255, 255, 1)",
             top: "50%",
             left: "50%",
-            transform: "translate(-50%, -50%)"
+            transform: "translate(-50%, -50%)",
           },
         }}
         contentLabel="Delete Confirmation"
       >
-        {/* <h2 style={{ fontFamily: "Lato", fontSize: "34px", fontWeight: "700"  }} >Confirm Deletion</h2> */}
         <p style={{
           fontFamily: "Lato",
           fontSize: "34px",
@@ -292,10 +325,13 @@ export default function Post(props) {
               fontWeight: "700",
               lineHeight: "22px",
               color: "rgba(24, 119, 242, 1)",
-              backgroundColor: "rgba(255, 255, 255, 1)"
-            }}>
-            No, go back</button>
-          <button onClick={handleDeleteConfirmation}
+              backgroundColor: "rgba(255, 255, 255, 1)",
+            }}
+          >
+            No, go back
+          </button>
+          <button
+            onClick={handleDeleteConfirmation}
             style={{
               marginRight: "10px",
               width: "134px",
@@ -306,12 +342,13 @@ export default function Post(props) {
               fontWeight: "700",
               lineHeight: "22px",
               backgroundColor: "rgba(24, 119, 242, 1)",
-              color: "rgba(255, 255, 255, 1)"
-            }}>Yes, delete it</button>
+              color: "rgba(255, 255, 255, 1)",
+            }}
+          >
+            Yes, delete it
+          </button>
         </div>
-
       </Modal>
-
     </Container>
   );
 }

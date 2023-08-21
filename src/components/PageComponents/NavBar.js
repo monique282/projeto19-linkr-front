@@ -92,7 +92,6 @@ export default function NavBar() {
             name="search"
             placeholder="Search for people"
             minLength={3}
-            value={searchResults}
             debounceTimeout={300}
             onChange={(e) => {
               const searchText = e.target.value;
@@ -153,7 +152,6 @@ export default function NavBar() {
             handleClick("false");
           }}
         />
-         
         )}
         
       </figure>
