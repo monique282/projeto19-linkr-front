@@ -10,7 +10,7 @@ export default function AuthProvider({ children }) {
     const [image, setImage] = useState(lsImage);
     const navigate = useNavigate();
     const localiza = useLocation();
-     const [posts, setPosts] = useState([]);
+    const [posts, setPosts] = useState([]);
     const [likes, setLikes] = useState([]);
 
     useEffect(() => {
