@@ -20,14 +20,17 @@ export default function HashtagPage() {
     const headers = configToken();
 
     axios
-      .get(`${URL}/likes`, headers)
-      .then((res) => setLikes(res.data))
+      .get(`${URL}/hashtags/likes/${hashtag}`, headers)
+      .then((res) => {
+        console.log(res.data)
+        setLikes(res.data)})
       .catch((err) => console.log(err));
 
     axios
       .get(`${URL}/hashtag/${hashtag}`, headers)
       .then((res) => {
         setPosts(res.data);
+        console.log('posts    ', res.data)
       })
       .catch((err) => console.log(err));
   }, [hashtag]);
