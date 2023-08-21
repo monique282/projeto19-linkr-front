@@ -57,6 +57,37 @@ export default function Post(props) {
     }
   }, [url]);
 
+  function likesTooltip(){
+    if (likes.length === 0) {
+      return 'Ninguém curtiu ainda';
+    } else if (isLiked) {
+      if (likes.length === 1) {
+        return 'Apenas você curtiu';
+      } else {
+        const firstLikedUser = likedUserIds[0] === userId ? likes[1] : likes[0];
+        const otherLikedUsers = likedUserIds[0] !== userId ? likes.slice(2) : likes.slice(1);
+        
+        const othersText = `e outros ${numberLikes - 2} curtiram`;
+    
+        if (otherLikedUsers.length === 0) {
+          return `Você e ${firstLikedUser} curtiram`;
+        } else if (otherLikedUsers.length === 1) {
+          return `Você, ${firstLikedUser} e ${otherLikedUsers[0]} curtiram`;
+        } else {
+          return `Você, ${firstLikedUser}, ${otherLikedUsers[0]} ${othersText}`;
+        }
+      }
+    } else {
+      if (likes.length === 1) {
+        return `Apenas ${likes[0]} curtiu`;
+      } else if (likes.length === 2) {
+        return `${likes[0]} e ${likes[1]} curtiram`;
+      } else {
+        return `${likes.slice(0, 2).join(', ')} e outros ${numberLikes - 2} curtiram`;
+      }
+    }
+  }
+
   function handleToggleLike() {
     setLoading(true);
     const obj = {
@@ -77,7 +108,6 @@ export default function Post(props) {
                 setInfo(res.data);
                 setUserPosts(res.data.posts);
 
-                console.log(res);
               })
               .catch((res) => console.log(res));
 
@@ -157,17 +187,7 @@ export default function Post(props) {
         <Lato400
           data-tooltip-id="my-tooltip"
           data-tooltip-content={
-            likes.length === 0
-              ? "Ninguém curtiu ainda"
-              : isLiked && likes.length === 1
-                ? "Apenas você curtiu"
-                : isLiked && likes.length > 1
-                  ? `Você, ${likedUserIds[0] !== userId ? likes[1] : likes[0]
-                  } e outros ${numberLikes - 2} curtiram`
-                  : !isLiked && likes.length === 1
-                    ? `Apenas ${likes[0]} curtiu`
-                    : `${likes.slice(0, 2).join(", ")} e outras ${numberLikes - 2
-                    } curtiram`
+            likesTooltip()
           }
           style={{ color: "#fff", fontSize: "11px" }}
           data-test="counter"
