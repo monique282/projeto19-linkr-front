@@ -22,7 +22,9 @@ export default function TimelinePage() {
   axios
     .get(URL, object)
     .then((res) => {setLikes(res.data)})
-    .catch((err) => console.log(err));
+    .catch((err) => {
+      alert(err.response.data)
+      console.log(err)});
   }
   function getPosts(){
     axios

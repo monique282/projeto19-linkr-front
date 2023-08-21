@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import { TbTrashFilled } from "react-icons/tb";
 import { TiPencil } from "react-icons/ti";
@@ -28,20 +28,23 @@ export default function Post(props) {
   const userId = localStorage.getItem("userId");
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const [postContent, setContent] = useState(content);
   const [isLiked, setIsLiked] = useState(likedUserIds.includes(Number(userId)));
-
-  const token = localStorage.getItem("token");
-  const object = { headers: { Authorization: `Bearer ${token}` } };
-
-  const { setPosts, setLikes } = useContext(AuthContext);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [metadata, setMetadata] = useState({
     title: "",
     description: "",
     image: undefined,
   });
+  const [isEditign, setIsEditing] = useState(false)
+  const token = localStorage.getItem("token");
+  const object = { headers: { Authorization: `Bearer ${token}` } };
+
+  const { setPosts, setLikes } = useContext(AuthContext);
+  const contentEdit = useCallback((inputElement)=> {
+    if(inputElement) inputElement.focus()
+  }, [])
   useEffect(()=>{
-    console.log(numberLikes)
   },[numberLikes])
 
   useEffect(() => {
@@ -92,6 +95,10 @@ export default function Post(props) {
         } curtiram`;
       }
     }
+  }
+
+  function handleEditPost() {
+    setIsEditing(!isEditign)
   }
 
   function handleToggleLike() {
@@ -212,24 +219,25 @@ export default function Post(props) {
           </Link>
           {Number(userId) === idUser ? (
             <div>
-              <StyledPencil />
+              <StyledPencil onClick={handleEditPost}/>
               <StyledTrash onClick={() => setIsModalOpen(true)} />
             </div>
           ) : (
             ""
           )}
         </div>
-        <Lato400
+        {isEditign ? 
+        (<EditInput  onChange={(event)=> setContent(event.target.value)} ref={contentEdit}/>) : 
+        (<Lato400
           style={{ color: "#B7B7B7", fontSize: "17px" }}
-          data-test="description"
-        >
+          data-test="description">
           {reactStringReplace(content, /#(\w+)/g, (match, i) => (
             <span key={i} onClick={() => navigate(`/hashtag/${match}`)}>
               {" "}
               #{match}{" "}
             </span>
-          ))}
-        </Lato400>
+          ))}</Lato400>)
+          }
         <a href={url} target="_blank" data-test="link">
           <SCMetadata>
             <div>
@@ -252,7 +260,6 @@ export default function Post(props) {
         onRequestClose={() => setIsModalOpen(false)}
         style={{
           overlay: {
-            // backgroundColor: "rgba(0, 0, 0, 0.5)",
             zIndex: 1000,
             backgroundColor: " rgba(255, 255, 255, 0.9)",
           },
@@ -389,6 +396,15 @@ const StyledTrash = styled(TbTrashFilled)`
   height: 23px;
   width: 23px;
 `;
+const EditInput = styled.input`
+  font-size: 14px;
+  color: #4c4c4c;
+  font-family: Lato;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  border-radius: 7px;
+`
 
 const Content = styled.div`
   width: 100%;
