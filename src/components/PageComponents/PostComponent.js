@@ -70,6 +70,7 @@ export default function Post(props) {
     }
   }, [url]);
 
+
   function likesTooltip() {
     if (likes.length === 0) {
       return "Ninguém curtiu ainda";
