@@ -22,7 +22,9 @@ export default function TimelinePage() {
   axios
     .get(URL, object)
     .then((res) => {setLikes(res.data)})
-    .catch((err) => console.log(err));
+    .catch((err) => {
+      alert(err.response.data)
+      console.log(err)});
   }
   function getPosts(){
     axios
@@ -76,6 +78,8 @@ export default function TimelinePage() {
                   <Post
                     key={post.postId}
                     post={post}
+                    loading={loading}
+                    setLoading={setLoading}
                     likes={
                       likes[i]?.likedUserNames[0] === null
                         ? []
