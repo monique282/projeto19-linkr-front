@@ -23,7 +23,7 @@ export default function Post(props) {
     postId,
     likedUserIds,
   } = props.post;
-  const { setUserPosts, id, likes, setUserLikes, setInfo } = props;
+  const { setUserPosts, id, likes = [], setUserLikes, setInfo } = props;
 
   const userId = localStorage.getItem("userId");
   const navigate = useNavigate();
@@ -40,6 +40,9 @@ export default function Post(props) {
     description: "",
     image: undefined,
   });
+  useEffect(()=>{
+    console.log(numberLikes)
+  },[numberLikes])
 
   useEffect(() => {
     if (url) {
