@@ -478,7 +478,7 @@ const StyledIcon = styled(({ isLiked, ...rest }) =>
   cursor: pointer;
 `;
 const StyledPencil = styled(TiPencil)`
-  color: #ef1717;
+  color: #fff;
   height: 23px;
   width: 23px;
 `;
