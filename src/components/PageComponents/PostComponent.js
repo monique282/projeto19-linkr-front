@@ -10,6 +10,7 @@ import styled from "styled-components";
 import { AuthContext } from "../../contexts/UserContext.js";
 import { configToken } from "../../services/api.js";
 import { Lato400, Lato700 } from "../StyleComponents/StylesComponents.js";
+import Modal from "react-modal";
 
 export default function Post(props) {
   const {
@@ -23,16 +24,14 @@ export default function Post(props) {
     likedUserIds,
   } = props.post;
   const { setUserPosts, id, likes, setUserLikes, setInfo } = props;
-
   const userId = localStorage.getItem("userId");
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [isLiked, setIsLiked] = useState(likedUserIds.includes(Number(userId)));
-
   const token = localStorage.getItem("token");
   const object = { headers: { Authorization: `Bearer ${token}` } };
-
-  const { setPosts, setLikes } = useContext(AuthContext);
+  const { setPosts, setLikes, posts } = useContext(AuthContext);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [metadata, setMetadata] = useState({
     title: "",
     description: "",
@@ -106,6 +105,26 @@ export default function Post(props) {
     }
   }
 
+  // essa função vai ser para abrir fechar o modal e chamar a função que expliu o post
+  function handleDeleteConfirmation() {
+    setIsModalOpen(false);
+    Delete(postId);
+  }
+  function Delete(id) {
+    console.log(id)
+    const url = `${process.env.REACT_APP_API_URL}/postDelete/${id}`
+    const promise = axios.delete(url)
+    promise.then(response => {
+      alert("Produto deletado");
+      handleToggleLike();
+      setIsModalOpen(false)
+    })
+    promise.catch(err => {
+      alert(err.response.data);
+    });
+  }
+
+
   return (
     <Container data-test="post">
       <Info>
@@ -139,16 +158,14 @@ export default function Post(props) {
             likes.length === 0
               ? "Ninguém curtiu ainda"
               : isLiked && likes.length === 1
-              ? "Apenas você curtiu"
-              : isLiked && likes.length > 1
-              ? `Você, ${
-                  likedUserIds[0] !== userId ? likes[1] : likes[0]
-                } e outros ${numberLikes - 2} curtiram`
-              : !isLiked && likes.length === 1
-              ? `Apenas ${likes[0]} curtiu`
-              : `${likes.slice(0, 2).join(", ")} e outras ${
-                  numberLikes - 2
-                } curtiram`
+                ? "Apenas você curtiu"
+                : isLiked && likes.length > 1
+                  ? `Você, ${likedUserIds[0] !== userId ? likes[1] : likes[0]
+                  } e outros ${numberLikes - 2} curtiram`
+                  : !isLiked && likes.length === 1
+                    ? `Apenas ${likes[0]} curtiu`
+                    : `${likes.slice(0, 2).join(", ")} e outras ${numberLikes - 2
+                    } curtiram`
           }
           style={{ color: "#fff", fontSize: "11px" }}
           data-test="counter"
@@ -171,7 +188,7 @@ export default function Post(props) {
           {Number(userId) === idUser ? (
             <div>
               <StyledPencil />
-              <StyledTrash />
+              <StyledTrash onClick={() => { setIsModalOpen(true); }} />
             </div>
           ) : (
             ""
@@ -203,6 +220,77 @@ export default function Post(props) {
           </SCMetadata>
         </a>
       </Content>
+
+      {/* caixa que mostra se realmente a pessoa quer apagar o post */}
+      <Modal
+        isOpen={isModalOpen}
+        onRequestClose={() => setIsModalOpen(false)}
+        style={{
+          overlay: {
+            backgroundColor: "rgba(0, 0, 0, 0.5)",
+            zIndex: 1000,
+            backgroundColor: "rgba(255, 255, 255, 0.9)",
+          },
+          content: {
+            width: "597px",
+            height: "262px",
+            margin: "auto",
+            borderRadius: "50px",
+            padding: "20px",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            marginTop: "10px",
+            marginBottom: "10px",
+            backgroundColor: "rgba(51, 51, 51, 1)",
+            color: "rgba(255, 255, 255, 1)",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+          },
+        }}
+        contentLabel="Delete Confirmation"
+      >
+        {/* <h2 style={{ fontFamily: "Lato", fontSize: "34px", fontWeight: "700"  }} >Confirm Deletion</h2> */}
+        <p style={{
+          fontFamily: "Lato",
+          fontSize: "34px",
+          fontWeight: "700",
+          textAlign: "center",
+          marginBottom: "30px"
+        }} >Are you sure you want to delete this post?</p>
+        <div style={{ display: "flex", }} >
+          <button onClick={() => setIsModalOpen(false)}
+            style={{
+              marginRight: "10px",
+              width: "134px",
+              height: "37px",
+              borderRadius: "5px",
+              fontFamily: "Lato",
+              fontSize: "18px",
+              fontWeight: "700",
+              lineHeight: "22px",
+              color: "rgba(24, 119, 242, 1)",
+              backgroundColor: "rgba(255, 255, 255, 1)"
+            }}>
+            No, go back</button>
+          <button onClick={handleDeleteConfirmation}
+            style={{
+              marginRight: "10px",
+              width: "134px",
+              height: "37px",
+              borderRadius: "5px",
+              fontFamily: "Lato",
+              fontSize: "18px",
+              fontWeight: "700",
+              lineHeight: "22px",
+              backgroundColor: "rgba(24, 119, 242, 1)",
+              color: "rgba(255, 255, 255, 1)"
+            }}>Yes, delete it</button>
+        </div>
+
+      </Modal>
     </Container>
   );
 }
@@ -267,7 +355,7 @@ const StyledIcon = styled(({ isLiked, ...rest }) =>
   cursor: pointer;
 `;
 const StyledPencil = styled(TiPencil)`
-  color: #fff;
+  color: #ef1717;
   height: 23px;
   width: 23px;
 `;

@@ -100,9 +100,6 @@ export default function Post(props) {
     });
   }
 
-
-
-
   return (
     <Container data-test="post" >
       <Info>
@@ -169,7 +166,7 @@ export default function Post(props) {
           overlay: {
             backgroundColor: "rgba(0, 0, 0, 0.5)",
             zIndex: 1000,
-            backgroundColor: " rgba(255, 255, 255, 0.9)",
+            backgroundColor: "rgba(255, 255, 255, 0.9)",
           },
           content: {
             width: "597px",
@@ -300,7 +297,8 @@ const StyledPencil = styled(TiPencil)`
   width: 23px;
 `
 const StyledTrash = styled(TbTrashFilled)`
-  color: #FFF;
+  color: #ef1717;
+  background-color: red;
   height: 23px;
   width: 23px;
 `
