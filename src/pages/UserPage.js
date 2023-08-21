@@ -1,24 +1,67 @@
-import { useState } from "react";
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import styled from "styled-components";
-import NavBar from "../components/PageComponents/NavBar.jsx";
-import Post from "../components/PageComponents/PostComponent.jsx";
+import HashtagBox from "../components/PageComponents/HashtagBox.js";
+import NavBar from "../components/PageComponents/NavBar.js";
+import Post from "../components/PageComponents/PostComponent.js";
+import { FontPageTitle } from "../components/StyleComponents/StylesComponents.js";
 
 export default function UserPage() {
-  const [posts, setPosts] = useState([
-    {
-      name: "Vitor",
-      picture:
-        "https://i.pinimg.com/originals/52/37/04/5237042f152ca9cf6c54daf824f1dc5d.jpg",
-      content: "post 1 #anime #2023",
-      url: "https://www.aficionados.com.br/animes-2023/",
-      tags: [],
-      likes: 13,
-    },
-  ]);
+  const [posts, setPosts] = useState([]);
+  const [likes, setLikes] = useState([]);
+  const [info, setInfo] = useState([]);
+  const { id } = useParams();
+  const token = localStorage.getItem("token");
+  const object = { headers: { Authorization: `Bearer ${token}` } };
+  console.log(likes);
+  console.log(posts);
 
-  const [image, setImage] = useState(
-    "https://i.pinimg.com/originals/52/37/04/5237042f152ca9cf6c54daf824f1dc5d.jpg"
-  );
+  function getPosts() {
+    axios
+      .get(`${process.env.REACT_APP_API_URL}/user/${id}`, object)
+      .then((res) => {
+        setInfo(res.data);
+        setPosts(res.data.posts);
+
+        console.log(res);
+      })
+      .catch((res) => console.log(res));
+  }
+
+  async function getLikes() {
+    const URL = `${process.env.REACT_APP_API_URL}/likes/${id}`;
+    axios
+      .get(URL, object)
+      .then((res) => {
+        setLikes(res.data);
+        getPosts();
+      })
+      .catch((err) => console.log(err));
+  }
+
+  useEffect(() => {
+    if (token) {
+      axios
+        .get(`${process.env.REACT_APP_API_URL}/user/${id}`, object)
+        .then((res) => {
+          setInfo(res.data);
+          setPosts(res.data.posts);
+
+          console.log(res);
+        })
+        .catch((res) => console.log(res));
+      // getLikes();
+      const URL = `${process.env.REACT_APP_API_URL}/likes/${id}`;
+      axios
+        .get(URL, object)
+        .then((res) => {
+          setLikes(res.data);
+          getPosts();
+        })
+        .catch((err) => console.log(err));
+    }
+  }, [id]);
 
   return (
     <>
@@ -26,14 +69,34 @@ export default function UserPage() {
       <Container>
         <Content>
           <header>
-            <img src={image} alt="profile" />
-            <h1>{"Vitor"} posts</h1>
+            <img src={info.image} alt={info.image} />
+            <h1>{info.name} posts</h1>
           </header>
           <section>
             <article>
-              {posts.map((post) => (
-                <Post post={post} />
-              ))}
+              {posts.length === 0 ? (
+                <FontPageTitle>O usuário não tem posts!</FontPageTitle>
+              ) : (
+                posts.map((post, i) => (
+                  <Post
+                    key={post.postId}
+                    post={post}
+                    userPosts={posts}
+                    setUserPosts={setPosts}
+                    setInfo={setInfo}
+                    setUserLikes={setLikes}
+                    id={id}
+                    likes={
+                      likes[i].likedUserNames[0] === null
+                        ? []
+                        : likes[i].likedUserNames
+                    }
+                  />
+                ))
+              )}
+            </article>
+            <article>
+              <HashtagBox />
             </article>
           </section>
         </Content>
@@ -54,18 +117,20 @@ const Content = styled.main`
   width: 80%;
   height: 100%;
 
-  gap: 41px;
-
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
+  padding-top: 50px;
+  gap: 25px;
 
   background-color: #333333;
 
   section {
     width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 25px;
     article {
-      width: 100%;
       height: 100%;
       display: flex;
       align-items: center;

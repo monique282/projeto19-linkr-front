@@ -1,11 +1,11 @@
-import { useContext, useEffect, useRef, useState } from "react";
-import { MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md";
-import styled from "styled-components";
-import { FontHeader, Lato700 } from "../StyleComponents/StylesComponents";
-import { AuthContext } from "../../contexts/UserContext";
-import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useContext, useEffect, useState } from "react";
 import { DebounceInput } from 'react-debounce-input';
+import { MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md";
+import { Link, useNavigate } from "react-router-dom";
+import styled from "styled-components";
+import { AuthContext } from "../../contexts/UserContext";
+import { FontHeader, Lato700 } from "../StyleComponents/StylesComponents";
 
 
 export default function NavBar() {
@@ -92,6 +92,7 @@ export default function NavBar() {
             name="search"
             placeholder="Search for people"
             minLength={3}
+            value={searchResults}
             debounceTimeout={300}
             onChange={(e) => {
               const searchText = e.target.value;
