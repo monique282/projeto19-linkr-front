@@ -242,7 +242,7 @@ export default function Post(props) {
         style={{
           overlay: {
             zIndex: 1000,
-            backgroundColor: " rgba(255, 255, 255, 0.9)",
+            backgroundColor: "rgba(255, 255, 255, 0.9)",
           },
           content: {
             width: "597px",
@@ -382,6 +382,8 @@ const StyledPencil = styled(TiPencil)`
   width: 23px;
 `;
 const StyledTrash = styled(TbTrashFilled)`
+  color: #ef1717;
+  background-color: red;
   color: #ef1717;
   height: 23px;
   width: 23px;
