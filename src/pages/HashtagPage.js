@@ -52,9 +52,9 @@ export default function HashtagPage() {
                   setHashtagLikes={setLikes}
                   hashtag={hashtag}
                   likes={
-                    likes[i].likedUserNames[0] === null
+                    likes[i]?.likedUserNames[0] === null
                       ? []
-                      : likes[i].likedUserNames
+                      : likes[i]?.likedUserNames
                   }
                 />
               ))

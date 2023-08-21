@@ -27,7 +27,7 @@ export default function Post(props) {
   const {
     setUserPosts,
     id,
-    likes,
+    likes = [],
     setUserLikes,
     setInfo,
     setHashtagPosts,
@@ -50,6 +50,9 @@ export default function Post(props) {
     description: "",
     image: undefined,
   });
+  useEffect(()=>{
+    console.log(numberLikes)
+  },[numberLikes])
 
   useEffect(() => {
     if (url) {
@@ -304,21 +307,15 @@ export default function Post(props) {
         }}
         contentLabel="Delete Confirmation"
       >
-        {/* <h2 style={{ fontFamily: "Lato", fontSize: "34px", fontWeight: "700"  }} >Confirm Deletion</h2> */}
-        <p
-          style={{
-            fontFamily: "Lato",
-            fontSize: "34px",
-            fontWeight: "700",
-            textAlign: "center",
-            marginBottom: "30px",
-          }}
-        >
-          Are you sure you want to delete this post?
-        </p>
-        <div style={{ display: "flex" }}>
-          <button
-            onClick={() => setIsModalOpen(false)}
+        <p style={{
+          fontFamily: "Lato",
+          fontSize: "34px",
+          fontWeight: "700",
+          textAlign: "center",
+          marginBottom: "30px"
+        }} >Are you sure you want to delete this post?</p>
+        <div style={{ display: "flex" }} >
+          <button onClick={() => setIsModalOpen(false)}
             style={{
               marginRight: "10px",
               width: "134px",
