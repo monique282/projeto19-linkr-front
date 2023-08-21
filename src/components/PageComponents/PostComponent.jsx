@@ -1,16 +1,19 @@
+import axios from "axios";
+import Modal from "react-modal";
+import styled from "styled-components";
+import reactStringReplace from 'react-string-replace';
 import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
 import { TiPencil } from "react-icons/ti"
 import { TbTrashFilled } from "react-icons/tb"
-import styled from "styled-components";
 import { Lato400, Lato700 } from "../StyleComponents/StylesComponents.js";
-import reactStringReplace from 'react-string-replace';
+
 import { useNavigate } from "react-router-dom";
 import { Tooltip } from "react-tooltip";
 import { useContext, useEffect, useState } from "react";
-import axios from "axios";
+
 import { AuthContext } from "../../contexts/UserContext.js";
 import { configToken } from "../../services/api.js";
-import Modal from "react-modal";
+
 
 
 
@@ -20,7 +23,7 @@ export default function Post(props) {
   const userId = localStorage.getItem("userId");
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-  const [isLiked, setIsLiked] = useState(likedUserIds.includes(Number(userId)));
+  const [isLiked, setIsLiked] = useState(likedUserIds?.includes(Number(userId)));
   const token = localStorage.getItem('token');
   const object = { headers: { 'Authorization': `Bearer ${token}` } }
   const { setPosts, setLikes, posts } = useContext(AuthContext)
@@ -50,16 +53,44 @@ export default function Post(props) {
       .catch(err => console.log(err))
   }
 
-  console.log(posts)
   async function getLikes() {
     const URL = `${process.env.REACT_APP_API_URL}/likes`
     const config = configToken();
     axios.get(URL, config)
       .then(res => setLikes(res.data))
       .catch(err => console.log(err))
+}
+  function likesMessage(){
+    if (likes.length === 0) {
+      return 'Ninguém curtiu ainda';
+    } else if (isLiked) {
+      if (likes.length === 1) {
+        return 'Apenas você curtiu';
+      } else {
+        const firstLikedUser = likedUserIds[0] !== userId ? likes[1] : likes[0];
+        const otherLikedUsers = likedUserIds[0] !== userId ? likes.slice(2) : likes.slice(1);
+        
+        const othersText = `e outros ${numberLikes - 2} curtiram`;
+    
+        if (otherLikedUsers.length === 0) {
+          return `Você e ${firstLikedUser} curtiram`;
+        } else if (otherLikedUsers.length === 1) {
+          return `Você, ${firstLikedUser} e ${otherLikedUsers[0]} curtiram`;
+        } else {
+          return `Você, ${firstLikedUser}, ${otherLikedUsers[0]} ${othersText}`;
+        }
+      }
+    } else {
+      if (likes.length === 1) {
+        return `Apenas ${likes[0]} curtiu`;
+      } else if (likes.length === 2) {
+        return `${likes[0]} e ${likes[1]} curtiram`;
+      } else {
+        return `${likes.slice(0, 2).join(', ')} e outros ${numberLikes - 2} curtiram`;
+      }
+    }
   }
-
-  function handleToggleLike() {
+  function handleToggleLike () {
     setLoading(true)
     const obj = {
       isLiked, userId: Number(userId), postId
@@ -84,7 +115,7 @@ export default function Post(props) {
   function handleDeleteConfirmation() {
     setIsModalOpen(false);
     Delete(postId);
-  }
+  };
 
   function Delete(id) {
     console.log(id)
@@ -104,7 +135,7 @@ export default function Post(props) {
     <Container data-test="post" >
       <Info>
         <figure>
-          <img src={image} alt="profile" />
+          <img onClick={() => navigate(`/user/${idUser}`)}src={image} alt="profile" />
         </figure>
 
         <StyledIcon
@@ -118,7 +149,8 @@ export default function Post(props) {
 
         <Lato400 data-tooltip-id="my-tooltip"
           data-tooltip-content={
-            (likes.length === 0) ? 'Ninguém curtiu ainda' : (isLiked && likes.length === 1) ? 'Apenas você curtiu' : (isLiked && likes.length > 1) ? `Você, ${likedUserIds[0] !== userId ? likes[1] : likes[0]} e outros ${numberLikes - 2} curtiram` : (!isLiked && likes.length === 1) ? `Apenas ${likes[0]} curtiu` : `${likes.slice(0, 2).join(', ')} e outras ${numberLikes - 2} curtiram`
+            likesMessage()
+            // (likes.length===0) ? 'Ninguém curtiu ainda' : (isLiked && likes.length===1) ? 'Apenas você curtiu' : (isLiked && likes.length>1) ? `Você, ${likedUserIds[0]!== userId ? likes[1] : likes[0]} e outros ${numberLikes - 2} curtiram` : (!isLiked && likes.length===1) ? `Apenas ${likes[0]} curtiu` : `${likes.slice(0,2).join(', ')} e outras ${numberLikes-2} curtiram`
           }
           style={{ color: "#fff", fontSize: "11px" }}
           data-test="counter">
@@ -129,11 +161,12 @@ export default function Post(props) {
       </Info>
       <Content>
         <div className="userName">
-          <Lato400 style={{ color: "#fff", fontSize: "19px" }} data-test="username" >{name}</Lato400>
+          <Lato400 style={{ color: "#fff", fontSize: "19px" }} onClick={() => navigate(`/user/${idUser}`)} data-test="username" >{name}</Lato400>
           {Number(userId) === idUser ? (
             <div>
-              <StyledPencil />
-              <StyledTrash onClick={() => { setIsModalOpen(true); }} />
+              {/* <StyledPencil /> */}
+              <StyledTrash onClick={() => setIsModalOpen(true)} />
+
             </div>) : ""}
         </div>
         <Lato400 style={{ color: "#B7B7B7", fontSize: "17px" }} data-test="description" >
@@ -141,7 +174,7 @@ export default function Post(props) {
             <span key={i} onClick={() => navigate(`/hashtag/${match}`)} > #{match} </span>
           ))}
         </Lato400>
-        <a href={url} target='_blank' data-test='link' >
+        <a href={url} target='_blank' data-test="link" >
           <SCMetadata>
             <div>
               <Lato400>{metadata.title}</Lato400>
@@ -164,7 +197,7 @@ export default function Post(props) {
         onRequestClose={() => setIsModalOpen(false)}
         style={{
           overlay: {
-            backgroundColor: "rgba(0, 0, 0, 0.5)",
+            // backgroundColor: "rgba(0, 0, 0, 0.5)",
             zIndex: 1000,
             backgroundColor: "rgba(255, 255, 255, 0.9)",
           },
@@ -184,7 +217,7 @@ export default function Post(props) {
             color: "rgba(255, 255, 255, 1)",
             top: "50%",
             left: "50%",
-            transform: "translate(-50%, -50%)",
+            transform: "translate(-50%, -50%)"
           },
         }}
         contentLabel="Delete Confirmation"
@@ -197,7 +230,7 @@ export default function Post(props) {
           textAlign: "center",
           marginBottom: "30px"
         }} >Are you sure you want to delete this post?</p>
-        <div style={{ display: "flex", }} >
+        <div style={{ display: "flex" }} >
           <button onClick={() => setIsModalOpen(false)}
             style={{
               marginRight: "10px",
@@ -292,13 +325,14 @@ const StyledIcon = styled(({ isLiked, ...rest }) =>
   cursor: pointer;
 `;
 const StyledPencil = styled(TiPencil)`
-  color: #FFF;
+  color: #fff;
   height: 23px;
   width: 23px;
 `
 const StyledTrash = styled(TbTrashFilled)`
   color: #ef1717;
   background-color: red;
+  color: #ef1717;
   height: 23px;
   width: 23px;
 `
