@@ -48,6 +48,7 @@ async function getLikes () {
       if(obj.url.length === 0) {
         setLoading(false)
         return alert('Campo URL é obrigatório!')}
+        
       if (token) {
         try {
           await axios.post(`${process.env.REACT_APP_API_URL}/new-post`, obj, object);

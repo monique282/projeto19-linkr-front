@@ -32,7 +32,7 @@ export default function Post(props) {
   );
   const token = localStorage.getItem("token");
   const object = { headers: { Authorization: `Bearer ${token}` } };
-  const { setPosts, setLikes, posts } = useContext(AuthContext);
+  const { setPosts, setLikes } = useContext(AuthContext);
   const [metadata, setMetadata] = useState({
     title: "",
     description: "",
@@ -241,7 +241,6 @@ export default function Post(props) {
         onRequestClose={() => setIsModalOpen(false)}
         style={{
           overlay: {
-            // backgroundColor: "rgba(0, 0, 0, 0.5)",
             zIndex: 1000,
             backgroundColor: " rgba(255, 255, 255, 0.9)",
           },
@@ -266,7 +265,6 @@ export default function Post(props) {
         }}
         contentLabel="Delete Confirmation"
       >
-        {/* <h2 style={{ fontFamily: "Lato", fontSize: "34px", fontWeight: "700"  }} >Confirm Deletion</h2> */}
         <p
           style={{
             fontFamily: "Lato",
