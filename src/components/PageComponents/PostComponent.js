@@ -55,18 +55,19 @@ export default function Post(props) {
     }
   }, [url]);
 
-  function likesTooltip(){
+  function likesTooltip() {
     if (likes.length === 0) {
-      return 'Ninguém curtiu ainda';
+      return "Ninguém curtiu ainda";
     } else if (isLiked) {
       if (likes.length === 1) {
-        return 'Apenas você curtiu';
+        return "Apenas você curtiu";
       } else {
         const firstLikedUser = likedUserIds[0] === userId ? likes[1] : likes[0];
-        const otherLikedUsers = likedUserIds[0] !== userId ? likes.slice(2) : likes.slice(1);
-        
+        const otherLikedUsers =
+          likedUserIds[0] !== userId ? likes.slice(2) : likes.slice(1);
+
         const othersText = `e outros ${numberLikes - 2} curtiram`;
-    
+
         if (otherLikedUsers.length === 0) {
           return `Você e ${firstLikedUser} curtiram`;
         } else if (otherLikedUsers.length === 1) {
@@ -81,7 +82,9 @@ export default function Post(props) {
       } else if (likes.length === 2) {
         return `${likes[0]} e ${likes[1]} curtiram`;
       } else {
-        return `${likes.slice(0, 2).join(', ')} e outros ${numberLikes - 2} curtiram`;
+        return `${likes.slice(0, 2).join(", ")} e outros ${
+          numberLikes - 2
+        } curtiram`;
       }
     }
   }
@@ -105,7 +108,6 @@ export default function Post(props) {
               .then((res) => {
                 setInfo(res.data);
                 setUserPosts(res.data.posts);
-
               })
               .catch((res) => console.log(res));
 
@@ -165,9 +167,7 @@ export default function Post(props) {
 
         <Lato400
           data-tooltip-id="my-tooltip"
-          data-tooltip-content={
-            likesTooltip()
-          }
+          data-tooltip-content={likesTooltip()}
           style={{ color: "#fff", fontSize: "11px" }}
           data-test="counter"
         >
