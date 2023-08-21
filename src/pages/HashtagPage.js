@@ -51,6 +51,9 @@ export default function HashtagPage() {
                 <Post
                   key={post.postId}
                   post={post}
+                  setHashtagPosts={setPosts}
+                  setHashtagLikes={setLikes}
+                  hashtag={hashtag}
                   likes={
                     likes[i]?.likedUserNames[0] === null
                       ? []
