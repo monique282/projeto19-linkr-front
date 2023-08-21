@@ -119,7 +119,6 @@ export default function Post(props) {
     const url = `${process.env.REACT_APP_API_URL}/postDelete/${id}`
     const promise = axios.delete(url)
     promise.then(response => {
-      alert("Produto deletado");
       setIsModalOpen(false);
       window.location.reload()
     })
@@ -127,8 +126,6 @@ export default function Post(props) {
       alert(err.response.data);
     });
   }
-
-
 
   return (
     <Container data-test="post">
