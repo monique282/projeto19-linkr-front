@@ -299,7 +299,7 @@ export default function Post(props) {
           </Link>
           {Number(userId) === idUser ? (
             <div>
-              <StyledPencil onClick={handleEditPost}/>
+              <StyledPencil data-test="edit-btn" onClick={handleEditPost}/>
               <StyledTrash data-test="delete-btn" onClick={() => setIsModalOpen(true)} />
             </div>
           ) : (
