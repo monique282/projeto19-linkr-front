@@ -217,19 +217,19 @@ export default function Post(props) {
     setIsModalOpen(false);
     Delete(postId);
   }
-  function handleKeyEvent(event) {
-    if (event.key === "Escape") {
-      setIsEditing(false)
-      setContent(content)
-    }
-    if (event.key === "Enter") {
-      setLoading(true)
-      const obj = {
-        postContent,
-        hashtags
+  function handleKeyEvent(event){
+      if(event.key === "Escape") {
+        setIsEditing(false)
+        setContent(content)
       }
-      axios.patch(`${process.env.REACT_APP_API_URL}/edit/${postId}`, obj)
-        .then()
+      if(event.key === "Enter") {
+        setLoading(true)
+        const obj = {
+          content: postContent,
+          hashtags
+        }
+        axios.patch(`${process.env.REACT_APP_API_URL}/edit/${postId}`, obj)
+        .then(() => setIsEditing(false))
         .catch(err => alert(err.response.data))
         .finally(() => setLoading(false))
     }
@@ -479,7 +479,7 @@ const StyledIcon = styled(({ isLiked, ...rest }) =>
   cursor: pointer;
 `;
 const StyledPencil = styled(TiPencil)`
-  color: #ef1717;
+  color: #fff;
   height: 23px;
   width: 23px;
 `;
