@@ -241,7 +241,8 @@ export default function Post(props) {
     const promise = axios.delete(url);
     promise.then((response) => {
       setIsModalOpen(false);
-      window.location.reload();
+      getPosts()
+
     });
     promise.catch((err) => {
       alert(err.response.data);
@@ -546,5 +547,6 @@ const Container = styled.div`
   gap: 15px;
   display: flex;
   border-radius: 16px;
+  //background-color: red;
   background: #171717;
 `;
