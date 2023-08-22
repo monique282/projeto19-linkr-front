@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useCallback, useContext, useEffect, useState } from "react";
-import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
+import { AiFillHeart, AiOutlineHeart, AiOutlineComment } from "react-icons/ai";
+import { BiRepost } from "react-icons/bi";
 import { TbTrashFilled } from "react-icons/tb";
 import { TiPencil } from "react-icons/ti";
 import Modal from "react-modal";
@@ -19,15 +20,19 @@ export default function Post(props) {
     content,
     url,
     numberLikes,
+    numberComments,
     userId: idUser,
     postId,
     likedUserIds,
+    commentsUserIds,
+
   } = props.post;
 
   const {
     setUserPosts,
     id,
     likes = [],
+    comments = [],
     setUserLikes,
     setInfo,
     setHashtagPosts,
@@ -36,6 +41,7 @@ export default function Post(props) {
     setAtualizeHashtag
   } = props;
 
+  console.log(props)
   const userId = localStorage.getItem("userId");
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
@@ -43,7 +49,6 @@ export default function Post(props) {
   const [postContent, setContent] = useState(content);
   const [hashtags, setHashtags] = useState([]);
   const [isLiked, setIsLiked] = useState(likedUserIds.includes(Number(userId)));
-
   const [metadata, setMetadata] = useState({
     title: "",
     description: "",
@@ -70,6 +75,7 @@ export default function Post(props) {
       .then((res) => { setLikes(res.data) })
       .catch((err) => alert(err.response.data));
   }
+
   useEffect(() => {
     const extractedHashtags = [];
     reactStringReplace(postContent, /#(\w+)/g, (match, i) => {
@@ -106,7 +112,7 @@ export default function Post(props) {
     }
   }, [url]);
 
-
+  // para os liks
   function likesTooltip() {
     if (likes.length === 0) {
       return "Ninguém curtiu ainda";
@@ -140,10 +146,13 @@ export default function Post(props) {
     }
   }
 
+
+
   function handleEditPost() {
     setIsEditing(!isEditign)
   }
 
+  // para enviar os liks para o banco
   function handleToggleLike() {
     setLoading(true);
     const obj = {
@@ -212,23 +221,92 @@ export default function Post(props) {
     }
   }
 
+  // para enviar os comentarios para o banco 
+  // function handleToggleComment() {
+  //   setLoading(true);
+  //   const obj = {
+  //     isComment,
+  //     userId: Number(userId),
+  //     postId,
+  //   };
+
+  //   if (token) {
+  //     axios
+  //       .post(`${process.env.REACT_APP_API_URL}/comments`, obj, object)
+  //       .then((res) => {
+  //         setIsComment((prevIsLiked) => !prevIsLiked);
+  //         if (id !== undefined) {
+  //           axios
+  //             .get(`${process.env.REACT_APP_API_URL}/user/${id}`, object)
+  //             .then((res) => {
+  //               setInfo(res.data);
+  //               setUserPosts(res.data.posts);
+  //             })
+  //             .catch((res) => console.log(res));
+
+  //           const URL = `${process.env.REACT_APP_API_URL}/likes/${id}`;
+  //           axios
+  //             .get(URL, object)
+  //             .then((res) => setUserLikes(res.data))
+  //             .catch((err) => console.log(err));
+  //         }
+
+  //         if (hashtag !== undefined) {
+  //           const URL = process.env.REACT_APP_API_URL;
+  //           const headers = configToken();
+
+  //           axios
+  //             .get(`${URL}/likes`, headers)
+  //             .then((res) => {
+  //               setLikes(res.data)
+  //               setHashtagLikes(res.data);
+  //             })
+  //             .catch((err) => console.log(err));
+
+  //           axios
+  //             .get(`${URL}/hashtag/${hashtag}`, headers)
+  //             .then((res) => {
+  //               setHashtagPosts(res.data);
+  //             })
+  //             .catch((err) => console.log(err));
+  //         } else {
+  //           axios
+  //             .get(`${process.env.REACT_APP_API_URL}/timeline`, object)
+  //             .then((res) => setPosts(res.data.rows))
+  //             .catch((err) => console.log(err));
+
+  //           const URL = `${process.env.REACT_APP_API_URL}/likes`;
+  //           const config = configToken();
+  //           axios
+  //             .get(URL, config)
+  //             .then((res) => setLikes(res.data))
+  //             .catch((err) => console.log(err));
+  //         }
+  //       })
+  //       .catch((err) => {
+  //         console.log(`Error in like toggle: `, err);
+  //       })
+  //       .finally(() => setLoading(false));
+  //   }
+  // }
+
   // essa função vai ser para abrir fechar o modal e chamar a função que expliu o post
   function handleDeleteConfirmation() {
     setIsModalOpen(false);
     Delete(postId);
   }
-  function handleKeyEvent(event){
-      if(event.key === "Escape") {
-        setIsEditing(false)
-        setContent(content)
+  function handleKeyEvent(event) {
+    if (event.key === "Escape") {
+      setIsEditing(false)
+      setContent(content)
+    }
+    if (event.key === "Enter") {
+      setLoading(true)
+      const obj = {
+        content: postContent,
+        hashtags
       }
-      if(event.key === "Enter") {
-        setLoading(true)
-        const obj = {
-          content: postContent,
-          hashtags
-        }
-        axios.patch(`${process.env.REACT_APP_API_URL}/edit/${postId}`, obj)
+      axios.patch(`${process.env.REACT_APP_API_URL}/edit/${postId}`, obj)
         .then(() => setIsEditing(false))
         .catch(err => alert(err.response.data))
         .finally(() => setLoading(false))
@@ -255,37 +333,77 @@ export default function Post(props) {
         <figure>
           <img src={image} alt="profile" />
         </figure>
-
-        <StyledIcon
-          onClick={handleToggleLike}
-          disabled={loading}
-          isLiked={isLiked}
-          data-test="like-btn"
-        />
-        <Lato700>
-          <Tooltip
-            id="my-tooltip"
-            place="bottom"
-            style={{
-              background: "rgba(255, 255, 255, 0.90)",
-              borderRadius: "3px",
-              color: "#505050",
-              fontSize: "12px",
-            }}
-            data-test="tooltip"
+        {/* esse aqui é os liks */}
+        <>
+          <StyledIcon
+            onClick={handleToggleLike}
+            disabled={loading}
+            isLiked={isLiked}
+            data-test="like-btn"
           />
-        </Lato700>
+          <Lato700>
+            <Tooltip
+              id="my-tooltip"
+              place="bottom"
+              style={{
+                background: "rgba(255, 255, 255, 0.90)",
+                borderRadius: "3px",
+                color: "#505050",
+                fontSize: "12px",
+              }}
+              data-test="tooltip"
+            />
+          </Lato700>
 
-        <Lato400
-          data-tooltip-id="my-tooltip"
-          data-tooltip-content={likesTooltip()}
-          style={{ color: "#fff", fontSize: "11px" }}
-          data-test="counter"
-        >
-          {Number(numberLikes) === 1
-            ? `${numberLikes} Like`
-            : `${numberLikes} Likes`}
-        </Lato400>
+          <Lato400
+            data-tooltip-id="my-tooltip"
+            data-tooltip-content={likesTooltip()}
+            style={{ color: "#fff", fontSize: "11px", marginTop: "5px" }}
+            data-test="counter"
+          >
+            {Number(numberLikes) === 1
+              ? `${numberLikes} Like`
+              : `${numberLikes} Likes`}
+          </Lato400>
+        </>
+        {/* esse aqui é os comentarios */}
+        <>
+          <StyledIconComment
+            //onClick={handleToggleComment}
+            disabled={loading}
+            //isLiked={isLiked}
+            data-test="comment-btn"
+          />
+
+          <Lato400
+            style={{ color: "#fff", fontSize: "11px", marginTop: "5px" }}
+            data-test="counter"
+          >
+            {Number(numberComments) === 1
+              ? `${numberComments} comment`
+              : `${numberComments} comments`}
+          </Lato400>
+        </>
+        {/* esse aqui é os reposts */}
+        <>
+          <StyledIconRepost
+           // onClick={handleToggleLike}
+            disabled={loading}
+           // isLiked={isLiked}
+            data-test="like-btn"
+          />
+        
+
+          <Lato400
+            style={{ color: "#fff", fontSize: "15px", marginTop: "5px" }}
+            data-test="counter"
+          >
+            {Number(numberLikes) === 1
+              ? `${numberLikes} repost`
+              : `${numberLikes} reposts`}
+          </Lato400>
+        </>
+
       </Info>
       <Content>
         <div className="userName">
@@ -478,11 +596,36 @@ const StyledIcon = styled(({ isLiked, ...rest }) =>
   font-size: 16px;
   color: ${(props) => (props.isLiked ? "#AC0000" : "#fff")};
   cursor: pointer;
+  margin-top: 10px;
+  height: 25px;
+  width: 27px;
 `;
+
+const StyledIconComment = styled(AiOutlineComment)`
+  font-size: 16px;
+  color:  #fff;
+  cursor: pointer;
+  //background-color: red;
+  margin-top: 10px;
+  height: 25px;
+  width: 27px;
+`;
+
+const StyledIconRepost = styled(BiRepost)`
+  font-size: 16px;
+  color:  #fff;
+  cursor: pointer;
+  //background-color: red;
+  margin-top: 10px;
+  height: 25px;
+  width: 27px;
+`;
+
 const StyledPencil = styled(TiPencil)`
   color: #fff;
   height: 23px;
   width: 23px;
+  margin-right: 12px;
 `;
 const StyledTrash = styled(TbTrashFilled)`
   color: #fff;
@@ -524,12 +667,13 @@ const Content = styled.div`
 `;
 
 const Info = styled.div`
-  width: 50px;
+  width: 70px;
   height: 100%;
 
   display: flex;
   flex-direction: column;
   align-items: center;
+  //background-color: red;
 
   img {
     width: 50px;
@@ -547,6 +691,6 @@ const Container = styled.div`
   gap: 15px;
   display: flex;
   border-radius: 16px;
-  //background-color: red;
+  
   background: #171717;
 `;
