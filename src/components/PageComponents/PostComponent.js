@@ -76,7 +76,6 @@ export default function Post(props) {
       extractedHashtags.push(match);
     });
     setHashtags(extractedHashtags)
-    console.log(hashtags)
   }, [postContent]);
 
   useEffect(()=>{
@@ -237,7 +236,6 @@ export default function Post(props) {
   }
   
   function Delete(id) {
-    console.log(id);
     const url = `${process.env.REACT_APP_API_URL}/postDelete/${id}`;
     const promise = axios.delete(url);
     promise.then((response) => {

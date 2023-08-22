@@ -14,8 +14,6 @@ export default function UserPage() {
   const { id } = useParams();
   const token = localStorage.getItem("token");
   const object = { headers: { Authorization: `Bearer ${token}` } };
-  console.log(likes);
-  console.log(posts);
 
   useEffect(() => {
     if (token) {
