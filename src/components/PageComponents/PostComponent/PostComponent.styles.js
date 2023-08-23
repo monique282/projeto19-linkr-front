@@ -117,7 +117,7 @@ export const Content = styled.div`
 `;
 
 export const Info = styled.div`
-  width: 50px;
+  width: 70px;
   height: 100%;
 
   display: flex;
