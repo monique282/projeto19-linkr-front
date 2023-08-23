@@ -13,6 +13,7 @@ export default function AuthProvider({ children }) {
     const [posts, setPosts] = useState([]);
     const [likes, setLikes] = useState([]);
 
+
     useEffect(() => {
         if (lsToken === null && localiza.pathname !== "/sign-up") {
             navigate("/");
