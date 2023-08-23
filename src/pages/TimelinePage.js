@@ -10,42 +10,46 @@ import { FontPageTitle } from "../components/StyleComponents/StylesComponents";
 import { AuthContext } from "../contexts/UserContext";
 
 export default function TimelinePage() {
-  const { setPosts, setLikes, posts, likes } = useContext(AuthContext);
+  const { setPosts, setLikes, posts, likes, comments, setComments } = useContext(AuthContext);
   const token = localStorage.getItem("token");
   const object = { headers: { Authorization: `Bearer ${token}` } };
   const [message, setMessage] = useState("Loading");
   const [loading, setLoading] = useState(false);
   const [atualize, setAtualize] = useState(false);
 
-  function getLikes(){
-  const URL = `${process.env.REACT_APP_API_URL}/likes`;
-  axios
-    .get(URL, object)
-    .then((res) => {setLikes(res.data)})
-    .catch((err) => {
-      alert(err.response.data)
-      console.log(err)});
-  }
-  function getPosts(){
+  function getLikes() {
+    const URL = `${process.env.REACT_APP_API_URL}/likes`;
     axios
-    .get(`${process.env.REACT_APP_API_URL}/timeline`, object)
-    .then((res) => {
-      setPosts(res?.data.rows || [] );
-      if (res.data.rows.length === 0) setMessage("There are no posts yet");
-    })
-    .catch((err) =>
-      {alert(err.response.data)
-      setMessage(
-        <>
-          <div>An error ocurred while trying to fetch the</div>
-          <div>posts, please refresh the page</div>
-        </>
-      )}
-    );
+      .get(URL, object)
+      .then((res) => { setLikes(res.data) })
+      .catch((err) => {
+        alert(err.response.data)
+        console.log(err)
+      });
   }
-  useEffect(()=> {
 
-  },[likes, posts])
+
+  function getPosts() {
+    axios
+      .get(`${process.env.REACT_APP_API_URL}/timeline`, object)
+      .then((res) => {
+        setPosts(res?.data.rows || []);
+        if (res.data.rows.length === 0) setMessage("There are no posts yet");
+      })
+      .catch((err) => {
+        alert(err.response.data)
+        setMessage(
+          <>
+            <div>An error ocurred while trying to fetch the</div>
+            <div>posts, please refresh the page</div>
+          </>
+        )
+      }
+      );
+  }
+  useEffect(() => {
+
+  }, [comments, likes, posts])
   useEffect(() => {
     if (token) {
       getPosts();
@@ -53,6 +57,7 @@ export default function TimelinePage() {
     }
   }, [loading]);
 
+  console.log(posts)
   return (
     <Background>
       <NavBar />
