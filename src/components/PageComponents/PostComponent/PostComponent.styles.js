@@ -1,5 +1,6 @@
 import styled from "styled-components";
-import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
+import { AiFillHeart, AiOutlineHeart, AiOutlineComment } from "react-icons/ai";
+import { BiRepost } from "react-icons/bi";
 import { TbTrashFilled } from "react-icons/tb";
 import { TiPencil } from "react-icons/ti";
 import { Tooltip } from "react-tooltip";
@@ -63,15 +64,18 @@ export const StyledTooltip = styled(Tooltip)`
 `
 export const StyledIcon = styled(({ isLiked, ...rest }) =>
   isLiked ? <AiFillHeart {...rest} /> : <AiOutlineHeart {...rest} />
-)`
-  font-size: 16px;
+)`font-size: 16px;
   color: ${(props) => (props.isLiked ? "#AC0000" : "#fff")};
   cursor: pointer;
-`;
+  margin-top: 10px;
+  height: 25px;
+  width: 27px;`
+  
 export const StyledPencil = styled(TiPencil)`
   color: #fff;
   height: 23px;
   width: 23px;
+  margin-right: 12px;
 `;
 export const StyledTrash = styled(TbTrashFilled)`
   color: #fff;
@@ -137,4 +141,21 @@ export const Container = styled.div`
   display: flex;
   border-radius: 16px;
   background: #171717;
+`;
+export const StyledIconComment = styled(AiOutlineComment)`
+  font-size: 16px;
+  color:  #fff;
+  cursor: pointer;
+  margin-top: 10px;
+  height: 25px;
+  width: 27px;
+`;
+
+export const StyledIconRepost = styled(BiRepost)`
+  font-size: 16px;
+  color:  #fff;
+  cursor: pointer;
+  margin-top: 10px;
+  height: 25px;
+  width: 27px;
 `;

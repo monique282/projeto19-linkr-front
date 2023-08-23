@@ -3,9 +3,7 @@ import { configToken } from "../../services/api";
 import { useState } from "react";
 
 export default function FollowButton( { statusFollow, userId, disable, setDisable } ) {
-
     console.log(statusFollow);
-
     function changeFollow () {
         setDisable(true);
 
@@ -18,7 +16,6 @@ export default function FollowButton( { statusFollow, userId, disable, setDisabl
             .catch( err => alert("Não foi possível executar a operação."))
             .finally(() => setDisable(false));
     }
-
 
     return (
         <button

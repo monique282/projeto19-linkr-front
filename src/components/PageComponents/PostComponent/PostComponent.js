@@ -14,15 +14,18 @@ export default function Post(props) {
     content,
     url,
     numberLikes,
+    numberComments,
     userId: idUser,
     postId,
     likedUserIds,
+    commentsUserIds,
   } = props.post;
 
   const {
     setUserPosts,
     id,
     likes = [],
+    comments = [],
     setUserLikes,
     setInfo,
     setHashtagPosts,
@@ -186,6 +189,39 @@ export default function Post(props) {
             ? `${numberLikes} Like`
             : `${numberLikes} Likes`}
         </Lato400>
+        {/* esse aqui é os comentarios */}
+        <>
+          <styles.StyledIconComment
+            //onClick={handleToggleComment}
+            disabled={loading}
+            //isLiked={isLiked}
+            data-test="comment-btn"
+          />
+
+          <Lato400
+            style={{ color: "#fff", fontSize: "11px", marginTop: "5px" }}
+            data-test="counter"
+          >
+            {Number(numberComments) === 1
+              ? `${numberComments} comment`
+              : `${numberComments} comments`}
+          </Lato400>
+        </>
+        {/* esse aqui é os reposts */}
+        <>
+          <styles.StyledIconRepost
+            disabled={loading}
+            data-test="like-btn"
+          />
+          <Lato400
+            style={{ color: "#fff", fontSize: "15px", marginTop: "5px" }}
+            data-test="counter"
+          >
+            {Number(numberLikes) === 1
+              ? `${numberLikes} repost`
+              : `${numberLikes} reposts`}
+          </Lato400>
+        </>
       </styles.Info>
       <styles.Content>
         <div className="userName">
