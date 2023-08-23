@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import { AuthContext } from "../../../contexts/UserContext.js";
 import { configToken } from "../../../services/api.js";
 import { Lato400, Lato700 } from "../../StyleComponents/StylesComponents.js";
-import { EditPost, LikesTooltip, PostOwner, ReturnModal } from "./PostComponent.functions";
+import { EditPost, LikesTooltip, PostOwner, RepostModal, ReturnModal } from "./PostComponent.functions";
 
 export default function Post(props) {
   const {
@@ -15,17 +15,16 @@ export default function Post(props) {
     url,
     numberLikes,
     numberComments,
+    numberReposts,
     userId: idUser,
     postId,
-    likedUserIds,
-    commentsUserIds,
+    likedUserIds
   } = props.post;
 
   const {
     setUserPosts,
     id,
     likes = [],
-    comments = [],
     setUserLikes,
     setInfo,
     setHashtagPosts,
@@ -37,8 +36,8 @@ export default function Post(props) {
   const userId = localStorage.getItem("userId");
   const [loading, setLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalOpenRepost, setIsModalOpenRepost] = useState(false);
   const [isLiked, setIsLiked] = useState(likedUserIds.includes(Number(userId)));
-  
   const [metadata, setMetadata] = useState({
     title: "",
     description: "",
@@ -47,27 +46,26 @@ export default function Post(props) {
   const [isEditing, setIsEditing] = useState(false)
   const token = localStorage.getItem("token");
   const object = { headers: { Authorization: `Bearer ${token}` } };
-
   const { setPosts, setLikes } = useContext(AuthContext);
-  
-  function getPosts(){
+
+  function getPosts() {
     axios
-    .get(`${process.env.REACT_APP_API_URL}/timeline`, object)
-    .then((res) => setPosts(res.data.rows))
-    .catch((err) =>alert(err.response.data))
+      .get(`${process.env.REACT_APP_API_URL}/timeline`, object)
+      .then((res) => setPosts(res.data.rows))
+      .catch((err) => alert(err.response.data))
   }
 
-  function getLikes(){
+  function getLikes() {
     const URL = `${process.env.REACT_APP_API_URL}/likes`;
     axios
       .get(URL, object)
-      .then((res) => {setLikes(res.data)})
+      .then((res) => { setLikes(res.data) })
       .catch((err) => alert(err.response.data));
   }
 
-  useEffect(()=>{
-    if ( setAtualizeHashtag ) setAtualizeHashtag(prev => !prev);
-  },[numberLikes])
+  useEffect(() => {
+    if (setAtualizeHashtag) setAtualizeHashtag(prev => !prev);
+  }, [numberLikes])
 
   useEffect(() => {
     if (token) {
@@ -211,15 +209,16 @@ export default function Post(props) {
         <>
           <styles.StyledIconRepost
             disabled={loading}
+            onClick={() => setIsModalOpenRepost(true)}
             data-test="like-btn"
           />
           <Lato400
-            style={{ color: "#fff", fontSize: "15px", marginTop: "5px" }}
+            style={{ color: "#fff", fontSize: "11px", marginTop: "5px" }}
             data-test="counter"
           >
-            {Number(numberLikes) === 1
-              ? `${numberLikes} repost`
-              : `${numberLikes} reposts`}
+            {Number(numberReposts) === 1
+              ? `${numberReposts} repost`
+              : `${numberReposts} reposts`}
           </Lato400>
         </>
       </styles.Info>
@@ -233,9 +232,9 @@ export default function Post(props) {
               {name}
             </Lato400>
           </Link>
-          <PostOwner setIsEditing={setIsEditing} isEditing={isEditing} userId={userId} idUser={idUser}/>
+          <PostOwner setIsEditing={setIsEditing} isEditing={isEditing} userId={userId} idUser={idUser} />
         </div>
-        <EditPost isEditing={isEditing} setIsEditing={setIsEditing} content={content} postId={postId} loading={loading} setLoading={setLoading}/>
+        <EditPost isEditing={isEditing} setIsEditing={setIsEditing} content={content} postId={postId} loading={loading} setLoading={setLoading} />
         <a href={url} target="_blank" data-test="link">
           <styles.SCMetadata>
             <div>
@@ -252,7 +251,10 @@ export default function Post(props) {
         </a>
       </styles.Content>
       {/* caixa que mostra se realmente a pessoa quer apagar o post */}
-      <ReturnModal setIsModalOpen={setIsModalOpen} isModalOpen={isModalOpen} postId={postId}/>
+      <ReturnModal setIsModalOpen={setIsModalOpen} isModalOpen={isModalOpen} postId={postId} />
+      {/* caixa que mostra se realmente a pessoa quer repostar um post */}
+      <RepostModal setIsModalOpenRepost={setIsModalOpenRepost} isModalOpenRepost={isModalOpenRepost} postId={postId} />
+
     </styles.Container>
   );
 }

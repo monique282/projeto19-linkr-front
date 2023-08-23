@@ -54,7 +54,6 @@ export default function TimelinePage() {
     }
   }, [loading]);
 
-  console.log(posts)
   return (
     <Background>
       <NavBar />
