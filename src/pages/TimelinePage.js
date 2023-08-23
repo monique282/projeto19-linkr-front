@@ -34,7 +34,16 @@ export default function TimelinePage() {
       .get(`${process.env.REACT_APP_API_URL}/timeline`, object)
       .then((res) => {
         setPosts(res?.data.rows || []);
-        if (res.data.rows.length === 0) setMessage("There are no posts yet");
+        if (res.data.rows.length === 0 && res.data.status === "not following") setMessage(
+          <>
+            <div>You don't follow anyone yet.</div>
+            <div>Search for new Friends!</div>
+          </>
+          );
+        
+        if (res.data.rows.length === 0 && res.data.status === "following") setMessage(
+            <div>No post found from your friends.</div>
+        )
       })
       .catch((err) => {
         alert(err.response.data)
