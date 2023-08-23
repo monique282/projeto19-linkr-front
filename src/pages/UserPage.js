@@ -6,6 +6,7 @@ import HashtagBox from "../components/PageComponents/HashtagBox.js";
 import NavBar from "../components/PageComponents/NavBar.js";
 import Post from "../components/PageComponents/PostComponent/PostComponent";
 import { FontPageTitle } from "../components/StyleComponents/StylesComponents.js";
+import FollowButton from "../components/PageComponents/FollowButton.js";
 
 export default function UserPage() {
   const [posts, setPosts] = useState([]);
@@ -15,8 +16,20 @@ export default function UserPage() {
   const token = localStorage.getItem("token");
   const object = { headers: { Authorization: `Bearer ${token}` } };
 
+  const [disable, setDisable] = useState(false);
+
   useEffect(() => {
     if (token) {
+
+      const URL = `${process.env.REACT_APP_API_URL}/likes/${id}`;
+      axios
+        .get(URL, object)
+        .then((res) => {
+          setLikes(res.data);
+        })
+        .catch((err) => console.log(err));
+      }
+
       axios
         .get(`${process.env.REACT_APP_API_URL}/user/${id}`, object)
         .then((res) => {
@@ -26,16 +39,7 @@ export default function UserPage() {
           console.log(res);
         })
         .catch((res) => console.log(res));
-
-      const URL = `${process.env.REACT_APP_API_URL}/likes/${id}`;
-      axios
-        .get(URL, object)
-        .then((res) => {
-          setLikes(res.data);
-        })
-        .catch((err) => console.log(err));
-    }
-  }, [id]);
+  }, [id, disable]);
 
   return (
     <>
@@ -46,6 +50,7 @@ export default function UserPage() {
             <img src={info.image} alt={info.image} />
             <h1>{info.name} posts</h1>
           </header>
+          <FollowButton statusFollow={info.statusFollow} userId={info.id} disable={disable} setDisable={setDisable} />
           <section>
             <article>
               {posts.length === 0 ? (
@@ -99,6 +104,8 @@ const Content = styled.main`
 
   background-color: #333333;
 
+  position: relative;
+
   section {
     width: 100%;
     display: flex;
@@ -134,5 +141,14 @@ const Content = styled.main`
       height: 50px;
       border-radius: 26.5px;
     }
+  }
+
+  button {
+    width: 112px;
+    height: 31px;
+    position: absolute;
+    top: 70px;
+    right: 270px;
+    border-radius: 5px;
   }
 `;
