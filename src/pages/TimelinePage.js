@@ -4,7 +4,7 @@ import styled from "styled-components";
 import HashtagBox from "../components/PageComponents/HashtagBox";
 import NavBar from "../components/PageComponents/NavBar";
 import { Background } from "../components/PageComponents/PageComponents";
-import Post from "../components/PageComponents/PostComponent";
+import Post from "../components/PageComponents/PostComponent/PostComponent";
 import SharePost from "../components/PageComponents/SharePost";
 import { FontPageTitle } from "../components/StyleComponents/StylesComponents";
 import { AuthContext } from "../contexts/UserContext";
@@ -16,7 +16,7 @@ export default function TimelinePage() {
   const [message, setMessage] = useState("Loading");
   const [loading, setLoading] = useState(false);
   const [atualize, setAtualize] = useState(false);
-
+  console.log(posts)
   function getLikes() {
     const URL = `${process.env.REACT_APP_API_URL}/likes`;
     axios
@@ -57,16 +57,12 @@ export default function TimelinePage() {
       );
   }
   useEffect(() => {
-
-  }, [comments, likes, posts])
-  useEffect(() => {
     if (token) {
       getPosts();
       getLikes();
     }
   }, [loading]);
 
-  console.log(posts)
   return (
     <Background>
       <NavBar />
