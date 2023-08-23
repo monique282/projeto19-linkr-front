@@ -5,7 +5,7 @@ import styled from "styled-components";
 import HashtagBox from "../components/PageComponents/HashtagBox";
 import NavBar from "../components/PageComponents/NavBar";
 import { Background } from "../components/PageComponents/PageComponents";
-import Post from "../components/PageComponents/PostComponent";
+import Post from "../components/PageComponents/PostComponent/PostComponent";
 import { FontPageTitle } from "../components/StyleComponents/StylesComponents";
 import { configToken } from "../services/api";
 

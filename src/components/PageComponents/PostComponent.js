@@ -41,7 +41,6 @@ export default function Post(props) {
     setAtualizeHashtag
   } = props;
 
-  console.log(props)
   const userId = localStorage.getItem("userId");
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
@@ -387,9 +386,7 @@ export default function Post(props) {
         {/* esse aqui é os reposts */}
         <>
           <StyledIconRepost
-           // onClick={handleToggleLike}
             disabled={loading}
-           // isLiked={isLiked}
             data-test="like-btn"
           />
         
@@ -601,31 +598,11 @@ const StyledIcon = styled(({ isLiked, ...rest }) =>
   width: 27px;
 `;
 
-const StyledIconComment = styled(AiOutlineComment)`
-  font-size: 16px;
-  color:  #fff;
-  cursor: pointer;
-  //background-color: red;
-  margin-top: 10px;
-  height: 25px;
-  width: 27px;
-`;
-
-const StyledIconRepost = styled(BiRepost)`
-  font-size: 16px;
-  color:  #fff;
-  cursor: pointer;
-  //background-color: red;
-  margin-top: 10px;
-  height: 25px;
-  width: 27px;
-`;
-
 const StyledPencil = styled(TiPencil)`
   color: #fff;
   height: 23px;
   width: 23px;
-  margin-right: 12px;
+
 `;
 const StyledTrash = styled(TbTrashFilled)`
   color: #fff;

@@ -17,7 +17,6 @@ export default function HashtagBox ({atualize}) {
         axios.get(URL, headers)
             .then(res => setHashtagsList(res.data))
             .catch(err => console.log(err));
-
     },
     [atualize])
 

@@ -57,7 +57,6 @@ export default function NavBar() {
     promise.then((response) => {
       // Atualiza os resultados da busca
       setSearchResults(response.data)
-      console.log(response.data)
     });
 
     promise.catch(err => {

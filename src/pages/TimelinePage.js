@@ -4,7 +4,7 @@ import styled from "styled-components";
 import HashtagBox from "../components/PageComponents/HashtagBox";
 import NavBar from "../components/PageComponents/NavBar";
 import { Background } from "../components/PageComponents/PageComponents";
-import Post from "../components/PageComponents/PostComponent";
+import Post from "../components/PageComponents/PostComponent/PostComponent";
 import SharePost from "../components/PageComponents/SharePost";
 import { FontPageTitle } from "../components/StyleComponents/StylesComponents";
 import { AuthContext } from "../contexts/UserContext";
@@ -47,9 +47,6 @@ export default function TimelinePage() {
       }
       );
   }
-  useEffect(() => {
-
-  }, [comments, likes, posts])
   useEffect(() => {
     if (token) {
       getPosts();
