@@ -1,9 +1,9 @@
-import styled from "styled-components";
-import { AiFillHeart, AiOutlineHeart, AiOutlineComment } from "react-icons/ai";
+import { AiFillHeart, AiOutlineComment, AiOutlineHeart } from "react-icons/ai";
 import { BiRepost } from "react-icons/bi";
 import { TbTrashFilled } from "react-icons/tb";
 import { TiPencil } from "react-icons/ti";
 import { Tooltip } from "react-tooltip";
+import styled from "styled-components";
 
 export const SCMetadata = styled.div`
   width: 100%;
@@ -141,6 +141,7 @@ export const Container = styled.div`
   display: flex;
   border-radius: 16px;
   background: #171717;
+  z-index: 3;
 `;
 export const StyledIconComment = styled(AiOutlineComment)`
   font-size: 16px;
