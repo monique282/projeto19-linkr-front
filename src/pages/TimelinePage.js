@@ -16,7 +16,7 @@ export default function TimelinePage() {
   const [message, setMessage] = useState("Loading");
   const [loading, setLoading] = useState(false);
   const [atualize, setAtualize] = useState(false);
-
+  console.log(posts)
   function getLikes() {
     const URL = `${process.env.REACT_APP_API_URL}/likes`;
     axios
