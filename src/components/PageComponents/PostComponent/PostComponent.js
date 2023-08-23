@@ -14,7 +14,6 @@ import {
   RepostModal,
   ReturnModal,
   getCommentsById,
-  postComment,
 } from "./PostComponent.functions";
 import * as styles from "./PostComponent.styles";
 
@@ -61,6 +60,7 @@ export default function Post(props) {
   const token = localStorage.getItem("token");
   const object = { headers: { Authorization: `Bearer ${token}` } };
   const { setPosts, setLikes } = useContext(AuthContext);
+  const [img, setImage] = useState(localStorage.getItem("image"));
 
   function getPosts() {
     axios
@@ -105,6 +105,69 @@ export default function Post(props) {
         .catch((err) => console.log(err));
     }
   }, [url]);
+
+  function postComment(e) {
+    e.preventDefault();
+    if (token) {
+      axios
+        .post(
+          `${process.env.REACT_APP_API_URL}/comment/${postId}`,
+          { content: comment },
+          object
+        )
+        .then((res) => {
+          setComments(res.data);
+          if (id !== undefined) {
+            axios
+              .get(`${process.env.REACT_APP_API_URL}/user/${id}`, object)
+              .then((res) => {
+                setInfo(res.data);
+                setUserPosts(res.data.posts);
+              })
+              .catch((res) => console.log(res));
+
+            const URL = `${process.env.REACT_APP_API_URL}/likes/${id}`;
+            axios
+              .get(URL, object)
+              .then((res) => setUserLikes(res.data))
+              .catch((err) => console.log(err));
+          }
+
+          if (hashtag !== undefined) {
+            const URL = process.env.REACT_APP_API_URL;
+            const headers = configToken();
+
+            axios
+              .get(`${URL}/likes`, headers)
+              .then((res) => {
+                setLikes(res.data);
+                setHashtagLikes(res.data);
+              })
+              .catch((err) => console.log(err));
+
+            axios
+              .get(`${URL}/hashtag/${hashtag}`, headers)
+              .then((res) => {
+                setHashtagPosts(res.data);
+              })
+              .catch((err) => console.log(err));
+          } else {
+            axios
+              .get(`${process.env.REACT_APP_API_URL}/timeline`, object)
+              .then((res) => setPosts(res.data.rows))
+              .catch((err) => console.log(err));
+
+            const URL = `${process.env.REACT_APP_API_URL}/likes`;
+            const config = configToken();
+            axios
+              .get(URL, config)
+              .then((res) => setLikes(res.data))
+              .catch((err) => console.log(err));
+          }
+        })
+        .catch((res) => alert(res.response.data));
+    }
+  }
 
   function handleToggleLike() {
     setLoading(true);
@@ -308,8 +371,12 @@ export default function Post(props) {
             <Comment comment={comment} key={index} />
           ))}
 
-          <form onSubmit={(e) => postComment(e, postId, comment, object)}>
-            <img src={image} alt="profile"></img>
+          <form
+            onSubmit={(e) =>
+              postComment(e)
+            }
+          >
+            <img src={img} alt="profile"></img>
             <div>
               <input
                 name="comment"
@@ -317,7 +384,11 @@ export default function Post(props) {
                 placeholder="write a comment..."
                 type="text"
                 value={comment}
-                onChange={(e) => setComment(e.target.value)}
+                onChange={(e) => {
+                  setLoading(true);
+                  setComment(e.target.value);
+                  setLoading(false);
+                }}
                 required
               ></input>
               <button type="submit">

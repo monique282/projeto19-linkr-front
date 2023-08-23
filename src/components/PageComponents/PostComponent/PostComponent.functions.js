@@ -361,11 +361,6 @@ export function PostOwner({
 export function getCommentsById(id, comments, setComments, object) {
   axios
     .get(`${process.env.REACT_APP_API_URL}/comments/${id}`, object)
-    .then((res) => setComments(res.data.reverse()))
+    .then((res) => setComments(res.data))
     .catch((res) => console.log(res));
-}
-
-export function postComment(e, id, content, object) { 
-  e.preventDefault()
-  console.log(content, id)
 }
