@@ -186,14 +186,16 @@ export function RepostModal({
   isModalOpenRepost,
 }) {
   function handleRepostConfirmation() {
-    alert(`post ${postId} foi repostado`);
     setIsModalOpenRepost(false);
-    // Repost(postId);
+    Repost(postId);
   }
 
   function Repost(id) {
+    const token = localStorage.getItem("token");
     const url = `${process.env.REACT_APP_API_URL}/repost/${id}`;
-    const promise = axios.delete(url);
+    const promise = axios.post(url, null, {
+      headers: { authorization: `Bearer ${token}` },
+    });
     promise.then((response) => {
       setIsModalOpenRepost(false);
       window.location.reload();
