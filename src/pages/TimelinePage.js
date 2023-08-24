@@ -8,6 +8,7 @@ import Post from "../components/PageComponents/PostComponent/PostComponent";
 import SharePost from "../components/PageComponents/SharePost";
 import { FontPageTitle } from "../components/StyleComponents/StylesComponents";
 import { AuthContext } from "../contexts/UserContext";
+import RefreshNewPost from "../components/UseInterval";
 
 export default function TimelinePage() {
   const { setPosts, setLikes, posts, likes, comments, setComments } = useContext(AuthContext);
@@ -16,7 +17,8 @@ export default function TimelinePage() {
   const [message, setMessage] = useState("Loading");
   const [loading, setLoading] = useState(false);
   const [atualize, setAtualize] = useState(false);
-  console.log(posts)
+  const [count, setCount] = useState(0);
+  const [refresh, setRefresh] = useState(0);
   function getLikes() {
     const URL = `${process.env.REACT_APP_API_URL}/likes`;
     axios
@@ -61,7 +63,7 @@ export default function TimelinePage() {
       getPosts();
       getLikes();
     }
-  }, [loading]);
+  }, [loading, refresh]);
 
   return (
     <Background>
@@ -74,6 +76,7 @@ export default function TimelinePage() {
             setLoading={setLoading}
             setAtualize={setAtualize}
           />
+          <RefreshNewPost count={count} setCount={setCount} lastestPost={posts[0]?.postId} setRefresh={setRefresh}/>
           <Posts>
             {posts.length === 0 ? (
               <FontPageTitle
