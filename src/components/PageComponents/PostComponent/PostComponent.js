@@ -300,7 +300,7 @@ export default function Post(props) {
 
             <Lato400
               style={{ color: "#fff", fontSize: "11px", marginTop: "5px" }}
-              data-test="counter"
+              data-test="comment-counter"
             >
               {Number(numberComments) === 1
                 ? `${numberComments} comment`
@@ -312,11 +312,11 @@ export default function Post(props) {
             <styles.StyledIconRepost
               disabled={loading}
               onClick={() => setIsModalOpenRepost(true)}
-              data-test="like-btn"
+              data-test="reposts-btn"
             />
             <Lato400
               style={{ color: "#fff", fontSize: "11px", marginTop: "5px" }}
-              data-test="counter"
+              data-test="reposts-counter"
             >
               {Number(numberReposts) === 1
                 ? `${numberReposts} repost`
@@ -380,7 +380,7 @@ export default function Post(props) {
         />
       </styles.Container>
       {isCommentOpen === true ? (
-        <ContainerComments>
+        <ContainerComments data-test="comment-box">
           {comments.map((comment, index) => (
             <Comment comment={comment} key={index} />
           ))}
@@ -394,6 +394,7 @@ export default function Post(props) {
                 placeholder="write a comment..."
                 type="text"
                 value={comment}
+                data-test="comment-input"
                 onChange={(e) => {
                   setLoading(true);
                   setComment(e.target.value);
@@ -401,7 +402,7 @@ export default function Post(props) {
                 }}
                 required
               ></input>
-              <button type="submit">
+              <button type="submit" data-test="comment-submit">
                 <StyledSend />
               </button>
             </div>
