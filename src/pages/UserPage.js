@@ -2,11 +2,11 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
+import FollowButton from "../components/PageComponents/FollowButton.js";
 import HashtagBox from "../components/PageComponents/HashtagBox.js";
 import NavBar from "../components/PageComponents/NavBar.js";
 import Post from "../components/PageComponents/PostComponent/PostComponent";
 import { FontPageTitle } from "../components/StyleComponents/StylesComponents.js";
-import FollowButton from "../components/PageComponents/FollowButton.js";
 
 export default function UserPage() {
   const [posts, setPosts] = useState([]);
@@ -143,12 +143,13 @@ const Content = styled.main`
     }
   }
 
-  button {
+  >button {
     width: 112px;
     height: 31px;
     position: absolute;
     top: 70px;
     right: 270px;
     border-radius: 5px;
+    cursor: pointer;
   }
 `;
