@@ -58,6 +58,7 @@ export default function NavBar() {
     const promise = axios.get(url, config);
     promise.then((response) => {
       // Atualiza os resultados da busca
+      console.log(response.data)
       setSearchResults(response.data)
     });
 
@@ -107,12 +108,21 @@ export default function NavBar() {
               }
             }}
           />
-          {searchResults.map(searchResults => (
-            <DirectByLink data-test="user-search" to={`/user/${searchResults.id}`} key={searchResults.id} onClick={() => setSearchResults([])}>
-              <img src={searchResults.image} alt="" />
-              <Title>{searchResults.name}</Title>
-            </DirectByLink>
+          {searchResults.map(searchResult => (
+            searchResult.follow === true ? (
+              <DirectByLink data-test="user-search" to={`/user/${searchResult.id}`} key={searchResult.id} onClick={() => setSearchResults([])}>
+                <img src={searchResult.image} alt="" />
+                <Title>{searchResult.name}</Title>
+                <Follow>• following</Follow>
+              </DirectByLink>
+            ) : (
+              <DirectByLink data-test="user-search" to={`/user/${searchResult.id}`} key={searchResult.id} onClick={() => setSearchResults([])}>
+                <img src={searchResult.image} alt="" />
+                <Title>{searchResult.name}</Title>
+              </DirectByLink>
+            )
           ))}
+
         </UserSearch>
       </form>
       <figure >
@@ -139,24 +149,24 @@ export default function NavBar() {
 
         {isClicked === "false" ? (
           <img data-test="avatar"
-          src={image}
-          alt="profile"
-          onClick={() => {
-            handleClick("true");
-          }}
-        />
+            src={image}
+            alt="profile"
+            onClick={() => {
+              handleClick("true");
+            }}
+          />
         ) : (
           <img data-test="avatar"
-          src={image}
-          alt="profile"
-          onClick={() => {
-            handleClick("false");
-          }}
-        />
+            src={image}
+            alt="profile"
+            onClick={() => {
+              handleClick("false");
+            }}
+          />
         )}
-        
+
       </figure>
-    </Container>
+    </Container >
   );
 }
 
@@ -176,6 +186,16 @@ const Title = styled.div`
     color: rgba(81, 81, 81, 1);
     margin-top: 5px;
 
+`
+const Follow = styled.p`
+    color: #C5C5C5;
+    font-family: 'Lato';
+    font-size: 19px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    margin-left: 10px;
+    margin-top: 5px;
 `
 const DirectByLink = styled(Link)`
     margin-top: 10px;
