@@ -26,7 +26,7 @@ export default function RefreshNewPost({ lastestPost, count, setCount, setRefres
 
   if (postsToReceive.length > 0) {
     return (
-      <Content onClick={()=> {
+      <Content data-test="load-btn" onClick={()=> {
         setRefresh(2)
         setPostsToReceive([])}}>
         <StyledLato>

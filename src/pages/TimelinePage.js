@@ -9,16 +9,20 @@ import SharePost from "../components/PageComponents/SharePost";
 import { FontPageTitle } from "../components/StyleComponents/StylesComponents";
 import { AuthContext } from "../contexts/UserContext";
 import RefreshNewPost from "../components/UseInterval";
+import InfiniteScroll from "react-infinite-scroller";
+import { Box, CircularProgress } from "@mui/material";
 
 export default function TimelinePage() {
   const { setPosts, setLikes, posts, likes, comments, setComments } = useContext(AuthContext);
   const token = localStorage.getItem("token");
   const object = { headers: { Authorization: `Bearer ${token}` } };
   const [message, setMessage] = useState("Loading");
+  const [hasMore, setMore] = useState(true)
   const [loading, setLoading] = useState(false);
   const [atualize, setAtualize] = useState(false);
   const [count, setCount] = useState(0);
   const [refresh, setRefresh] = useState(0);
+
   function getLikes() {
     const URL = `${process.env.REACT_APP_API_URL}/likes`;
     axios
@@ -77,6 +81,18 @@ export default function TimelinePage() {
             setAtualize={setAtualize}
           />
           <RefreshNewPost count={count} setCount={setCount} lastestPost={posts[0]?.postId} setRefresh={setRefresh}/>
+          <StyledInfiniteScroll
+          pageStart={0}
+          loadMore={getPosts}
+          hasMore={hasMore}
+          loader={
+          <div className="progressContent" key={0}>
+            <Box>
+              <CircularProgress color="inherit" size={50}/>
+            </Box>
+            Loading more posts...
+          </div>}
+          >
           <Posts>
             {posts.length === 0 ? (
               <FontPageTitle
@@ -103,6 +119,7 @@ export default function TimelinePage() {
               })
             )}
           </Posts>
+          </StyledInfiniteScroll>
         </Feed>
         <Trending>
           <HashtagBox atualize={atualize} />
@@ -132,3 +149,9 @@ const Content = styled.div`
   gap: 25px;
   padding-top: 50px;
 `;
+const StyledInfiniteScroll = styled(InfiniteScroll)`
+  color:#6d6d6d;
+  .progressContent{
+    text-align: center;
+  }
+  `
