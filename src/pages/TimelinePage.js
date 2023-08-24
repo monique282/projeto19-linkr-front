@@ -26,7 +26,7 @@ export default function TimelinePage() {
       .then((res) => { setLikes(res.data) })
       .catch((err) => {
         alert(err.response.data)
-        console.log(err)
+  
       });
   }
 
