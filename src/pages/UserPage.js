@@ -50,7 +50,7 @@ export default function UserPage() {
             <img src={info.image} alt={info.image} />
             <h1>{info.name} posts</h1>
           </header>
-          <FollowButton statusFollow={info.statusFollow} userId={info.id} disable={disable} setDisable={setDisable} />
+          { !info.isUser && (<FollowButton statusFollow={info.statusFollow} userId={info.id} disable={disable} setDisable={setDisable} isUser={info.isUser} />)}
           <section>
             <article>
               {posts.length === 0 ? (
