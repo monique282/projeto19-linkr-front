@@ -55,6 +55,7 @@ export function EditPost({
       {isEditing ? (
         <styles.EditInput
           value={postContent}
+          data-test="edit-input"
           disabled={loading}
           onBlur={() => {
             setIsEditing(false);
@@ -142,6 +143,7 @@ export function ReturnModal({ setIsModalOpen, postId, isModalOpen }) {
       <div style={{ display: "flex" }}>
         <button
           onClick={() => setIsModalOpen(false)}
+          data-test="cancel"
           style={{
             marginRight: "10px",
             width: "134px",
@@ -159,6 +161,7 @@ export function ReturnModal({ setIsModalOpen, postId, isModalOpen }) {
         </button>
         <button
           onClick={handleDeleteConfirmation}
+          data-test="confirm"
           style={{
             marginRight: "10px",
             width: "134px",
