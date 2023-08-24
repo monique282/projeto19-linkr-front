@@ -6,6 +6,7 @@ import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { AuthContext } from "../../contexts/UserContext";
 import { FontHeader, Lato700 } from "../StyleComponents/StylesComponents";
+import { configToken } from "../../services/api";
 
 
 export default function NavBar() {
@@ -52,8 +53,9 @@ export default function NavBar() {
   // Função para realizar a busca no servidor
   function performSearchNoServer(name) {
     const url = `${process.env.REACT_APP_API_URL}/search/${name}`
+    const config = configToken();
 
-    const promise = axios.get(url)
+    const promise = axios.get(url, config);
     promise.then((response) => {
       // Atualiza os resultados da busca
       setSearchResults(response.data)
