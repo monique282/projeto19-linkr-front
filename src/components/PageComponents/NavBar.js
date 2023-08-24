@@ -58,7 +58,6 @@ export default function NavBar() {
     const promise = axios.get(url, config);
     promise.then((response) => {
       // Atualiza os resultados da busca
-      console.log(response.data)
       setSearchResults(response.data)
     });
 
@@ -97,10 +96,6 @@ export default function NavBar() {
             debounceTimeout={300}
             onChange={(e) => {
               const searchText = e.target.value;
-              console.log(e.target.value)
-              // if (searchText.length < 3) {
-              //   return alert("É necessário no mínimo 3 carateres para fazer a busca")
-              // }
               if (searchText.length >= 3) {
                 performSearchNoServer(searchText); //  função de busca no servidor
               } else {
