@@ -5,11 +5,10 @@ import { useState } from "react";
 export default function FollowButton({ statusFollow, userId, disable, setDisable }) {
     const [disabled, setDisabled] = useState(false);
     function changeFollow() {
-        setDisabled(true);
-
         const URL = `${process.env.REACT_APP_API_URL}/follows`;
         const body = { userId };
         const config = configToken();
+        setDisabled(true);
         axios
             .post(URL, body, config)
             .then(res => {
