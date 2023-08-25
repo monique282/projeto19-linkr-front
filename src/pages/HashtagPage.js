@@ -20,10 +20,9 @@ export default function HashtagPage() {
 
   const [atualizeHashtag, setAtualizeHashtag] = useState(false)
   const [lastItemCreated, setLastItem] = useState(0)
-  const [hasMore, setMore] = useState(false);
+  const [hasMore, setMore] = useState(true);
 
   function handleScroll() {
-    console.log(lastItemCreated, posts)
     if(object){
       axios.get(`${process.env.REACT_APP_API_URL}/hashtagScroll/${hashtag}?lastPost=${lastItemCreated}`, object)
         .then(res => {
