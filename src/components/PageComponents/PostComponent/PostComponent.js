@@ -334,6 +334,7 @@ export default function Post(props) {
               </Lato400>
             </Link>
             <PostOwner
+              setIsModalOpen={setIsModalOpen}
               setIsEditing={setIsEditing}
               isEditing={isEditing}
               userId={userId}
@@ -350,7 +351,7 @@ export default function Post(props) {
           />
           <a href={url} target="_blank" data-test="link">
             <styles.SCMetadata>
-              <div>
+              <div style={{width:"100%"}}>
                 <Lato400>{metadata.title}</Lato400>
                 <Lato400>{metadata.description}</Lato400>
                 <Lato400>{url}</Lato400>

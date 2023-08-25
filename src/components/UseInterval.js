@@ -16,8 +16,9 @@ export default function RefreshNewPost({ lastestPost, count, setCount, setRefres
         .get(`${process.env.REACT_APP_API_URL}/timeline`, token)
         .then((res) => {
           const newPosts = res.data.rows.filter(
-            (item) => item.postId > lastestPost
+            (item) => item.createdAt > lastestPost
           );
+          console.log(res.data.rows)
           setPostsToReceive(newPosts);
           setCount(newPosts.length);
         });
@@ -26,7 +27,7 @@ export default function RefreshNewPost({ lastestPost, count, setCount, setRefres
 
   if (postsToReceive.length > 0) {
     return (
-      <Content onClick={()=> {
+      <Content data-test="load-btn" onClick={()=> {
         setRefresh(2)
         setPostsToReceive([])}}>
         <StyledLato>
