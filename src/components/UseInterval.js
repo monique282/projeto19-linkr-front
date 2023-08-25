@@ -18,12 +18,11 @@ export default function RefreshNewPost({ lastestPost, count, setCount, setRefres
           const newPosts = res.data.rows.filter(
             (item) => item.createdAt > lastestPost
           );
-          console.log(res.data.rows)
           setPostsToReceive(newPosts);
           setCount(newPosts.length);
         });
     }
-  }, 15000);
+  }, 15000000);
 
   if (postsToReceive.length > 0) {
     return (

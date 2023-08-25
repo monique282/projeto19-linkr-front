@@ -35,8 +35,6 @@ export default function UserPage() {
         .then((res) => {
           setInfo(res.data);
           setPosts(res.data.posts);
-
-          console.log(res);
         })
         .catch((res) => console.log(res));
   }, [id, disable]);

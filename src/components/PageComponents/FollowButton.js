@@ -3,7 +3,6 @@ import { configToken } from "../../services/api";
 import { useState } from "react";
 
 export default function FollowButton( { statusFollow, userId, disable, setDisable } ) {
-    console.log(statusFollow);
     function changeFollow () {
         setDisable(true);
 

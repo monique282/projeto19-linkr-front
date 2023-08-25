@@ -17,12 +17,12 @@ export default function TimelinePage() {
   const token = localStorage.getItem("token");
   const object = { headers: { Authorization: `Bearer ${token}` } };
   const [message, setMessage] = useState("Loading");
-  const [hasMore, setMore] = useState(true)
+  const [hasMore, setMore] = useState(false);
+  const [lastItemCreated, setLastItem] = useState(0)
   const [loading, setLoading] = useState(false);
   const [atualize, setAtualize] = useState(false);
   const [count, setCount] = useState(0);
   const [refresh, setRefresh] = useState(0);
-
   function getLikes() {
     const URL = `${process.env.REACT_APP_API_URL}/likes`;
     axios
@@ -37,7 +37,8 @@ export default function TimelinePage() {
     axios
       .get(`${process.env.REACT_APP_API_URL}/timeline`, object)
       .then((res) => {
-        setPosts(res?.data.rows || []);
+        setMore(true)
+        setPosts(res.data.rows || []);
         if (res.data.rows.length === 0 && res.data.status === "not following") setMessage(
           <>
             <div>You don't follow anyone yet. </div>
@@ -46,8 +47,9 @@ export default function TimelinePage() {
           );
         
         if (res.data.rows.length === 0 && res.data.status === "following") setMessage(
-            <div>No post found from your friends</div>
+            <div>No posts found from your friends</div>
         )
+        if (res.data.rows) setLastItem(res.data.rows[res.data.rows.length - 1].createdAt);
       })
       .catch((err) => {
         alert(err.response.data || "Erro no servidor. Tente novamente")
@@ -59,6 +61,16 @@ export default function TimelinePage() {
         )
       }
       );
+  }
+  console.log(posts)
+  function handleScroll() {
+    axios.get(`${process.env.REACT_APP_API_URL}/timelineScroll?createdAt=${lastItemCreated}`, object)
+    .then(res => {
+      setMore(false)
+      setPosts(prevPosts => [...prevPosts, ...res.data.rows]);
+      console.log(res.data.rows[res.data.rows.length - 1].createdAt)
+      // setLastItem(res.data.rows[res.data.rowCount-1].createdAt);
+    })
   }
   useEffect(() => {
     if (token) {
@@ -81,8 +93,8 @@ export default function TimelinePage() {
           <RefreshNewPost count={count} setCount={setCount} lastestPost={posts[0]?.createdAt} setRefresh={setRefresh}/>
           <StyledInfiniteScroll
           pageStart={0}
-          loadMore={getPosts}
-          hasMore={true}
+          loadMore={handleScroll}
+          hasMore={hasMore}
           loader={
           <div className="progressContent" key={0}>
             <Box>

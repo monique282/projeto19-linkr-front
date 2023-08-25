@@ -24,7 +24,6 @@ export default function HashtagPage() {
     axios
       .get(`${URL}/hashtags/likes/${hashtag}`, headers)
       .then((res) => {
-        console.log('likessss  ', res.data)
         setLikes(res.data)})
       .catch((err) => console.log(err));
 
@@ -32,7 +31,6 @@ export default function HashtagPage() {
       .get(`${URL}/hashtag/${hashtag}`, headers)
       .then((res) => {
         setPosts(res.data);
-        console.log('posts    ', res.data)
       })
       .catch((err) => console.log(err));
   }, [hashtag, atualizeHashtag]);
