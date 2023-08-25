@@ -30,16 +30,12 @@ export default function TimelinePage() {
       .then((res) => { setLikes(res.data) })
       .catch((err) => {
         alert(err.response.data)
-  
       });
   }
-
-console.log(posts)
   function getPosts() {
     axios
       .get(`${process.env.REACT_APP_API_URL}/timeline`, object)
       .then((res) => {
-        console.log(Date.now())
         setPosts(res?.data.rows || []);
         if (res.data.rows.length === 0 && res.data.status === "not following") setMessage(
           <>
@@ -85,7 +81,7 @@ console.log(posts)
           <StyledInfiniteScroll
           pageStart={0}
           loadMore={getPosts}
-          hasMore={hasMore}
+          hasMore={true}
           loader={
           <div className="progressContent" key={0}>
             <Box>
