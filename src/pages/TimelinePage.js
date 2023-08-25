@@ -17,67 +17,63 @@ export default function TimelinePage() {
   const token = localStorage.getItem("token");
   const object = { headers: { Authorization: `Bearer ${token}` } };
   const [message, setMessage] = useState("Loading");
-  const [hasMore, setMore] = useState(false);
+  const [hasMore, setMore] = useState(true);
   const [lastItemCreated, setLastItem] = useState(0)
   const [loading, setLoading] = useState(false);
   const [atualize, setAtualize] = useState(false);
   const [count, setCount] = useState(0);
   const [refresh, setRefresh] = useState(0);
-
-  function getLikes() {
-    const URL = `${process.env.REACT_APP_API_URL}/likes`;
-    axios
-      .get(URL, object)
-      .then((res) => { setLikes(res.data) })
-      .catch((err) => {
-        alert(err.response.data || "Erro no servidor. Tente novamente.")
+  console.log(hasMore)
   
-      });
-  }
-  function getPosts() {
-    axios
-      .get(`${process.env.REACT_APP_API_URL}/timeline`, object)
-      .then((res) => {
-        setMore(true)
-        setPosts(res.data.rows || []);
-        if (res.data.rows.length === 0 && res.data.status === "not following") setMessage(
-          <>
-            <div>You don't follow anyone yet. </div>
-            <div>Search for new friends!</div>
-          </>
-          );
-        
-        if (res.data.rows.length === 0 && res.data.status === "following") setMessage(
-            <div>No posts found from your friends</div>
-        )
-        if (res.data.rows) setLastItem(res.data.rows[res.data.rows.length - 1].createdAt);
-      })
-      .catch((err) => {
-        alert(err.response.data || "Erro no servidor. Tente novamente")
-        setMessage(
-          <>
-            <div>An error ocurred while trying to fetch the</div>
-            <div>posts, please refresh the page</div>
-          </>
-        )
-      }
-      );
-  }
   function handleScroll() {
     axios.get(`${process.env.REACT_APP_API_URL}/timelineScroll?createdAt=${lastItemCreated}`, object)
     .then(res => {
-      if(res.data.length === 0) setMore(false)
+      if(res.data.rows.length === 0) setMore(false)
       else{
-        setMore(true)
         setPosts(prevPosts => [...prevPosts,...res.data.rows]);
         setLastItem(res.data.rows[res.data.rows.length - 1].createdAt);
       }
     })
+    .catch(err => alert(err.response.data || "Erro interno no servidor, tente novamente!"))
   }
+
   useEffect(() => {
     if (token) {
-      getPosts();
-      getLikes();
+      const URL2 = `${process.env.REACT_APP_API_URL}/likes`;
+      axios
+        .get(URL2, object)
+        .then((res) => { setLikes(res.data) })
+        .catch((err) => {
+          alert(err.response.data || "Erro no servidor. Tente novamente.")
+        });
+        axios
+        .get(`${process.env.REACT_APP_API_URL}/timeline`, object)
+        .then((res) => {
+          setLastItem(res.data.rows[res.data.rows.length - 1].createdAt)
+          setMore(true)
+          setPosts(res.data.rows || []);
+          if (res.data.rows.length === 0 && res.data.status === "not following") setMessage(
+            <>
+              <div>You don't follow anyone yet. </div>
+              <div>Search for new friends!</div>
+            </>
+            );
+          
+          if (res.data.rows.length === 0 && res.data.status === "following") setMessage(
+              <div>No posts found from your friends</div>
+          )
+          if (res.data.rows) setLastItem(res.data.rows[res.data.rows.length - 1].createdAt);
+        })
+        .catch((err) => {
+          alert(err.response.data || "Erro no servidor. Tente novamente")
+          setMessage(
+            <>
+              <div>An error ocurred while trying to fetch the</div>
+              <div>posts, please refresh the page</div>
+            </>
+          )
+        }
+        );
     }
   }, [loading, refresh]);
 
@@ -117,7 +113,9 @@ export default function TimelinePage() {
               posts.map((post, i) => {
                 return (
                   <Post
+                    lastItemCreated={lastItemCreated}
                     key={i}
+                    setMore={setMore}
                     post={post}
                     loading={loading}
                     setLoading={setLoading}
@@ -161,9 +159,9 @@ const Content = styled.div`
   gap: 25px;
   padding-top: 50px;
 `;
+
 export const StyledInfiniteScroll = styled(InfiniteScroll)`
   color:#6d6d6d;
   .progressContent{
     text-align: center;
-  }
-  `
+  }`

@@ -41,6 +41,8 @@ export default function Post(props) {
     setHashtagLikes,
     hashtag,
     setAtualizeHashtag,
+    lastItemCreated:createdAt,
+    setMore
   } = props;
 
   const userId = localStorage.getItem("userId");
@@ -62,34 +64,9 @@ export default function Post(props) {
   const { setPosts, setLikes } = useContext(AuthContext);
   const [img, setImage] = useState(localStorage.getItem("image"));
 
-  function getPosts() {
-    axios
-      .get(`${process.env.REACT_APP_API_URL}/timeline`, object)
-      .then((res) => {
-        setPosts(res.data.rows)})
-      .catch((err) => alert(err.response.data));
-  }
-
-  function getLikes() {
-    const URL = `${process.env.REACT_APP_API_URL}/likes`;
-    axios
-      .get(URL, object)
-      .then((res) => {
-        setLikes(res.data);
-      })
-      .catch((err) => alert(err.response.data));
-  }
-
   useEffect(() => {
     if (setAtualizeHashtag) setAtualizeHashtag((prev) => !prev);
   }, [numberLikes]);
-
-  useEffect(() => {
-    if (token) {
-      getPosts();
-      getLikes();
-    }
-  }, [loading]);
 
   useEffect(() => {
     if (url) {
@@ -153,17 +130,7 @@ export default function Post(props) {
               })
               .catch((err) => console.log(err));
           } else {
-            axios
-              .get(`${process.env.REACT_APP_API_URL}/timeline`, object)
-              .then((res) => setPosts(res.data.rows))
-              .catch((err) => alert(err.response.data));
-
-            const URL = `${process.env.REACT_APP_API_URL}/likes`;
-            const config = configToken();
-            axios
-              .get(URL, config)
-              .then((res) => setLikes(res.data))
-              .catch((err) => console.log(err));
+            window.location.reload()
           }
         })
         .catch((res) => alert(res.response.data));
@@ -233,7 +200,9 @@ export default function Post(props) {
         .catch((err) => {
           console.log(`Error in like toggle: `, err);
         })
-        .finally(() => setLoading(false));
+        .finally(() => {
+          setMore(true)
+          setLoading(false)});
     }
   }
 

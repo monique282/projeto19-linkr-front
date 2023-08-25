@@ -7,8 +7,8 @@ import HashtagBox from "../components/PageComponents/HashtagBox.js";
 import NavBar from "../components/PageComponents/NavBar.js";
 import Post from "../components/PageComponents/PostComponent/PostComponent";
 import { FontPageTitle } from "../components/StyleComponents/StylesComponents.js";
-import { StyledInfiniteScroll } from "./TimelinePage.js";
 import { Box, CircularProgress } from "@mui/material";
+import InfiniteScroll from "react-infinite-scroller";
 
 export default function UserPage() {
   const [posts, setPosts] = useState([]);
@@ -20,7 +20,7 @@ export default function UserPage() {
 
   const [disable, setDisable] = useState(false);
   const [lastItemCreated, setLastItem] = useState(0)
-  const [hasMore, setMore] = useState(false);
+  const [hasMore, setMore] = useState(true);
 
   function handleScroll() {
     console.log(lastItemCreated, posts)
@@ -31,7 +31,6 @@ export default function UserPage() {
           else {
             setPosts([...posts,...res.data.posts]);
             setLastItem(res.data.posts[res.data.posts.length -1].createdAt)
-            setMore(true)
           }
       })}
   }
@@ -184,3 +183,11 @@ const Content = styled.main`
     cursor: pointer;
   }
 `;
+const StyledInfiniteScroll = styled(InfiniteScroll)`
+  color:#6d6d6d;
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+  .progressContent{
+    text-align: center;
+  }`

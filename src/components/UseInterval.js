@@ -46,6 +46,7 @@ const Content = styled.div`
   padding-top: 23px;
   padding-bottom: 23px;
   text-align: center;
+  cursor:pointer;
 `;
 
 const StyledLato = styled(Lato400)`
