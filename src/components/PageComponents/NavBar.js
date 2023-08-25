@@ -14,10 +14,7 @@ export default function NavBar() {
   const [image, setImage] = useState(localStorage.getItem("image"));
   const { setToken, token } = useContext(AuthContext);
   const [searchResults, setSearchResults] = useState([]);
-
   const [isClicked, setClicked] = useState("false");
-
-
 
   useEffect(() => {
     const localImage = localStorage.getItem("image");
