@@ -17,8 +17,6 @@ export default function NavBar() {
 
   const [isClicked, setClicked] = useState("false");
 
-
-
   useEffect(() => {
     const localImage = localStorage.getItem("image");
     setImage(localImage);

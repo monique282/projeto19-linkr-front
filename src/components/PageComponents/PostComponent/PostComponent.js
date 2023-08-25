@@ -65,7 +65,8 @@ export default function Post(props) {
   function getPosts() {
     axios
       .get(`${process.env.REACT_APP_API_URL}/timeline`, object)
-      .then((res) => setPosts(res.data.rows))
+      .then((res) => {
+        setPosts(res.data.rows)})
       .catch((err) => alert(err.response.data));
   }
 

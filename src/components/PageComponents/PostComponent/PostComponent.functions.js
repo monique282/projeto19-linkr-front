@@ -367,5 +367,5 @@ export function getCommentsById(id, comments, setComments, object) {
   axios
     .get(`${process.env.REACT_APP_API_URL}/comments/${id}`, object)
     .then((res) => setComments(res.data))
-    .catch((res) => console.log(res));
+    .catch((err) => console.log(err));
 }
