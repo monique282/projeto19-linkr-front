@@ -78,7 +78,7 @@ export default function TimelinePage() {
             setLoading={setLoading}
             setAtualize={setAtualize}
           />
-          <RefreshNewPost count={count} setCount={setCount} lastestPost={posts[0]?.postId} setRefresh={setRefresh}/>
+          <RefreshNewPost count={count} setCount={setCount} lastestPost={posts[0]?.createdAt} setRefresh={setRefresh}/>
           <StyledInfiniteScroll
           pageStart={0}
           loadMore={getPosts}

@@ -334,6 +334,7 @@ export default function Post(props) {
               </Lato400>
             </Link>
             <PostOwner
+              setIsModalOpen={setIsModalOpen}
               setIsEditing={setIsEditing}
               isEditing={isEditing}
               userId={userId}
