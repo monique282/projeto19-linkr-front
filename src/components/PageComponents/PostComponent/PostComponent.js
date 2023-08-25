@@ -101,8 +101,7 @@ export default function Post(props) {
             description,
             image: images[0],
           }));
-        })
-        .catch((err) => console.log(err));
+        }).catch((err) => console.log(err));
     }
   }, [url]);
 
@@ -156,7 +155,7 @@ export default function Post(props) {
             axios
               .get(`${process.env.REACT_APP_API_URL}/timeline`, object)
               .then((res) => setPosts(res.data.rows))
-              .catch((err) => console.log(err));
+              .catch((err) => alert(err.response.data));
 
             const URL = `${process.env.REACT_APP_API_URL}/likes`;
             const config = configToken();
@@ -220,7 +219,7 @@ export default function Post(props) {
             axios
               .get(`${process.env.REACT_APP_API_URL}/timeline`, object)
               .then((res) => setPosts(res.data.rows))
-              .catch((err) => console.log(err));
+              .catch((err) => alert(err.response.data));
 
             const URL = `${process.env.REACT_APP_API_URL}/likes`;
             const config = configToken();
