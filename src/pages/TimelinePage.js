@@ -23,6 +23,7 @@ export default function TimelinePage() {
   const [atualize, setAtualize] = useState(false);
   const [count, setCount] = useState(0);
   const [refresh, setRefresh] = useState(0);
+
   function getLikes() {
     const URL = `${process.env.REACT_APP_API_URL}/likes`;
     axios
@@ -62,14 +63,15 @@ export default function TimelinePage() {
       }
       );
   }
-  console.log(posts)
   function handleScroll() {
     axios.get(`${process.env.REACT_APP_API_URL}/timelineScroll?createdAt=${lastItemCreated}`, object)
     .then(res => {
-      setMore(false)
-      setPosts(prevPosts => [...prevPosts, ...res.data.rows]);
-      console.log(res.data.rows[res.data.rows.length - 1].createdAt)
-      // setLastItem(res.data.rows[res.data.rowCount-1].createdAt);
+      if(res.data.length === 0) setMore(false)
+      else{
+        setMore(true)
+        setPosts(prevPosts => [...prevPosts,...res.data.rows]);
+        setLastItem(res.data.rows[res.data.rows.length - 1].createdAt);
+      }
     })
   }
   useEffect(() => {
@@ -159,7 +161,7 @@ const Content = styled.div`
   gap: 25px;
   padding-top: 50px;
 `;
-const StyledInfiniteScroll = styled(InfiniteScroll)`
+export const StyledInfiniteScroll = styled(InfiniteScroll)`
   color:#6d6d6d;
   .progressContent{
     text-align: center;

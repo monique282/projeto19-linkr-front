@@ -7,6 +7,8 @@ import HashtagBox from "../components/PageComponents/HashtagBox.js";
 import NavBar from "../components/PageComponents/NavBar.js";
 import Post from "../components/PageComponents/PostComponent/PostComponent";
 import { FontPageTitle } from "../components/StyleComponents/StylesComponents.js";
+import { StyledInfiniteScroll } from "./TimelinePage.js";
+import { Box, CircularProgress } from "@mui/material";
 
 export default function UserPage() {
   const [posts, setPosts] = useState([]);
@@ -17,6 +19,23 @@ export default function UserPage() {
   const object = { headers: { Authorization: `Bearer ${token}` } };
 
   const [disable, setDisable] = useState(false);
+  const [lastItemCreated, setLastItem] = useState(0)
+  const [hasMore, setMore] = useState(false);
+
+  function handleScroll() {
+    console.log(lastItemCreated, posts)
+    if(object){
+      axios.get(`${process.env.REACT_APP_API_URL}/userScroll/${id}?lastPost=${lastItemCreated}`, object)
+        .then(res => {
+          if(res.data.posts.length === 0) setMore(false)
+          else {
+            setPosts([...posts,...res.data.posts]);
+            setLastItem(res.data.posts[res.data.posts.length -1].createdAt)
+            setMore(true)
+          }
+      })}
+  }
+  console.log(posts)
 
   useEffect(() => {
     if (token) {
@@ -33,8 +52,11 @@ export default function UserPage() {
       axios
         .get(`${process.env.REACT_APP_API_URL}/user/${id}`, object)
         .then((res) => {
+          console.log(res)
           setInfo(res.data);
           setPosts(res.data.posts);
+          setLastItem(res.data.posts[res.data.posts.length -1].createdAt)
+          setMore(true)
         })
         .catch((res) => console.log(res));
   }, [id, disable]);
@@ -54,23 +76,35 @@ export default function UserPage() {
               {posts.length === 0 ? (
                 <FontPageTitle>O usuário não tem posts!</FontPageTitle>
               ) : (
-                posts.map((post, i) => (
-                  <Post
-                    key={post.postId}
-                    post={post}
-                    userPosts={posts}
-                    setUserPosts={setPosts}
-                    setInfo={setInfo}
-                    setUserLikes={setLikes}
-                    id={id}
-                    likes={
-                      likes[i].likedUserNames[0] === null
-                        ? []
-                        : likes[i].likedUserNames
+                <StyledInfiniteScroll
+                  pageStart={0}
+                  loadMore={handleScroll}
+                  hasMore={hasMore}
+                  loader={
+                  <div className="progressContent" key={0}>
+                    <Box>
+                      <CircularProgress color="inherit" size={50}/>
+                    </Box>
+                    Loading more posts...
+                  </div>}
+                  >{posts.map((post, i) => (
+                        <Post
+                          key={post.postId}
+                          post={post}
+                          userPosts={posts}
+                          setUserPosts={setPosts}
+                          setInfo={setInfo}
+                          setUserLikes={setLikes}
+                          id={id}
+                          likes={
+                            likes[i]?.likedUserNames[0] === null
+                              ? []
+                              : likes[i]?.likedUserNames
+                          }
+                        />
+                      ))
                     }
-                  />
-                ))
-              )}
+                </StyledInfiniteScroll>)}
             </article>
             <article>
               <HashtagBox />
@@ -93,7 +127,6 @@ const Container = styled.div`
 const Content = styled.main`
   width: 80%;
   height: 100%;
-
   display: flex;
   flex-direction: column;
   align-items: center;

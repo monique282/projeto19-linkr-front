@@ -22,7 +22,7 @@ export default function RefreshNewPost({ lastestPost, count, setCount, setRefres
           setCount(newPosts.length);
         });
     }
-  }, 15000000);
+  }, 15000);
 
   if (postsToReceive.length > 0) {
     return (

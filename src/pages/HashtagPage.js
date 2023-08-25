@@ -8,19 +8,38 @@ import { Background } from "../components/PageComponents/PageComponents";
 import Post from "../components/PageComponents/PostComponent/PostComponent";
 import { FontPageTitle } from "../components/StyleComponents/StylesComponents";
 import { configToken } from "../services/api";
+import { StyledInfiniteScroll } from "./TimelinePage";
+import { Box, CircularProgress } from "@mui/material";
 
 export default function HashtagPage() {
   const { hashtag } = useParams();
-
+  const token = localStorage.getItem("token");
+  const object = { headers: { Authorization: `Bearer ${token}` } };
   const [posts, setPosts] = useState([]);
   const [likes, setLikes] = useState([]);
 
   const [atualizeHashtag, setAtualizeHashtag] = useState(false)
+  const [lastItemCreated, setLastItem] = useState(0)
+  const [hasMore, setMore] = useState(false);
+
+  function handleScroll() {
+    console.log(lastItemCreated, posts)
+    if(object){
+      axios.get(`${process.env.REACT_APP_API_URL}/hashtagScroll/${hashtag}?lastPost=${lastItemCreated}`, object)
+        .then(res => {
+          console.log(res)
+          if(res.data.length === 0) setMore(false)
+          else {
+            setPosts([...posts,...res.data]);
+            setLastItem(res.data[res.data.length -1].createdAt)
+            setMore(true)
+          }
+      })}
+  }
 
   useEffect(() => {
     const URL = process.env.REACT_APP_API_URL;
     const headers = configToken();
-
     axios
       .get(`${URL}/hashtags/likes/${hashtag}`, headers)
       .then((res) => {
@@ -31,6 +50,8 @@ export default function HashtagPage() {
       .get(`${URL}/hashtag/${hashtag}`, headers)
       .then((res) => {
         setPosts(res.data);
+        setLastItem(res.data[res.data.length -1].createdAt)
+        setMore(true)
       })
       .catch((err) => console.log(err));
   }, [hashtag, atualizeHashtag]);
@@ -41,6 +62,18 @@ export default function HashtagPage() {
       <Content>
         <Feed>
           <FontPageTitle data-test="hashtag-title"># {hashtag}</FontPageTitle>
+          <StyledInfiniteScroll
+          pageStart={0}
+          loadMore={handleScroll}
+          hasMore={hasMore}
+          loader={
+          <div className="progressContent" key={0}>
+            <Box>
+              <CircularProgress color="inherit" size={50}/>
+            </Box>
+            Loading more posts...
+          </div>}
+          >
           <Posts>
             {posts.length === 0 ? (
               <FontPageTitle style={{ textAlign: "center" }}>
@@ -64,6 +97,7 @@ export default function HashtagPage() {
               ))
             )}
           </Posts>
+          </StyledInfiniteScroll>
         </Feed>
         <Trending>
           <HashtagBox />
