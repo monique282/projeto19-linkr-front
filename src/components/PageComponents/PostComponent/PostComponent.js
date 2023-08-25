@@ -312,11 +312,11 @@ export default function Post(props) {
             <styles.StyledIconRepost
               disabled={loading}
               onClick={() => setIsModalOpenRepost(true)}
-              data-test="reposts-btn"
+              data-test="repost-btn"
             />
             <Lato400
               style={{ color: "#fff", fontSize: "11px", marginTop: "5px" }}
-              data-test="reposts-counter"
+              data-test="repost-counter"
             >
               {Number(numberReposts) === 1
                 ? `${numberReposts} repost`
