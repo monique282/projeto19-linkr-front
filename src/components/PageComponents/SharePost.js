@@ -56,7 +56,7 @@ async function getLikes () {
           getLikes();
           getPosts();
         } catch (error) {
-          alert(error.response.data);
+          alert("Aconteceu um erro no servidor. Tente novamente.");
         }
       }
       setLoading(false);

@@ -101,8 +101,7 @@ export default function Post(props) {
             description,
             image: images[0],
           }));
-        })
-        .catch((err) => console.log(err));
+        }).catch((err) => console.log(err));
     }
   }, [url]);
 
@@ -156,7 +155,7 @@ export default function Post(props) {
             axios
               .get(`${process.env.REACT_APP_API_URL}/timeline`, object)
               .then((res) => setPosts(res.data.rows))
-              .catch((err) => console.log(err));
+              .catch((err) => alert(err.response.data));
 
             const URL = `${process.env.REACT_APP_API_URL}/likes`;
             const config = configToken();
@@ -220,7 +219,7 @@ export default function Post(props) {
             axios
               .get(`${process.env.REACT_APP_API_URL}/timeline`, object)
               .then((res) => setPosts(res.data.rows))
-              .catch((err) => console.log(err));
+              .catch((err) => alert(err.response.data));
 
             const URL = `${process.env.REACT_APP_API_URL}/likes`;
             const config = configToken();
@@ -312,11 +311,11 @@ export default function Post(props) {
             <styles.StyledIconRepost
               disabled={loading}
               onClick={() => setIsModalOpenRepost(true)}
-              data-test="reposts-btn"
+              data-test="repost-btn"
             />
             <Lato400
               style={{ color: "#fff", fontSize: "11px", marginTop: "5px" }}
-              data-test="reposts-counter"
+              data-test="repost-counter"
             >
               {Number(numberReposts) === 1
                 ? `${numberReposts} repost`

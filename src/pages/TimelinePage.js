@@ -29,7 +29,8 @@ export default function TimelinePage() {
       .get(URL, object)
       .then((res) => { setLikes(res.data) })
       .catch((err) => {
-        alert(err.response.data)
+        alert(err.response.data || "Erro no servidor. Tente novamente.")
+  
       });
   }
   function getPosts() {
@@ -39,17 +40,17 @@ export default function TimelinePage() {
         setPosts(res?.data.rows || []);
         if (res.data.rows.length === 0 && res.data.status === "not following") setMessage(
           <>
-            <div>You don't follow anyone yet.</div>
-            <div>Search for new Friends!</div>
+            <div>You don't follow anyone yet. </div>
+            <div>Search for new friends!</div>
           </>
           );
         
         if (res.data.rows.length === 0 && res.data.status === "following") setMessage(
-            <div>No post found from your friends.</div>
+            <div>No post found from your friends</div>
         )
       })
       .catch((err) => {
-        alert(err.response.data)
+        alert(err.response.data || "Erro no servidor. Tente novamente")
         setMessage(
           <>
             <div>An error ocurred while trying to fetch the</div>
