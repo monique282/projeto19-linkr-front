@@ -24,7 +24,7 @@ export default function FollowButton( { statusFollow, userId, disable, setDisabl
             style={{
                 backgroundColor: statusFollow === "following" ? "#FFFFFF" : "#1877F2",
                 color: statusFollow === "following" ? "#1877F2" : "#FFFFFF",
-                border: `1px solid ${statusFollow === "following" ? "#FFFFFF" : "#1877F2"}`
+                border: `1px solid ${statusFollow === "following" ? "#FFFFFF" : "#1877F2"}`,
             }}
             data-test="follow-btn"      
         >

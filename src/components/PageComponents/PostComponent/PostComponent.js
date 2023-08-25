@@ -29,8 +29,8 @@ export default function Post(props) {
     userId: idUser,
     postId,
     likedUserIds,
+    repostedBy,
   } = props.post;
-
   const {
     setUserPosts,
     id,
@@ -115,7 +115,8 @@ export default function Post(props) {
           object
         )
         .then((res) => {
-          setComments(res.data);
+          setComment("");
+          getCommentsById(postId, comments, setComments, object);
           if (id !== undefined) {
             axios
               .get(`${process.env.REACT_APP_API_URL}/user/${id}`, object)
@@ -175,7 +176,6 @@ export default function Post(props) {
       userId: Number(userId),
       postId,
     };
-
     if (token) {
       axios
         .post(`${process.env.REACT_APP_API_URL}/like`, obj, object)
@@ -238,6 +238,18 @@ export default function Post(props) {
 
   return (
     <>
+      {repostedBy ? (
+        <ContainerReposted>
+          <div>
+            <styles.StyledIconRepost />
+            <p>
+              Re-posted by <span>{repostedBy}</span>
+            </p>
+          </div>
+        </ContainerReposted>
+      ) : (
+        <></>
+      )}
       <styles.Container data-test="post">
         <styles.Info>
           <figure>
@@ -287,7 +299,7 @@ export default function Post(props) {
 
             <Lato400
               style={{ color: "#fff", fontSize: "11px", marginTop: "5px" }}
-              data-test="counter"
+              data-test="comment-counter"
             >
               {Number(numberComments) === 1
                 ? `${numberComments} comment`
@@ -299,11 +311,11 @@ export default function Post(props) {
             <styles.StyledIconRepost
               disabled={loading}
               onClick={() => setIsModalOpenRepost(true)}
-              data-test="like-btn"
+              data-test="repost-btn"
             />
             <Lato400
               style={{ color: "#fff", fontSize: "11px", marginTop: "5px" }}
-              data-test="counter"
+              data-test="repost-counter"
             >
               {Number(numberReposts) === 1
                 ? `${numberReposts} repost`
@@ -362,19 +374,17 @@ export default function Post(props) {
           setIsModalOpenRepost={setIsModalOpenRepost}
           isModalOpenRepost={isModalOpenRepost}
           postId={postId}
+          object={object}
+          token={token}
         />
       </styles.Container>
       {isCommentOpen === true ? (
-        <ContainerComments>
+        <ContainerComments data-test="comment-box">
           {comments.map((comment, index) => (
             <Comment comment={comment} key={index} />
           ))}
 
-          <form
-            onSubmit={(e) =>
-              postComment(e)
-            }
-          >
+          <form onSubmit={postComment}>
             <img src={img} alt="profile"></img>
             <div>
               <input
@@ -383,6 +393,7 @@ export default function Post(props) {
                 placeholder="write a comment..."
                 type="text"
                 value={comment}
+                data-test="comment-input"
                 onChange={(e) => {
                   setLoading(true);
                   setComment(e.target.value);
@@ -390,7 +401,7 @@ export default function Post(props) {
                 }}
                 required
               ></input>
-              <button type="submit">
+              <button type="submit" data-test="comment-submit">
                 <StyledSend />
               </button>
             </div>
@@ -403,6 +414,42 @@ export default function Post(props) {
   );
 }
 
+const ContainerReposted = styled.div`
+  width: 611px;
+  height: 60px;
+  margin-bottom: -47px;
+  padding: 0px 0px 25px 25px;
+  border-radius: 16px;
+  background-color: #1e1e1e;
+  div {
+    height: auto;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+
+    text-align: center;
+
+    p {
+      margin-top: 10px;
+      color: #fff;
+      font-family: Lato;
+      font-size: 11px;
+      font-style: normal;
+      font-weight: 400;
+      line-height: normal;
+
+      span {
+        color: #fff;
+        font-family: Lato;
+        font-size: 11px;
+        font-style: normal;
+        font-weight: 700;
+        line-height: normal;
+      }
+    }
+  }
+`;
+
 const ContainerComments = styled.div`
   width: 611px;
   height: auto;
@@ -410,7 +457,7 @@ const ContainerComments = styled.div`
 
   background: #1e1e1e;
   padding: 45px 18px 18px 18px;
-  margin-top: -40px;
+  margin-top: -50px;
 
   display: flex;
   flex-direction: column;

@@ -55,6 +55,7 @@ export function EditPost({
       {isEditing ? (
         <styles.EditInput
           value={postContent}
+          data-test="edit-input"
           disabled={loading}
           onBlur={() => {
             setIsEditing(false);
@@ -142,6 +143,7 @@ export function ReturnModal({ setIsModalOpen, postId, isModalOpen }) {
       <div style={{ display: "flex" }}>
         <button
           onClick={() => setIsModalOpen(false)}
+          data-test="cancel"
           style={{
             marginRight: "10px",
             width: "134px",
@@ -159,6 +161,7 @@ export function ReturnModal({ setIsModalOpen, postId, isModalOpen }) {
         </button>
         <button
           onClick={handleDeleteConfirmation}
+          data-test="confirm"
           style={{
             marginRight: "10px",
             width: "134px",
@@ -186,14 +189,16 @@ export function RepostModal({
   isModalOpenRepost,
 }) {
   function handleRepostConfirmation() {
-    alert(`post ${postId} foi repostado`);
     setIsModalOpenRepost(false);
-    // Repost(postId);
+    Repost(postId);
   }
 
   function Repost(id) {
+    const token = localStorage.getItem("token");
     const url = `${process.env.REACT_APP_API_URL}/repost/${id}`;
-    const promise = axios.delete(url);
+    const promise = axios.post(url, null, {
+      headers: { authorization: `Bearer ${token}` },
+    });
     promise.then((response) => {
       setIsModalOpenRepost(false);
       window.location.reload();

@@ -153,10 +153,8 @@ export const StyledIconComment = styled(AiOutlineComment)`
 `;
 
 export const StyledIconRepost = styled(BiRepost)`
-  font-size: 16px;
+  font-size: 27px;
   color:  #fff;
   cursor: pointer;
   margin-top: 10px;
-  height: 25px;
-  width: 27px;
 `;

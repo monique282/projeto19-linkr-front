@@ -7,8 +7,8 @@ import { Background } from "../components/PageComponents/PageComponents";
 import Post from "../components/PageComponents/PostComponent/PostComponent";
 import SharePost from "../components/PageComponents/SharePost";
 import { FontPageTitle } from "../components/StyleComponents/StylesComponents";
-import { AuthContext } from "../contexts/UserContext";
 import RefreshNewPost from "../components/UseInterval";
+import { AuthContext } from "../contexts/UserContext";
 
 export default function TimelinePage() {
   const { setPosts, setLikes, posts, likes, comments, setComments } = useContext(AuthContext);
@@ -25,30 +25,31 @@ export default function TimelinePage() {
       .get(URL, object)
       .then((res) => { setLikes(res.data) })
       .catch((err) => {
-        alert(err.response.data)
-        console.log(err)
+        alert(err.response.data || "Erro no servidor. Tente novamente.")
+  
       });
   }
 
-
+console.log(posts)
   function getPosts() {
     axios
       .get(`${process.env.REACT_APP_API_URL}/timeline`, object)
       .then((res) => {
+        console.log(Date.now())
         setPosts(res?.data.rows || []);
         if (res.data.rows.length === 0 && res.data.status === "not following") setMessage(
           <>
-            <div>You don't follow anyone yet.</div>
-            <div>Search for new Friends!</div>
+            <div>You don't follow anyone yet. </div>
+            <div>Search for new friends!</div>
           </>
           );
         
         if (res.data.rows.length === 0 && res.data.status === "following") setMessage(
-            <div>No post found from your friends.</div>
+            <div>No post found from your friends</div>
         )
       })
       .catch((err) => {
-        alert(err.response.data)
+        alert(err.response.data || "Erro no servidor. Tente novamente")
         setMessage(
           <>
             <div>An error ocurred while trying to fetch the</div>
@@ -89,7 +90,7 @@ export default function TimelinePage() {
               posts.map((post, i) => {
                 return (
                   <Post
-                    key={post.postId}
+                    key={i}
                     post={post}
                     loading={loading}
                     setLoading={setLoading}
@@ -114,7 +115,7 @@ export default function TimelinePage() {
 const Feed = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 30px;
+  gap: 40px;
 `;
 
 const Trending = styled.div`
@@ -124,7 +125,7 @@ const Trending = styled.div`
 const Posts = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 25px;
 `;
 
 const Content = styled.div`
